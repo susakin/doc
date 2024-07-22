@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      <Tooltip content="111111111111111" hasArrow={false} size="small">
+      <Tooltip content="111111111111111" size="small" placement="right">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>

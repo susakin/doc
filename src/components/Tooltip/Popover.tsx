@@ -1,6 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Wrapper } from "./Wrapper";
-import { UseFloatingOptions } from "@floating-ui/react";
+import {
+  Alignment,
+  Placement,
+  Side,
+  UseFloatingOptions,
+} from "@floating-ui/react";
 
 import {
   useFloating,
@@ -16,12 +21,13 @@ import {
   safePolygon,
   arrow,
   useRole,
+  FloatingArrow,
   hide,
 } from "@floating-ui/react";
 
 export type PopoverProps = {
   children?: React.ReactElement;
-  content?: React.ReactNode;
+  content?: ((placement: Placement) => React.ReactNode) | React.ReactNode;
   trigger?: "click" | "hover";
   strategy?: "fixed" | "absolute";
   openDelay?: number;
@@ -30,12 +36,11 @@ export type PopoverProps = {
   onOpenChange?: (open: boolean) => void;
   hideWhenContentClick?: boolean;
   className?: string;
-  arrow?: React.ReactNode;
+  hasArrow?: boolean;
 } & Pick<UseFloatingOptions, "placement">;
 
 const Popover: React.FC<PopoverProps> = ({
   children,
-  content,
   trigger = "hover",
   openDelay = 0,
   strategy = "absolute",
@@ -43,35 +48,45 @@ const Popover: React.FC<PopoverProps> = ({
   onOpenChange,
   hideWhenContentClick,
   className,
+  hasArrow,
   ...rest
 }) => {
   const [open, setOpen] = useState<boolean>(false);
   const wrapperRef = useRef<Wrapper>(null);
   const isTriggerClick = trigger === "click";
-  const arrowRef = useRef<HTMLDivElement>(null);
+  const arrowRef = useRef(null);
 
   useEffect(() => {
     onOpenChange?.(open);
   }, [open]);
 
-  const { refs, floatingStyles, context, middlewareData } = useFloating({
-    placement: rest.placement,
-    strategy,
-    open,
-    onOpenChange(open) {
-      setOpen(open);
-    },
-    whileElementsMounted: autoUpdate,
-    middleware: [
-      hide(),
-      shift(),
-      flip(),
-      arrow({
-        element: arrowRef,
-      }),
-      offset(rest.offset),
-    ],
-  });
+  const { refs, floatingStyles, context, middlewareData, placement } =
+    useFloating({
+      placement: rest.placement,
+      strategy,
+      open,
+      onOpenChange(open) {
+        setOpen(open);
+      },
+      whileElementsMounted: autoUpdate,
+      middleware: [
+        hide(),
+        shift(),
+        flip(),
+        arrow({
+          element: arrowRef,
+        }),
+        offset(rest.offset),
+      ],
+    });
+
+  const content = useMemo(() => {
+    if (typeof rest.content === "function") {
+      return rest.content(placement);
+    } else {
+      return rest.content;
+    }
+  }, [placement, rest.content]);
 
   const click = useClick(context, {
     enabled: isTriggerClick && enabled,
@@ -104,7 +119,7 @@ const Popover: React.FC<PopoverProps> = ({
       <Wrapper ref={wrapperRef} {...getReferenceProps()}>
         {children}
       </Wrapper>
-      {open && (
+      {true && (
         <FloatingPortal>
           <div
             ref={refs.setFloating}
@@ -127,18 +142,17 @@ const Popover: React.FC<PopoverProps> = ({
           >
             <div className={className}>
               {content}
-              {!!rest.arrow && (
-                <div
+              {hasArrow && (
+                <FloatingArrow
+                  style={{ transform: `rotate(180deg)` }}
+                  fill="#1f2329"
+                  height={8}
+                  width={16}
+                  d="M4.438 1.993L7.253 5.16a1 1 0 001.494 0l2.815-3.166A5.938 5.938 0 0116 0H0c1.696 0 3.311.725 4.438 1.993z"
+                  viewBox="0 0 16 8"
                   ref={arrowRef}
-                  style={{
-                    position: "absolute",
-                    display: "flex",
-                    left: middlewareData.arrow?.x,
-                    top: middlewareData.arrow?.y,
-                  }}
-                >
-                  {rest.arrow}
-                </div>
+                  context={context}
+                />
               )}
             </div>
           </div>

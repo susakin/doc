@@ -1,5 +1,5 @@
 import React from "react";
-import Popover from "./Popover";
+import Popover, { PopoverProps } from "./Popover";
 import styles from "./index.module.less";
 import { Arrow } from "../Icon";
 import cs from "classnames";
@@ -7,9 +7,8 @@ import cs from "classnames";
 type TooltipProps = {
   children?: React.ReactElement;
   content?: React.ReactNode;
-  hasArrow?: boolean;
   size?: "default" | "small";
-};
+} & Pick<PopoverProps, "placement" | "hasArrow">;
 
 const className = "tooltip";
 
@@ -18,17 +17,14 @@ const Tooltip: React.FC<TooltipProps> = ({
   content,
   hasArrow = true,
   size = "default",
+  placement = "top",
 }) => {
   return (
     <Popover
-      placement="top"
+      placement={placement}
       offset={8}
       className={styles[`zoom-in`]}
-      arrow={
-        hasArrow && (
-          <Arrow viewBox="0 0 16 8" width={16} height={8} fill="#1f2329" />
-        )
-      }
+      hasArrow={hasArrow}
       content={
         <div
           className={cs(styles[`${className}`], styles[`${className}-${size}`])}
