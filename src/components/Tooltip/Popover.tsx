@@ -1,11 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Wrapper } from "./Wrapper";
-import {
-  Alignment,
-  Placement,
-  Side,
-  UseFloatingOptions,
-} from "@floating-ui/react";
+import { Placement, UseFloatingOptions } from "@floating-ui/react";
 
 import {
   useFloating,
@@ -21,13 +16,14 @@ import {
   safePolygon,
   arrow,
   useRole,
-  FloatingArrow,
   hide,
 } from "@floating-ui/react";
 
 export type PopoverProps = {
   children?: React.ReactElement;
-  content?: ((placement: Placement) => React.ReactNode) | React.ReactNode;
+  content?:
+    | ((side: Placement, arrowRef: any, context: any) => React.ReactNode)
+    | React.ReactNode;
   trigger?: "click" | "hover";
   strategy?: "fixed" | "absolute";
   openDelay?: number;
@@ -35,8 +31,7 @@ export type PopoverProps = {
   enabled?: boolean;
   onOpenChange?: (open: boolean) => void;
   hideWhenContentClick?: boolean;
-  className?: string;
-  hasArrow?: boolean;
+  renderToBody?: boolean;
 } & Pick<UseFloatingOptions, "placement">;
 
 const Popover: React.FC<PopoverProps> = ({
@@ -47,8 +42,7 @@ const Popover: React.FC<PopoverProps> = ({
   enabled = true,
   onOpenChange,
   hideWhenContentClick,
-  className,
-  hasArrow,
+  renderToBody = true,
   ...rest
 }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -82,11 +76,11 @@ const Popover: React.FC<PopoverProps> = ({
 
   const content = useMemo(() => {
     if (typeof rest.content === "function") {
-      return rest.content(placement);
+      return rest.content(placement, arrowRef, context);
     } else {
       return rest.content;
     }
-  }, [placement, rest.content]);
+  }, [placement, rest.content, arrowRef, context]);
 
   const click = useClick(context, {
     enabled: isTriggerClick && enabled,
@@ -114,13 +108,15 @@ const Popover: React.FC<PopoverProps> = ({
     refs.setReference(wrapperRef?.current?.element as any);
   }, []);
 
+  const Container: any = renderToBody ? FloatingPortal : React.Fragment;
+
   return (
     <>
       <Wrapper ref={wrapperRef} {...getReferenceProps()}>
         {children}
       </Wrapper>
-      {true && (
-        <FloatingPortal>
+      {open && (
+        <Container>
           <div
             ref={refs.setFloating}
             style={{
@@ -140,23 +136,9 @@ const Popover: React.FC<PopoverProps> = ({
                 : undefined
             }
           >
-            <div className={className}>
-              {content}
-              {hasArrow && (
-                <FloatingArrow
-                  style={{ transform: `rotate(180deg)` }}
-                  fill="#1f2329"
-                  height={8}
-                  width={16}
-                  d="M4.438 1.993L7.253 5.16a1 1 0 001.494 0l2.815-3.166A5.938 5.938 0 0116 0H0c1.696 0 3.311.725 4.438 1.993z"
-                  viewBox="0 0 16 8"
-                  ref={arrowRef}
-                  context={context}
-                />
-              )}
-            </div>
+            {content}
           </div>
-        </FloatingPortal>
+        </Container>
       )}
     </>
   );

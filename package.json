@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.19",
+    "@types/node": "^20.14.12",
+    "ahooks": "^3.8.0",
     "classnames": "^2.5.1",
     "less": "^4.2.0",
     "react": "^18.3.1",

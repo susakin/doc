@@ -1,1 +1,1 @@
-export { default as Arrow } from "./Arrow";
+export { default as Font } from "./Font";
