@@ -2,13 +2,13 @@ import React from "react";
 import Popover from "../Tooltip/Popover";
 import styles from "./index.module.less";
 import cs from "classnames";
-import { Side } from "@floating-ui/react";
 import "@/assets/less/variable.less";
 import Tooltip from "../Tooltip";
 import { default as ColorButton } from "./Button";
-import { Font } from "../Icon";
+import { FontcolorOutlined } from "../Icon";
 import { usePropsValue } from "@/hooks/usePropsValue";
 import Button from "../Button";
+import { getSideAnimateClassName } from "@/utils";
 
 type ColorSetting = {
   color: string;
@@ -168,7 +168,7 @@ const Picker: React.FC<PickerProps> = ({ className, ...rest }) => {
                   setValue((v) => ({ ...v, color }));
                 }}
               >
-                <Font size={22} viewBox="0 0 22 22" fill={color} />
+                <FontcolorOutlined size={22} viewBox="0 0 22 22" fill={color} />
               </ColorButton>
             </Tooltip>
           );
@@ -232,14 +232,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ children }) => {
     <Popover
       offset={8}
       content={(placement) => {
-        const [side] = placement.split("-") as [Side];
-        const position = {
-          left: "slide-right-in",
-          right: "slide-left-in",
-          top: "slide-bottom-in",
-          bottom: "slide-up-in",
-        };
-        return <Picker className={position[side]} />;
+        return <Picker className={getSideAnimateClassName(placement)} />;
       }}
     >
       {children}

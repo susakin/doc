@@ -1,7 +1,7 @@
 import React from "react";
 import Svg, { SvgProps } from "./Svg";
 
-const Font: React.FC<SvgProps> = (props) => {
+const FontcolorOutlined: React.FC<SvgProps> = (props) => {
   return (
     <Svg {...props}>
       <title>{props?.ariaLabel}</title>
@@ -10,4 +10,4 @@ const Font: React.FC<SvgProps> = (props) => {
   );
 };
 
-export default Font;
+export default FontcolorOutlined;
