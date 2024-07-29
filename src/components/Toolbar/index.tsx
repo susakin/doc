@@ -6,6 +6,7 @@ import Popover from "../Tooltip/Popover";
 import { getSideAnimateClassName } from "@/utils";
 import { Placement } from "@floating-ui/react";
 import Tooltip from "../Tooltip";
+import { TextOutlined, TypographyOutlined, BoldOutlined } from "../Icon";
 
 type Item = {
   icon?: React.ReactNode;
@@ -13,6 +14,7 @@ type Item = {
   devider?: boolean;
   unique?: boolean;
   tooltip?: React.ReactNode;
+  active?: boolean;
 };
 
 type ToolbarProps = {};
@@ -21,10 +23,34 @@ const classNamePrefix = "toolbar";
 
 const Toolbar: React.FC<ToolbarProps> = () => {
   const items = useMemo<(Item | undefined)[]>(() => {
-    return [];
+    const svgProps = { width: "1em", height: "1em", viewBox: "0 0 24 24" };
+    return [
+      {
+        icon: <TextOutlined {...svgProps} />,
+        submenu: <></>,
+        devider: true,
+      },
+      {
+        icon: <TypographyOutlined {...svgProps} />,
+        submenu: <></>,
+        devider: true,
+      },
+      {
+        icon: <BoldOutlined {...svgProps} />,
+        tooltip: (
+          <>
+            <span>
+              <span>粗体</span>
+              <span> (Ctrl + B)</span>
+            </span>
+          </>
+        ),
+        active: true,
+      },
+    ];
   }, []);
 
-  function getRenderItem({ icon, submenu, unique, tooltip, ...rest }: Item) {
+  function getRenderItem({ icon, submenu, unique, tooltip, active }: Item) {
     const arrow = (
       <div className={styles[`${classNamePrefix}-item-submenu`]}>
         <DownBoldOutlined viewBox="0 0 24 24" height="1em" width="1em" />
@@ -36,6 +62,7 @@ const Toolbar: React.FC<ToolbarProps> = () => {
         <div
           className={cs(styles[`${classNamePrefix}-item`], {
             [styles[`${classNamePrefix}-item-unique`]]: unique,
+            [styles[`${classNamePrefix}-item-active`]]: active,
           })}
         >
           <div className={styles[`${classNamePrefix}-item-icon`]}>{icon}</div>

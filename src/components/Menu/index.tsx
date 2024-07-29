@@ -7,6 +7,7 @@ import Popover from "../Tooltip/Popover";
 import { Placement } from "@floating-ui/react";
 import { getSideAnimateClassName } from "@/utils";
 import RightSmallOutlined from "../Icon/RightSmallOutlined";
+import TextOutlined from "../Icon/TextOutlined";
 
 const classNamePrefix = "menu";
 
@@ -24,8 +25,13 @@ type Item = {
 };
 
 const Menu: React.FC = () => {
+  const svgProps = { width: "1em", height: "1em", viewBox: "0 0 24 24" };
   const items = useMemo<Item[]>(() => {
-    return [];
+    return [
+      {
+        icon: <TextOutlined {...svgProps} />,
+      },
+    ];
   }, []);
 
   function getRenderItem({
