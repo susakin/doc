@@ -17,15 +17,23 @@
     width: 230px;
 
     &-item {
-      min-height: 32px;
       padding: 4px;
       border-radius: 4px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      cursor: pointer;
 
       &-active {
 
+        .menu-inner-item-icon,
         .menu-inner-item-text,
         .menu-inner-item-suffix {
           color: #336df4;
+        }
+
+        .menu-inner-item-suffix {
+          font-size: 16px;
         }
       }
 
@@ -45,15 +53,17 @@
         min-width: 0;
         margin-left: 16px;
         color: #1f2329;
-        width: 100%;
         font-size: 14px;
         line-height: 22px;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
-        margin-left: 4px;
         padding-right: 4px;
         position: relative;
+      }
+
+      &-suffix {
+        display: flex;
       }
 
       &:hover {

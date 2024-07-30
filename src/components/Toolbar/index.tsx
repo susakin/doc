@@ -7,6 +7,7 @@ import { getSideAnimateClassName } from "@/utils";
 import { Placement } from "@floating-ui/react";
 import Tooltip from "../Tooltip";
 import { TextOutlined, TypographyOutlined, BoldOutlined } from "../Icon";
+import Typography from "../Typography";
 
 type Item = {
   icon?: React.ReactNode;
@@ -32,7 +33,7 @@ const Toolbar: React.FC<ToolbarProps> = () => {
       },
       {
         icon: <TypographyOutlined {...svgProps} />,
-        submenu: <></>,
+        submenu: <Typography />,
         devider: true,
       },
       {
@@ -69,7 +70,8 @@ const Toolbar: React.FC<ToolbarProps> = () => {
           {!!submenu &&
             (unique ? (
               <Popover
-                placement="bottom"
+                placement="bottom-start"
+                offset={10}
                 content={(placement: Placement) => {
                   return (
                     <div className={getSideAnimateClassName(placement)}>
@@ -99,7 +101,8 @@ const Toolbar: React.FC<ToolbarProps> = () => {
       return (
         <>
           <Popover
-            placement="bottom"
+            placement="bottom-start"
+            offset={10}
             content={(placement: Placement) => {
               return (
                 <div className={getSideAnimateClassName(placement)}>

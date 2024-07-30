@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import styles from "./index.module.less";
 import cs from "classnames";
 import DoneOutlined from "../Icon/DoneOutlined";
@@ -7,11 +7,10 @@ import Popover from "../Tooltip/Popover";
 import { Placement } from "@floating-ui/react";
 import { getSideAnimateClassName } from "@/utils";
 import RightSmallOutlined from "../Icon/RightSmallOutlined";
-import TextOutlined from "../Icon/TextOutlined";
 
 const classNamePrefix = "menu";
 
-type Item = {
+export type Item = {
   icon?: React.ReactNode;
   text?: React.ReactNode;
   suffix?: React.ReactNode;
@@ -22,18 +21,14 @@ type Item = {
   active?: boolean;
   submenu?: React.ReactNode;
   devider?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 };
 
-const Menu: React.FC = () => {
-  const svgProps = { width: "1em", height: "1em", viewBox: "0 0 24 24" };
-  const items = useMemo<Item[]>(() => {
-    return [
-      {
-        icon: <TextOutlined {...svgProps} />,
-      },
-    ];
-  }, []);
+type MenuProps = {
+  items?: Item[];
+};
 
+const Menu: React.FC<MenuProps> = ({ items }) => {
   function getRenderItem({
     icon,
     render,
@@ -43,6 +38,7 @@ const Menu: React.FC = () => {
     tooltip,
     submenu,
     disabled,
+    onClick,
   }: Item) {
     if (render) {
       return render();
@@ -53,6 +49,7 @@ const Menu: React.FC = () => {
           [styles[`${classNamePrefix}-inner-item-active`]]: active,
           [styles[`${classNamePrefix}-inner-item-disabled`]]: disabled,
         })}
+        onClick={onClick}
       >
         <div className={styles[`${classNamePrefix}-inner-item-icon`]}>
           {icon}
@@ -85,24 +82,32 @@ const Menu: React.FC = () => {
       </Popover>;
     }
 
-    return (
-      <>
-        <Tooltip content={tooltip}>{item}</Tooltip>
-      </>
-    );
+    if (tooltip) {
+      return (
+        <>
+          <Tooltip content={tooltip} placement="right" offset={10}>
+            {item}
+          </Tooltip>
+        </>
+      );
+    }
+    return <>{item}</>;
   }
 
   return (
     <div className={styles[`${classNamePrefix}`]}>
       <div className={styles[`${classNamePrefix}-inner`]}>
-        {items.map((item) => {
+        {items?.map((item, index) => {
           const { devider } = item;
           const renderItem = getRenderItem(item);
           return (
             <>
               {renderItem}
               {devider && (
-                <div className={styles[`${classNamePrefix}-inner-devider`]} />
+                <div
+                  className={styles[`${classNamePrefix}-inner-devider`]}
+                  key={index}
+                />
               )}
             </>
           );
