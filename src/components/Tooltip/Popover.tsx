@@ -20,7 +20,7 @@ import {
 } from "@floating-ui/react";
 
 export type PopoverProps = {
-  children?: React.ReactElement;
+  children?: React.ReactElement | ((open: boolean) => React.ReactNode);
   content?:
     | ((side: Placement, arrowRef: any, context: any) => React.ReactNode)
     | React.ReactNode;
@@ -35,7 +35,6 @@ export type PopoverProps = {
 } & Pick<UseFloatingOptions, "placement">;
 
 const Popover: React.FC<PopoverProps> = ({
-  children,
   trigger = "hover",
   openDelay = 0,
   strategy = "absolute",
@@ -109,6 +108,8 @@ const Popover: React.FC<PopoverProps> = ({
   }, []);
 
   const Container: any = renderToBody ? FloatingPortal : React.Fragment;
+  const children =
+    typeof rest.children === "function" ? rest.children(open) : rest.children;
 
   return (
     <>

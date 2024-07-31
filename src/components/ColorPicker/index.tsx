@@ -1,14 +1,12 @@
 import React from "react";
-import Popover from "../Tooltip/Popover";
 import styles from "./index.module.less";
 import cs from "classnames";
 import "@/assets/less/variable.less";
 import Tooltip from "../Tooltip";
 import { default as ColorButton } from "./Button";
-import { FontcolorOutlined } from "../Icon";
+import { Font } from "../Icon";
 import { usePropsValue } from "@/hooks/usePropsValue";
 import Button from "../Button";
-import { getSideAnimateClassName } from "@/utils";
 
 type ColorSetting = {
   color: string;
@@ -135,8 +133,9 @@ const colorConfig: Color[] = [
   },
 ];
 
-const Picker: React.FC<PickerProps> = ({ className, ...rest }) => {
-  const classNamePrefix = "picker";
+const classNamePrefix = "color-picker";
+
+const ColorPicker: React.FC<PickerProps> = ({ className, ...rest }) => {
   const [value, setValue] = usePropsValue<ColorSetting>({
     value: rest.value,
     defaultValue: rest.defaultValue || defaultColorSetting,
@@ -168,7 +167,7 @@ const Picker: React.FC<PickerProps> = ({ className, ...rest }) => {
                   setValue((v) => ({ ...v, color }));
                 }}
               >
-                <FontcolorOutlined size={22} viewBox="0 0 22 22" fill={color} />
+                <Font size={22} viewBox="0 0 22 22" fill={color} />
               </ColorButton>
             </Tooltip>
           );
@@ -220,23 +219,6 @@ const Picker: React.FC<PickerProps> = ({ className, ...rest }) => {
         </Button>
       </div>
     </div>
-  );
-};
-
-type ColorPickerProps = {
-  children?: React.ReactElement;
-};
-
-const ColorPicker: React.FC<ColorPickerProps> = ({ children }) => {
-  return (
-    <Popover
-      offset={8}
-      content={(placement) => {
-        return <Picker className={getSideAnimateClassName(placement)} />;
-      }}
-    >
-      {children}
-    </Popover>
   );
 };
 

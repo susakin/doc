@@ -5,6 +5,8 @@ import {
   LeftAlignmentOutlined,
   RightAlignmentOutlined,
   MaybeOutlined,
+  IncreaseIndentationOutlined,
+  ReduceIndentationOutlined,
 } from "../Icon";
 
 const Typography: React.FC = () => {
@@ -29,11 +31,16 @@ const Typography: React.FC = () => {
         tooltip: "Ctrl + Shift + R",
       },
       {
-        icon: <LeftAlignmentOutlined {...svgProps} />,
+        icon: <IncreaseIndentationOutlined {...svgProps} />,
         text: "增加缩进",
         tooltip: "无法缩进当前内容块",
         disabled: true,
         suffix: <MaybeOutlined {...svgProps} />,
+      },
+      {
+        icon: <ReduceIndentationOutlined {...svgProps} />,
+        text: "减少缩进",
+        disabled: true,
       },
     ];
   }, []);

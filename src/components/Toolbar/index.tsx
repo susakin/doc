@@ -1,13 +1,25 @@
 import React, { useMemo } from "react";
 import styles from "./index.module.less";
 import cs from "classnames";
-import { DownBoldOutlined } from "../Icon";
+import {
+  DownBoldOutlined,
+  FontcolorOutlined,
+  GlobalLinkOutlined,
+  ItalicOutlined,
+  UnderlineOutlined,
+} from "../Icon";
 import Popover from "../Tooltip/Popover";
 import { getSideAnimateClassName } from "@/utils";
 import { Placement } from "@floating-ui/react";
 import Tooltip from "../Tooltip";
-import { TextOutlined, TypographyOutlined, BoldOutlined } from "../Icon";
+import {
+  TextOutlined,
+  TypographyOutlined,
+  BoldOutlined,
+  HorizontalLineOutlined,
+} from "../Icon";
 import Typography from "../Typography";
+import ColorPicker from "../ColorPicker";
 
 type Item = {
   icon?: React.ReactNode;
@@ -21,6 +33,61 @@ type Item = {
 type ToolbarProps = {};
 
 const classNamePrefix = "toolbar";
+
+const Arrow = function ({ open }: { open: boolean }) {
+  return (
+    <div
+      className={cs(styles[`${classNamePrefix}-item-submenu`], {
+        [styles[`${classNamePrefix}-item-submenu-hovered`]]: open,
+      })}
+    >
+      <span className={styles[`${classNamePrefix}-item-submenu-icon`]}>
+        <DownBoldOutlined viewBox="0 0 24 24" height="1em" width="1em" />
+      </span>
+    </div>
+  );
+};
+
+const MenuItem = function ({
+  unique,
+  active,
+  icon,
+  submenu,
+  open,
+}: Item & { open?: boolean }) {
+  return (
+    <>
+      <div
+        className={cs(styles[`${classNamePrefix}-item`], {
+          [styles[`${classNamePrefix}-item-unique`]]: unique,
+          [styles[`${classNamePrefix}-item-active`]]: active,
+          [styles[`${classNamePrefix}-item-hovered`]]: open && !unique,
+        })}
+      >
+        <div className={styles[`${classNamePrefix}-item-icon`]}>{icon}</div>
+        {!!submenu &&
+          (unique ? (
+            <Popover
+              placement="bottom"
+              renderToBody={false}
+              offset={10}
+              content={(placement: Placement) => {
+                return (
+                  <div className={getSideAnimateClassName(placement)}>
+                    {submenu}
+                  </div>
+                );
+              }}
+            >
+              {(open) => <Arrow open={open} />}
+            </Popover>
+          ) : (
+            <Arrow open={false} />
+          ))}
+      </div>
+    </>
+  );
+};
 
 const Toolbar: React.FC<ToolbarProps> = () => {
   const items = useMemo<(Item | undefined)[]>(() => {
@@ -38,61 +105,49 @@ const Toolbar: React.FC<ToolbarProps> = () => {
       },
       {
         icon: <BoldOutlined {...svgProps} />,
-        tooltip: (
-          <>
-            <span>
-              <span>粗体</span>
-              <span> (Ctrl + B)</span>
-            </span>
-          </>
-        ),
+        tooltip: "粗体 (Ctrl + B)",
         active: true,
+      },
+      {
+        icon: <HorizontalLineOutlined {...svgProps} />,
+        tooltip: "粗体 (Ctrl + Sfhit + X)",
+      },
+      {
+        icon: <ItalicOutlined {...svgProps} />,
+        tooltip: "斜体 (Ctrl + I)",
+      },
+      {
+        icon: <UnderlineOutlined {...svgProps} />,
+        tooltip: "下划线 (Ctrl + U)",
+      },
+      {
+        icon: <GlobalLinkOutlined {...svgProps} />,
+        tooltip: "链接 (Ctrl + K)",
+      },
+      {
+        unique: true,
+        icon: (
+          <span className={styles[`font-icon`]}>
+            <FontcolorOutlined {...svgProps} />
+          </span>
+        ),
+        submenu: <ColorPicker />,
       },
     ];
   }, []);
 
   function getRenderItem({ icon, submenu, unique, tooltip, active }: Item) {
-    const arrow = (
-      <div className={styles[`${classNamePrefix}-item-submenu`]}>
-        <DownBoldOutlined viewBox="0 0 24 24" height="1em" width="1em" />
-      </div>
-    );
-
-    const item = (
-      <>
-        <div
-          className={cs(styles[`${classNamePrefix}-item`], {
-            [styles[`${classNamePrefix}-item-unique`]]: unique,
-            [styles[`${classNamePrefix}-item-active`]]: active,
-          })}
-        >
-          <div className={styles[`${classNamePrefix}-item-icon`]}>{icon}</div>
-          {!!submenu &&
-            (unique ? (
-              <Popover
-                placement="bottom-start"
-                offset={10}
-                content={(placement: Placement) => {
-                  return (
-                    <div className={getSideAnimateClassName(placement)}>
-                      {submenu}
-                    </div>
-                  );
-                }}
-              >
-                {arrow}
-              </Popover>
-            ) : (
-              arrow
-            ))}
-        </div>
-      </>
-    );
-
     if (tooltip) {
       return (
         <>
-          <Tooltip content={tooltip}>{item}</Tooltip>
+          <Tooltip content={tooltip}>
+            <MenuItem
+              icon={icon}
+              submenu={submenu}
+              unique={unique}
+              active={active}
+            />
+          </Tooltip>
         </>
       );
     }
@@ -103,6 +158,7 @@ const Toolbar: React.FC<ToolbarProps> = () => {
           <Popover
             placement="bottom-start"
             offset={10}
+            renderToBody={false}
             content={(placement: Placement) => {
               return (
                 <div className={getSideAnimateClassName(placement)}>
@@ -111,12 +167,22 @@ const Toolbar: React.FC<ToolbarProps> = () => {
               );
             }}
           >
-            {item}
+            {(open) => (
+              <MenuItem
+                open={open}
+                icon={icon}
+                submenu={submenu}
+                unique={unique}
+                active={active}
+              />
+            )}
           </Popover>
         </>
       );
     }
-    return <>{item}</>;
+    return (
+      <MenuItem icon={icon} submenu={submenu} unique={unique} active={active} />
+    );
   }
 
   return (
