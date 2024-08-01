@@ -37,7 +37,9 @@ const Tooltip: React.FC<TooltipProps> = ({
         return (
           <div
             className={styles[`zoom-in`]}
-            style={{ transformOrigin: `${origin[side]} center` }}
+            style={{
+              transformOrigin: `${origin[side]} center`,
+            }}
           >
             <div
               className={cs(

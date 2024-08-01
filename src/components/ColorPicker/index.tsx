@@ -8,7 +8,7 @@ import { Font } from "../Icon";
 import { usePropsValue } from "@/hooks/usePropsValue";
 import Button from "../Button";
 
-type ColorSetting = {
+export type ColorSetting = {
   color: string;
   backgroundColor: string;
 };

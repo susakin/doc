@@ -20,6 +20,7 @@ import {
 } from "../Icon";
 import Typography from "../Typography";
 import ColorPicker from "../ColorPicker";
+import useColorPicker from "./useColorPicker";
 
 type Item = {
   icon?: React.ReactNode;
@@ -34,7 +35,7 @@ type ToolbarProps = {};
 
 const classNamePrefix = "toolbar";
 
-const Arrow = function ({ open }: { open: boolean }) {
+const Arrow = function ({ open }: { open?: boolean }) {
   return (
     <div
       className={cs(styles[`${classNamePrefix}-item-submenu`], {
@@ -90,6 +91,8 @@ const MenuItem = function ({
 };
 
 const Toolbar: React.FC<ToolbarProps> = () => {
+  const colorPicker = useColorPicker();
+
   const items = useMemo<(Item | undefined)[]>(() => {
     const svgProps = { width: "1em", height: "1em", viewBox: "0 0 24 24" };
     return [
@@ -124,17 +127,9 @@ const Toolbar: React.FC<ToolbarProps> = () => {
         icon: <GlobalLinkOutlined {...svgProps} />,
         tooltip: "链接 (Ctrl + K)",
       },
-      {
-        unique: true,
-        icon: (
-          <span className={styles[`font-icon`]}>
-            <FontcolorOutlined {...svgProps} />
-          </span>
-        ),
-        submenu: <ColorPicker />,
-      },
+      colorPicker,
     ];
-  }, []);
+  }, [colorPicker]);
 
   function getRenderItem({ icon, submenu, unique, tooltip, active }: Item) {
     if (tooltip) {
@@ -159,9 +154,13 @@ const Toolbar: React.FC<ToolbarProps> = () => {
             placement="bottom-start"
             offset={10}
             renderToBody={false}
+            hasMaxHeight
             content={(placement: Placement) => {
               return (
-                <div className={getSideAnimateClassName(placement)}>
+                <div
+                  className={getSideAnimateClassName(placement)}
+                  style={{ height: "100%" }}
+                >
                   {submenu}
                 </div>
               );

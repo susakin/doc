@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Wrapper } from "./Wrapper";
-import { Placement, UseFloatingOptions } from "@floating-ui/react";
+import { Placement, size, UseFloatingOptions } from "@floating-ui/react";
 
 import {
   useFloating,
@@ -32,6 +32,8 @@ export type PopoverProps = {
   onOpenChange?: (open: boolean) => void;
   hideWhenContentClick?: boolean;
   renderToBody?: boolean;
+  hasMaxHeight?: boolean;
+  hasMaxWidth?: boolean;
 } & Pick<UseFloatingOptions, "placement">;
 
 const Popover: React.FC<PopoverProps> = ({
@@ -42,12 +44,16 @@ const Popover: React.FC<PopoverProps> = ({
   onOpenChange,
   hideWhenContentClick,
   renderToBody = true,
+  hasMaxWidth,
+  hasMaxHeight,
   ...rest
 }) => {
   const [open, setOpen] = useState<boolean>(false);
   const wrapperRef = useRef<Wrapper>(null);
   const isTriggerClick = trigger === "click";
   const arrowRef = useRef(null);
+  const [maxHeight, setMaxHeight] = useState<number>();
+  const [maxWidth, setMaxWidth] = useState<number>();
 
   useEffect(() => {
     onOpenChange?.(open);
@@ -65,11 +71,17 @@ const Popover: React.FC<PopoverProps> = ({
       middleware: [
         hide(),
         shift(),
+        offset(rest.offset),
         flip(),
+        size({
+          apply({ availableWidth, availableHeight }) {
+            hasMaxWidth && setMaxWidth(availableWidth);
+            hasMaxHeight && setMaxHeight(availableHeight);
+          },
+        }),
         arrow({
           element: arrowRef,
         }),
-        offset(rest.offset),
       ],
     });
 
@@ -127,6 +139,8 @@ const Popover: React.FC<PopoverProps> = ({
                 : "visible",
               outline: "none",
               ...floatingStyles,
+              height: maxHeight,
+              width: maxWidth,
             }}
             {...getFloatingProps()}
             onClick={
