@@ -22,3 +22,20 @@ export { default as UnderlineOutlined } from "./UnderlineOutlined";
 export { default as GlobalLinkOutlined } from "./GlobalLinkOutlined";
 
 export { default as Font } from "./Font";
+
+export { default as H1Outlined } from "./H1Outlined";
+export { default as H2Outlined } from "./H2Outlined";
+export { default as H3Outlined } from "./H3Outlined";
+export { default as H4Outlined } from "./H4Outlined";
+export { default as H5Outlined } from "./H5Outlined";
+export { default as H6Outlined } from "./H6Outlined";
+export { default as H7Outlined } from "./H7Outlined";
+export { default as H8Outlined } from "./H8Outlined";
+export { default as H9Outlined } from "./H9Outlined";
+export { default as HnOutlined } from "./HnOutlined";
+
+export { default as DisorderListOutlined } from "./DisorderListOutlined";
+export { default as OrderListOutlined } from "./OrderListOutlined";
+
+export { default as ReferenceOutlined } from "./ReferenceOutlined";
+export { default as CalloutOutlined } from "./CalloutOutlined";

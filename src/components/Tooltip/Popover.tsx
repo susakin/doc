@@ -34,6 +34,7 @@ export type PopoverProps = {
   renderToBody?: boolean;
   hasMaxHeight?: boolean;
   hasMaxWidth?: boolean;
+  hasSafePolygon?: boolean;
 } & Pick<UseFloatingOptions, "placement">;
 
 const Popover: React.FC<PopoverProps> = ({
@@ -46,6 +47,7 @@ const Popover: React.FC<PopoverProps> = ({
   renderToBody = true,
   hasMaxWidth,
   hasMaxHeight,
+  hasSafePolygon = true,
   ...rest
 }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -69,7 +71,6 @@ const Popover: React.FC<PopoverProps> = ({
       },
       whileElementsMounted: autoUpdate,
       middleware: [
-        hide(),
         shift(),
         offset(rest.offset),
         flip(),
@@ -82,6 +83,7 @@ const Popover: React.FC<PopoverProps> = ({
         arrow({
           element: arrowRef,
         }),
+        hide(),
       ],
     });
 
@@ -104,7 +106,7 @@ const Popover: React.FC<PopoverProps> = ({
       open: openDelay,
     },
     enabled: !isTriggerClick && enabled,
-    handleClose: safePolygon(),
+    handleClose: hasSafePolygon ? safePolygon() : undefined,
   });
   const dismiss = useDismiss(context);
 

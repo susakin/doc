@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./index.module.less";
 import { FontcolorOutlined } from "../Icon";
 import ColorPicker, { ColorSetting } from "../ColorPicker";
+import { svgProps } from "@/utils";
 
-const useColorPicker = () => {
-  const svgProps = { width: "1em", height: "1em", viewBox: "0 0 24 24" };
+export const useColorPicker = () => {
   const [colorSetting, setColorSetting] = useState<ColorSetting>();
 
   return {

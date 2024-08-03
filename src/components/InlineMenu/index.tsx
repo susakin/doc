@@ -1,0 +1,71 @@
+import React, { useMemo } from "react";
+import Menu, { Item } from "../Menu";
+import {
+  CalloutOutlined,
+  DisorderListOutlined,
+  H1Outlined,
+  H2Outlined,
+  HnOutlined,
+  OrderListOutlined,
+  ReferenceOutlined,
+  TextOutlined,
+} from "../Icon";
+import { svgProps } from "@/utils";
+import TitleMenu from "./TitleMenu";
+
+const InlineMenu: React.FC = () => {
+  const menus = useMemo<Item[]>(() => {
+    return [
+      {
+        icon: <TextOutlined {...svgProps} />,
+        text: "正文",
+        tooltip: "Ctrl + Alt + 0",
+      },
+      {
+        icon: <H1Outlined {...svgProps} />,
+        text: "一级标题",
+        tooltip: "Ctrl + Alt + 1",
+      },
+      {
+        icon: <H2Outlined {...svgProps} />,
+        text: "二级标题",
+        tooltip: "Ctrl + Alt + 2",
+      },
+      {
+        icon: <H1Outlined {...svgProps} />,
+        text: "三级标题",
+        tooltip: "Ctrl + Alt + 3",
+      },
+      {
+        icon: <HnOutlined {...svgProps} />,
+        text: "其他标题",
+        submenu: <TitleMenu />,
+      },
+      {
+        icon: <OrderListOutlined {...svgProps} />,
+        text: "有序列表",
+        tooltip: "Ctrl + Shift + 7",
+      },
+      {
+        icon: <DisorderListOutlined {...svgProps} />,
+        text: "有序列表",
+        tooltip: "Ctrl + Shift + 8",
+        devider: true,
+      },
+      {
+        icon: <ReferenceOutlined {...svgProps} />,
+        text: "引用",
+        tooltip: "Ctrl + Shift + >",
+      },
+      {
+        icon: <CalloutOutlined {...svgProps} />,
+        text: "高亮块",
+        tooltip: "高亮块",
+      },
+    ];
+  }, []);
+
+  return <Menu items={menus} />;
+};
+
+export default InlineMenu;

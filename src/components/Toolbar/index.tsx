@@ -3,24 +3,18 @@ import styles from "./index.module.less";
 import cs from "classnames";
 import {
   DownBoldOutlined,
-  FontcolorOutlined,
   GlobalLinkOutlined,
   ItalicOutlined,
   UnderlineOutlined,
 } from "../Icon";
 import Popover from "../Tooltip/Popover";
-import { getSideAnimateClassName } from "@/utils";
+import { getSideAnimateClassName, svgProps } from "@/utils";
 import { Placement } from "@floating-ui/react";
 import Tooltip from "../Tooltip";
-import {
-  TextOutlined,
-  TypographyOutlined,
-  BoldOutlined,
-  HorizontalLineOutlined,
-} from "../Icon";
-import Typography from "../Typography";
-import ColorPicker from "../ColorPicker";
-import useColorPicker from "./useColorPicker";
+import { TextOutlined, BoldOutlined, HorizontalLineOutlined } from "../Icon";
+import { useColorPicker } from "./useColorPicker";
+import { useTypography } from "./useTypography";
+import { useInlineMenu } from "./useInlineMenu";
 
 type Item = {
   icon?: React.ReactNode;
@@ -92,20 +86,12 @@ const MenuItem = function ({
 
 const Toolbar: React.FC<ToolbarProps> = () => {
   const colorPicker = useColorPicker();
-
+  const typography = useTypography();
+  const inlineMenu = useInlineMenu();
   const items = useMemo<(Item | undefined)[]>(() => {
-    const svgProps = { width: "1em", height: "1em", viewBox: "0 0 24 24" };
     return [
-      {
-        icon: <TextOutlined {...svgProps} />,
-        submenu: <></>,
-        devider: true,
-      },
-      {
-        icon: <TypographyOutlined {...svgProps} />,
-        submenu: <Typography />,
-        devider: true,
-      },
+      inlineMenu,
+      typography,
       {
         icon: <BoldOutlined {...svgProps} />,
         tooltip: "粗体 (Ctrl + B)",
@@ -129,7 +115,7 @@ const Toolbar: React.FC<ToolbarProps> = () => {
       },
       colorPicker,
     ];
-  }, [colorPicker]);
+  }, [colorPicker, typography]);
 
   function getRenderItem({ icon, submenu, unique, tooltip, active }: Item) {
     if (tooltip) {

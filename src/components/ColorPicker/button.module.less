@@ -6,24 +6,28 @@
   cursor: pointer;
   outline: none;
 
-  &:before {
-    content: "";
-    border: 1px solid #d0d3d6;
-    transform: scale(.5);
-    transform-origin: 0 0;
-    width: 42px;
-    height: 44px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    border-radius: 4px;
-  }
+
 
   &:hover {
     border-color: #c2d4ff;
 
     &:before {
       display: none;
+    }
+  }
+
+  &:not(.button-selected) {
+    &:before {
+      content: "";
+      border: 1px solid #d0d3d6;
+      transform: scale(.5);
+      transform-origin: 0 0;
+      width: 42px;
+      height: 44px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      border-radius: 4px;
     }
   }
 

@@ -10,3 +10,5 @@ export function getSideAnimateClassName(placement: Placement): string {
   };
   return position[side];
 }
+
+export const svgProps = { width: "1em", height: "1em", viewBox: "0 0 24 24" };

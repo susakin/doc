@@ -5,7 +5,7 @@ import DoneOutlined from "../Icon/DoneOutlined";
 import Tooltip from "../Tooltip";
 import Popover from "../Tooltip/Popover";
 import { Placement } from "@floating-ui/react";
-import { getSideAnimateClassName } from "@/utils";
+import { getSideAnimateClassName, svgProps } from "@/utils";
 import RightSmallOutlined from "../Icon/RightSmallOutlined";
 
 const classNamePrefix = "menu";
@@ -59,9 +59,9 @@ const Menu: React.FC<MenuProps> = ({ items }) => {
         </div>
         <div className={styles[`${classNamePrefix}-inner-item-suffix`]}>
           {active ? (
-            <DoneOutlined viewBox="0 0 24 24" width="1em" height="1em" />
+            <DoneOutlined {...svgProps} />
           ) : !!submenu ? (
-            <RightSmallOutlined viewBox="0 0 24 24" width="1em" height="1em" />
+            <RightSmallOutlined {...svgProps} />
           ) : (
             suffix
           )}
@@ -70,22 +70,28 @@ const Menu: React.FC<MenuProps> = ({ items }) => {
     );
 
     if (submenu) {
-      <Popover
-        placement="right"
-        content={(placement: Placement) => {
-          return (
-            <div className={getSideAnimateClassName(placement)}>{submenu}</div>
-          );
-        }}
-      >
-        {item}
-      </Popover>;
+      return (
+        <Popover
+          placement="right"
+          offset={5}
+          renderToBody={false}
+          content={(placement: Placement) => {
+            return (
+              <div className={getSideAnimateClassName(placement)}>
+                {submenu}
+              </div>
+            );
+          }}
+        >
+          {item}
+        </Popover>
+      );
     }
 
     if (tooltip) {
       return (
         <>
-          <Tooltip content={tooltip} placement="right" offset={10}>
+          <Tooltip content={tooltip} renderToBody placement="right" offset={12}>
             {item}
           </Tooltip>
         </>

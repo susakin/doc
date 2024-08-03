@@ -37,7 +37,21 @@
         display: none;
       }
 
+      &:hover {
+        &:first-child {
+          .color-picker-background-color-button-inner {
+            &:before {
+              display: none;
+            }
+          }
+        }
+      }
+
       &:first-child {
+        &:before {
+          display: block;
+        }
+
         .color-picker-background-color-button-inner {
           &:after {
             content: "";

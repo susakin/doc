@@ -25,6 +25,7 @@ const Tooltip: React.FC<TooltipProps> = ({
     <Popover
       placement={placement}
       offset={8}
+      hasSafePolygon={false}
       {...rest}
       content={(placement, arrowRef, context) => {
         const [side] = placement.split("-") as [Side];
