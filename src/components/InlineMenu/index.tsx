@@ -48,7 +48,7 @@ const InlineMenu: React.FC = () => {
       },
       {
         icon: <DisorderListOutlined {...svgProps} />,
-        text: "有序列表",
+        text: "无序列表",
         tooltip: "Ctrl + Shift + 8",
         devider: true,
       },

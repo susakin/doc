@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Tooltip, Button } from "./components";
 import "./App.css";
-import ColorPicker from "./components/ColorPicker";
+import BlockMenu from "./components/BlockMenu";
 import Toolbar from "./components/Toolbar";
 
 function App() {
@@ -15,9 +15,7 @@ function App() {
           count is {count}
         </button>
       </Tooltip>
-      <ColorPicker>
-        <Button>1111</Button>
-      </ColorPicker>
+      <BlockMenu />
     </>
   );
 }

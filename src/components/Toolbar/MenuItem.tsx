@@ -1,0 +1,114 @@
+import React from "react";
+import styles from "./menuItem.module.less";
+import { Placement } from "@floating-ui/react";
+import { getSideAnimateClassName } from "@/utils";
+import cs from "classnames";
+import Popover from "../Tooltip/Popover";
+import { Item } from ".";
+import { DownBoldOutlined } from "../Icon";
+import Tooltip from "../Tooltip";
+
+type MenuItemProps = {
+  item: Omit<Item, "tooltip" | "devider">;
+  open?: boolean;
+  className?: string;
+};
+
+type MenuArrowProps = {
+  open?: boolean;
+};
+
+const MenuArrow: React.FC<MenuArrowProps> = function ({ open }) {
+  const classNamePrefix = "menu-arrow";
+  return (
+    <div
+      className={cs(styles[`${classNamePrefix}`], {
+        [styles[`${classNamePrefix}-hovered`]]: open,
+      })}
+    >
+      <span className={styles[`${classNamePrefix}-icon`]}>
+        <DownBoldOutlined viewBox="0 0 24 24" height="1em" width="1em" />
+      </span>
+    </div>
+  );
+};
+
+const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
+  const { unique, active, submenu, icon } = item;
+  const classNamePrefix = "menu-item";
+
+  return (
+    <>
+      <div
+        className={cs(styles[`${classNamePrefix}`], className, {
+          [styles[`${classNamePrefix}-unique`]]: unique,
+          [styles[`${classNamePrefix}-hovered`]]: open && !unique,
+          [styles[`${classNamePrefix}-active`]]: active,
+          [styles[`${classNamePrefix}-can-hover`]]: !submenu,
+        })}
+      >
+        <div className={styles[`${classNamePrefix}-icon`]}>{icon}</div>
+        {!!submenu &&
+          (unique ? (
+            <Popover
+              placement="bottom"
+              renderToBody={false}
+              offset={10}
+              content={(placement: Placement) => {
+                return (
+                  <div className={getSideAnimateClassName(placement)}>
+                    {submenu}
+                  </div>
+                );
+              }}
+            >
+              {(open) => <MenuArrow open={open} />}
+            </Popover>
+          ) : (
+            <MenuArrow open={false} />
+          ))}
+      </div>
+    </>
+  );
+};
+
+export default MenuItem;
+
+export function getRenderItem(item: Item) {
+  const { submenu, unique, tooltip } = item;
+  if (tooltip) {
+    return (
+      <>
+        <Tooltip content={tooltip} offset={15}>
+          <MenuItem item={item} />
+        </Tooltip>
+      </>
+    );
+  }
+
+  if (!!submenu && !unique) {
+    return (
+      <>
+        <Popover
+          placement="bottom-start"
+          offset={10}
+          renderToBody={false}
+          hasMaxHeight
+          content={(placement: Placement) => {
+            return (
+              <div
+                className={getSideAnimateClassName(placement)}
+                style={{ height: "100%" }}
+              >
+                {submenu}
+              </div>
+            );
+          }}
+        >
+          {(open) => <MenuItem open={open} item={item} />}
+        </Popover>
+      </>
+    );
+  }
+  return <MenuItem item={item} />;
+}
