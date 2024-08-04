@@ -16,6 +16,7 @@ export type Item = {
   submenu?: React.ReactNode;
   devider?: boolean;
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  danger?: boolean;
 };
 
 type MenuProps = {

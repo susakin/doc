@@ -39,3 +39,8 @@ export { default as OrderListOutlined } from "./OrderListOutlined";
 
 export { default as ReferenceOutlined } from "./ReferenceOutlined";
 export { default as CalloutOutlined } from "./CalloutOutlined";
+
+export { default as DeleteTrashOutlined } from "./DeleteTrashOutlined";
+
+export { default as ClipOutlined } from "./ClipOutlined";
+export { default as CopyOutlined } from "./CopyOutlined";

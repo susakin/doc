@@ -16,12 +16,14 @@ type MenuItemProps = {
 };
 
 const MenuItem: React.FC<MenuItemProps> = ({ item }) => {
-  const { active, disabled, onClick, submenu, icon, text, suffix } = item;
+  const { active, disabled, onClick, submenu, icon, text, suffix, danger } =
+    item;
   return (
     <div
       className={cs(styles[`${classNamePrefix}`], {
         [styles[`${classNamePrefix}-active`]]: active,
         [styles[`${classNamePrefix}-disabled`]]: disabled,
+        [styles[`${classNamePrefix}-danger`]]: danger,
       })}
       onClick={onClick}
     >
