@@ -44,3 +44,7 @@ export { default as DeleteTrashOutlined } from "./DeleteTrashOutlined";
 
 export { default as ClipOutlined } from "./ClipOutlined";
 export { default as CopyOutlined } from "./CopyOutlined";
+
+export { default as NewJoinMeetingOutlined } from "./NewJoinMeetingOutlined";
+
+export { default as DividerOutlined } from "./DividerOutlined";

@@ -1,11 +1,17 @@
 import React, { useMemo } from "react";
 import Menu, { Item } from "../Menu";
-import FlattenMenu from "./FlattenMenu";
 import { svgProps } from "@/utils";
 import { useTypography } from "../Toolbar/useTypography";
 import StyleSetOutlined from "../Icon/StyleSetOutlined";
 import ColorPicker from "../ColorPicker";
-import { ClipOutlined, CopyOutlined, DeleteTrashOutlined } from "../Icon";
+import {
+  ClipOutlined,
+  CopyOutlined,
+  DeleteTrashOutlined,
+  NewJoinMeetingOutlined,
+} from "../Icon";
+import MenuList from "./MeunList";
+import EmptyBlockMenu from "../EmptyBlockMenu";
 
 const BlockMenu: React.FC = () => {
   const typography = useTypography();
@@ -14,7 +20,7 @@ const BlockMenu: React.FC = () => {
       {
         devider: true,
         render() {
-          return <FlattenMenu />;
+          return <MenuList />;
         },
       },
       {
@@ -41,9 +47,16 @@ const BlockMenu: React.FC = () => {
         text: "删除",
         icon: <DeleteTrashOutlined {...svgProps} />,
         danger: true,
+        devider: true,
+      },
+      {
+        text: "在下方添加",
+        icon: <NewJoinMeetingOutlined {...svgProps} />,
+        submenu: <EmptyBlockMenu />,
       },
     ];
   }, [typography]);
+
   return <Menu items={items} />;
 };
 

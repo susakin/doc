@@ -4,9 +4,9 @@ import { Placement } from "@floating-ui/react";
 import { getSideAnimateClassName } from "@/utils";
 import cs from "classnames";
 import Popover from "../Tooltip/Popover";
-import { Item } from ".";
 import { DownBoldOutlined } from "../Icon";
 import Tooltip from "../Tooltip";
+import { Item } from ".";
 
 type MenuItemProps = {
   item: Omit<Item, "tooltip" | "devider">;

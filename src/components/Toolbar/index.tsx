@@ -1,25 +1,13 @@
 import React, { useMemo } from "react";
-import styles from "./index.module.less";
 import { GlobalLinkOutlined, ItalicOutlined, UnderlineOutlined } from "../Icon";
 import { svgProps } from "@/utils";
 import { BoldOutlined, HorizontalLineOutlined } from "../Icon";
 import { useColorPicker } from "./useColorPicker";
 import { useTypography } from "./useTypography";
 import { useInlineMenu } from "./useInlineMenu";
-import { getRenderItem } from "./MenuItem";
-
-export type Item = {
-  icon?: React.ReactNode;
-  submenu?: React.ReactNode;
-  devider?: boolean;
-  unique?: boolean;
-  tooltip?: React.ReactNode;
-  active?: boolean;
-};
+import HorizontalMenu, { Item } from "../HorizontalMenu";
 
 type ToolbarProps = {};
-
-const classNamePrefix = "toolbar";
 
 const Toolbar: React.FC<ToolbarProps> = () => {
   const colorPicker = useColorPicker();
@@ -54,23 +42,7 @@ const Toolbar: React.FC<ToolbarProps> = () => {
     ];
   }, [colorPicker, typography]);
 
-  return (
-    <div className={styles[`${classNamePrefix}`]}>
-      {items
-        ?.filter((item) => !!item)
-        .map((item) => {
-          const renderItem = getRenderItem(item);
-          return (
-            <>
-              {renderItem}
-              {item?.devider && (
-                <div className={styles[`${classNamePrefix}-item-devider`]} />
-              )}
-            </>
-          );
-        })}
-    </div>
-  );
+  return <HorizontalMenu items={items} />;
 };
 
 export default Toolbar;

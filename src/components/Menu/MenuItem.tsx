@@ -27,7 +27,9 @@ const MenuItem: React.FC<MenuItemProps> = ({ item }) => {
       })}
       onClick={onClick}
     >
-      <div className={styles[`${classNamePrefix}-icon`]}>{icon}</div>
+      {!!icon && (
+        <div className={styles[`${classNamePrefix}-icon`]}>{icon}</div>
+      )}
       <div className={styles[`${classNamePrefix}-text`]}>{text}</div>
       <div className={styles[`${classNamePrefix}-suffix`]}>
         {active ? (

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "./index.module.less";
+import styles from "./useColorPicker.module.less";
 import { FontcolorOutlined } from "../Icon";
 import ColorPicker, { ColorSetting } from "../ColorPicker";
 import { svgProps } from "@/utils";
