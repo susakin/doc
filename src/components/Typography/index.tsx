@@ -4,14 +4,14 @@ import {
   CenterAlignmentOutlined,
   LeftAlignmentOutlined,
   RightAlignmentOutlined,
-  MaybeOutlined,
-  IncreaseIndentationOutlined,
-  ReduceIndentationOutlined,
 } from "../Icon";
+import { svgProps } from "@/utils";
+import { useIndentation } from "./useIndentation";
 
 const Typography: React.FC = () => {
+  const indentationItems = useIndentation();
+
   const items = useMemo<Item[]>(() => {
-    const svgProps = { width: "1em", height: "1em", viewBox: "0 0 24 24" };
     return [
       {
         icon: <LeftAlignmentOutlined {...svgProps} />,
@@ -30,20 +30,9 @@ const Typography: React.FC = () => {
         devider: true,
         tooltip: "Ctrl + Shift + R",
       },
-      {
-        icon: <IncreaseIndentationOutlined {...svgProps} />,
-        text: "增加缩进",
-        tooltip: "无法缩进当前内容块",
-        disabled: true,
-        suffix: <MaybeOutlined {...svgProps} />,
-      },
-      {
-        icon: <ReduceIndentationOutlined {...svgProps} />,
-        text: "减少缩进",
-        disabled: true,
-      },
+      ...indentationItems,
     ];
-  }, []);
+  }, [indentationItems]);
   return <Menu items={items} />;
 };
 

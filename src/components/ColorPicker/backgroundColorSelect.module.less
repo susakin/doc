@@ -1,0 +1,54 @@
+.background-color-select {
+  display: flex;
+  flex-wrap: wrap;
+
+  &-button {
+    width: 12.5%;
+    max-width: 26px;
+    background-color: initial;
+    height: 26px;
+    margin-bottom: 4px;
+
+    &:before {
+      display: none;
+    }
+
+    &:hover {
+      &:first-child {
+        .background-color-select-button-inner {
+          &:before {
+            display: none;
+          }
+        }
+      }
+    }
+
+    &:first-child {
+      &:before {
+        display: block;
+      }
+
+      .background-color-select-button-inner {
+        &:after {
+          content: "";
+          position: absolute;
+          width: 1px;
+          height: 56px;
+          top: 2px;
+          left: 22px;
+          background-color: #8f959e;
+          transform: rotate(45deg) scale(.5);
+          transform-origin: -1px -2px;
+        }
+      }
+    }
+
+    &-inner {
+      width: 22px;
+      height: 22px;
+      border-radius: 2px;
+      fill: #1f2329;
+    }
+
+  }
+}

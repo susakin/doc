@@ -2,11 +2,10 @@ import React from "react";
 import styles from "./index.module.less";
 import cs from "classnames";
 import "@/assets/less/variable.less";
-import Tooltip from "../Tooltip";
-import { default as ColorButton } from "./Button";
-import { Font } from "../Icon";
 import { usePropsValue } from "@/hooks/usePropsValue";
 import Button from "../Button";
+import FontColorSelect from "./FontColorSelect";
+import BackgroundColorSelect from "./BackgroundColorSelect";
 
 export type ColorSetting = {
   color: string;
@@ -26,7 +25,7 @@ const defaultColorSetting = {
   backgroundColor: "none",
 };
 
-type Color = {
+export type Color = {
   color: string;
   label: string;
 };
@@ -148,66 +147,21 @@ const ColorPicker: React.FC<PickerProps> = ({ className, ...rest }) => {
   return (
     <div className={cs(className, styles[`${classNamePrefix}`])}>
       <p className={styles[`${classNamePrefix}-title`]}>字体颜色</p>
-      <div className={styles[`${classNamePrefix}-color`]}>
-        {colorConfig.map(({ color, label }, index) => {
-          return (
-            <Tooltip
-              content={label}
-              placement="top"
-              key={index}
-              size="small"
-              hasArrow={false}
-              offset={5}
-              renderToBody={false}
-            >
-              <ColorButton
-                selected={color === value?.color}
-                className={styles[`${classNamePrefix}-color-button`]}
-                onClick={() => {
-                  setValue((v) => ({ ...v, color }));
-                }}
-              >
-                <Font size={22} viewBox="0 0 22 22" fill={color} />
-              </ColorButton>
-            </Tooltip>
-          );
-        })}
-      </div>
+      <FontColorSelect
+        items={colorConfig}
+        selectedColor={value?.color}
+        onClick={({ color }) => {
+          setValue((v) => ({ ...v, color }));
+        }}
+      />
       <p className={styles[`${classNamePrefix}-title`]}>背景颜色</p>
-      <div className={styles[`${classNamePrefix}-background-color`]}>
-        {backgroundColorConfig.map(({ color, label }, index) => {
-          const selected = color === value?.backgroundColor;
-          return (
-            <Tooltip
-              content={label}
-              placement="top"
-              key={index}
-              size="small"
-              hasArrow={false}
-              renderToBody={false}
-              offset={5}
-            >
-              <ColorButton
-                selected={selected}
-                className={styles[`${classNamePrefix}-background-color-button`]}
-                onClick={() => {
-                  setValue((v) => ({ ...v, backgroundColor: color }));
-                }}
-              >
-                <div
-                  style={{
-                    backgroundColor: color,
-                    boxShadow: selected ? "inset 0 0 0 1px #fff" : "",
-                  }}
-                  className={
-                    styles[`${classNamePrefix}-background-color-button-inner`]
-                  }
-                />
-              </ColorButton>
-            </Tooltip>
-          );
-        })}
-      </div>
+      <BackgroundColorSelect
+        items={backgroundColorConfig}
+        selectedColor={value?.backgroundColor}
+        onClick={({ color }) => {
+          setValue((v) => ({ ...v, backgroundColor: color }));
+        }}
+      />
       <div className={styles[`${classNamePrefix}-foot`]}>
         <Button
           className={styles[`${classNamePrefix}-foot-button`]}
