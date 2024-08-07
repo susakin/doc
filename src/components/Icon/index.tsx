@@ -48,3 +48,6 @@ export { default as CopyOutlined } from "./CopyOutlined";
 export { default as NewJoinMeetingOutlined } from "./NewJoinMeetingOutlined";
 
 export { default as DividerOutlined } from "./DividerOutlined";
+export { default as StyleSetOutlined } from "./StyleSetOutlined";
+
+export { default as ReplaceOutlined } from "./ReplaceOutlined";

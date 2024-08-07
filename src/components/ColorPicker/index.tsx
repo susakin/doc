@@ -6,10 +6,14 @@ import { usePropsValue } from "@/hooks/usePropsValue";
 import Button from "../Button";
 import FontColorSelect from "./FontColorSelect";
 import BackgroundColorSelect from "./BackgroundColorSelect";
+import { svgProps } from "@/utils";
+import { ReplaceOutlined } from "../Icon";
 
 export type ColorSetting = {
   color: string;
   backgroundColor: string;
+  borderColor?: string;
+  fillColor?: string;
 };
 
 type PickerProps = {
@@ -18,11 +22,16 @@ type PickerProps = {
   value?: ColorSetting;
   onChange?: (value: ColorSetting) => void;
   defaultValue?: ColorSetting;
+  hasRandom?: boolean;
+  hasBorderColor?: boolean;
+  hasFillColor?: boolean;
 };
 
 const defaultColorSetting = {
   color: "rgb(31, 35, 41)",
   backgroundColor: "none",
+  borderColor: "rgb(255, 165, 61)",
+  fillColor: "rgb(254, 212, 164)",
 };
 
 export type Color = {
@@ -30,7 +39,42 @@ export type Color = {
   label: string;
 };
 
-const backgroundColorConfig: Color[] = [
+const basicBackgroundColor: Color[] = [
+  {
+    label: "透明",
+    color: "none",
+  },
+  {
+    label: "灰色",
+    color: "rgb(187, 191, 196)",
+  },
+  {
+    label: "红色",
+    color: "rgb(247, 105, 100)",
+  },
+  {
+    label: "橙色",
+    color: "rgb(255, 165, 61)",
+  },
+  {
+    label: "黄色",
+    color: "rgb(255, 233, 40)",
+  },
+  {
+    label: "绿色",
+    color: "rgb(98, 210, 86)",
+  },
+  {
+    label: "蓝色",
+    color: "rgba(78, 131, 253, 0.55)",
+  },
+  {
+    label: "紫色",
+    color: "rgba(147, 90, 246, 0.55)",
+  },
+];
+
+const basicFillColor: Color[] = [
   {
     label: "透明",
     color: "none",
@@ -63,41 +107,18 @@ const backgroundColorConfig: Color[] = [
     label: "浅紫色",
     color: "rgba(205, 178, 250, 0.7)",
   },
+];
+
+const backgroundColor: Color[] = [
+  ...basicFillColor,
   {
     label: "中灰色",
     color: "rgba(222, 224, 227, 0.8)",
   },
-  {
-    label: "灰色",
-    color: "rgb(187, 191, 196)",
-  },
-  {
-    label: "红色",
-    color: "rgb(247, 105, 100)",
-  },
-  {
-    label: "橙色",
-    color: "rgb(255, 165, 61)",
-  },
-  {
-    label: "黄色",
-    color: "rgb(255, 233, 40)",
-  },
-  {
-    label: "绿色",
-    color: "rgb(98, 210, 86)",
-  },
-  {
-    label: "蓝色",
-    color: "rgba(78, 131, 253, 0.55)",
-  },
-  {
-    label: "紫色",
-    color: "rgba(147, 90, 246, 0.55)",
-  },
+  ...basicBackgroundColor.slice(1),
 ];
 
-const colorConfig: Color[] = [
+const color: Color[] = [
   {
     label: "黑色",
     color: "rgb(31, 35, 41)",
@@ -132,9 +153,51 @@ const colorConfig: Color[] = [
   },
 ];
 
+const fillColor: Color[] = [
+  ...basicFillColor,
+  {
+    label: "中灰色",
+    color: "rgba(222, 224, 227, 0.7)",
+  },
+  {
+    label: "灰色",
+    color: "rgba(187, 191, 196, 0.5)",
+  },
+  {
+    label: "中红色",
+    color: "rgb(251, 191, 188)",
+  },
+  {
+    label: "中橙色",
+    color: "rgb(254, 212, 164)",
+  },
+  {
+    label: "中黄色",
+    color: "rgb(255, 252, 163)",
+  },
+  {
+    label: "中绿色",
+    color: "rgb(183, 237, 177)",
+  },
+  {
+    label: "中蓝色",
+    color: "rgb(186, 206, 253)",
+  },
+  {
+    label: "中紫色",
+    color: "rgb(205, 178, 250)",
+  },
+];
+
 const classNamePrefix = "color-picker";
 
-const ColorPicker: React.FC<PickerProps> = ({ className, ...rest }) => {
+const ColorPicker: React.FC<PickerProps> = ({
+  className,
+  hasRandom,
+  hasBorderColor,
+  hasFillColor,
+  ...rest
+}) => {
   const [value, setValue] = usePropsValue<ColorSetting>({
     value: rest.value,
     defaultValue: rest.defaultValue || defaultColorSetting,
@@ -146,20 +209,47 @@ const ColorPicker: React.FC<PickerProps> = ({ className, ...rest }) => {
 
   return (
     <div className={cs(className, styles[`${classNamePrefix}`])}>
-      <p className={styles[`${classNamePrefix}-title`]}>字体颜色</p>
+      <div className={styles[`${classNamePrefix}-header`]}>
+        <p className={styles[`${classNamePrefix}-title`]}>字体颜色</p>
+        {hasRandom && (
+          <div className={styles[`${classNamePrefix}-header-random`]}>
+            <ReplaceOutlined {...svgProps} />
+            随机
+          </div>
+        )}
+      </div>
       <FontColorSelect
-        items={colorConfig}
+        items={color}
         selectedColor={value?.color}
         onClick={({ color }) => {
           setValue((v) => ({ ...v, color }));
         }}
       />
-      <p className={styles[`${classNamePrefix}-title`]}>背景颜色</p>
+
+      {hasBorderColor && (
+        <>
+          <p className={styles[`${classNamePrefix}-title`]}>边框颜色</p>
+          <BackgroundColorSelect
+            items={basicBackgroundColor}
+            selectedColor={value?.borderColor}
+            onClick={({ color }) => {
+              setValue((v) => ({ ...v, borderColor: color }));
+            }}
+          />
+        </>
+      )}
+
+      <p className={styles[`${classNamePrefix}-title`]}>
+        {hasFillColor ? "填充" : "背景"}颜色
+      </p>
       <BackgroundColorSelect
-        items={backgroundColorConfig}
-        selectedColor={value?.backgroundColor}
+        items={hasFillColor ? fillColor : backgroundColor}
+        selectedColor={value?.[hasFillColor ? "fillColor" : "backgroundColor"]}
         onClick={({ color }) => {
-          setValue((v) => ({ ...v, backgroundColor: color }));
+          setValue((v) => ({
+            ...v,
+            [hasFillColor ? "fillColor" : "backgroundColor"]: color,
+          }));
         }}
       />
       <div className={styles[`${classNamePrefix}-foot`]}>

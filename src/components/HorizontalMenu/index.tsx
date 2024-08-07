@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./index.module.less";
 
 import { getRenderItem } from "./MenuItem";
+import { Placement } from "@floating-ui/react";
 
 export type Item = {
   icon?: React.ReactNode;
@@ -10,6 +11,8 @@ export type Item = {
   unique?: boolean;
   tooltip?: React.ReactNode;
   active?: boolean;
+  hasArrow?: boolean;
+  placement?: Placement;
 };
 
 type ToolbarProps = {

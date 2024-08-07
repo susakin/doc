@@ -34,7 +34,14 @@ const MenuArrow: React.FC<MenuArrowProps> = function ({ open }) {
 };
 
 const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
-  const { unique, active, submenu, icon } = item;
+  const {
+    unique,
+    active,
+    submenu,
+    icon,
+    placement = "bottom",
+    hasArrow = true,
+  } = item;
   const classNamePrefix = "menu-item";
 
   return (
@@ -51,7 +58,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
         {!!submenu &&
           (unique ? (
             <Popover
-              placement="bottom"
+              placement={placement}
               renderToBody={false}
               offset={10}
               content={(placement: Placement) => {
@@ -64,9 +71,9 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
             >
               {(open) => <MenuArrow open={open} />}
             </Popover>
-          ) : (
+          ) : hasArrow ? (
             <MenuArrow open={false} />
-          ))}
+          ) : null)}
       </div>
     </>
   );
@@ -75,7 +82,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
 export default MenuItem;
 
 export function getRenderItem(item: Item) {
-  const { submenu, unique, tooltip } = item;
+  const { submenu, unique, tooltip, placement = "bottom-start" } = item;
   if (tooltip) {
     return (
       <>
@@ -90,7 +97,7 @@ export function getRenderItem(item: Item) {
     return (
       <>
         <Popover
-          placement="bottom-start"
+          placement={placement}
           offset={10}
           renderToBody={false}
           hasMaxHeight

@@ -13,6 +13,7 @@ const Toolbar: React.FC<ToolbarProps> = () => {
   const colorPicker = useColorPicker();
   const typography = useTypography();
   const inlineMenu = useInlineMenu();
+
   const items = useMemo<(Item | undefined)[]>(() => {
     return [
       inlineMenu,
