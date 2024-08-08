@@ -31,7 +31,7 @@ const defaultColorSetting = {
   color: "rgb(31, 35, 41)",
   backgroundColor: "none",
   borderColor: "rgb(255, 165, 61)",
-  fillColor: "rgb(254, 212, 164)",
+  fillColor: "rgba(254, 212, 164, 0.8)",
 };
 
 export type Color = {
@@ -85,7 +85,7 @@ const basicFillColor: Color[] = [
   },
   {
     label: "浅红色",
-    color: "rgb(251, 191, 188)",
+    color: "rgb(253, 226, 226)",
   },
   {
     label: "浅橙色",
@@ -93,7 +93,7 @@ const basicFillColor: Color[] = [
   },
   {
     label: "浅黄色",
-    color: "rgba(255, 246, 122, 0.8",
+    color: "rgba(255, 246, 122, 0.8)",
   },
   {
     label: "浅绿色",
@@ -191,6 +191,20 @@ const fillColor: Color[] = [
 
 const classNamePrefix = "color-picker";
 
+function createRandomIntGenerator(min: number, max: number, initValue: number) {
+  let lastValue: number = initValue;
+  return function () {
+    let randomInt;
+    do {
+      randomInt = Math.floor(Math.random() * (max - min + 1)) + min;
+    } while (randomInt === lastValue);
+    lastValue = randomInt;
+    return randomInt;
+  };
+}
+
+const randomInt = createRandomIntGenerator(0, 7, 3);
+
 const ColorPicker: React.FC<PickerProps> = ({
   className,
   hasRandom,
@@ -212,7 +226,17 @@ const ColorPicker: React.FC<PickerProps> = ({
       <div className={styles[`${classNamePrefix}-header`]}>
         <p className={styles[`${classNamePrefix}-title`]}>字体颜色</p>
         {hasRandom && (
-          <div className={styles[`${classNamePrefix}-header-random`]}>
+          <div
+            className={styles[`${classNamePrefix}-header-random`]}
+            onClick={() => {
+              const index = randomInt();
+              setValue((v) => ({
+                ...v,
+                borderColor: basicBackgroundColor[index]?.color,
+                fillColor: basicFillColor[index]?.color,
+              }));
+            }}
+          >
             <ReplaceOutlined {...svgProps} />
             随机
           </div>
