@@ -6,7 +6,6 @@ import { getSideAnimateClassName, svgProps } from "@/utils";
 import DoneOutlined from "../Icon/DoneOutlined";
 import RightSmallOutlined from "../Icon/RightSmallOutlined";
 import Popover from "../Tooltip/Popover";
-import { Placement } from "@floating-ui/react";
 import Tooltip from "../Tooltip";
 
 const classNamePrefix = "menu-item";
@@ -55,11 +54,9 @@ export function getRenderItem(item: Item) {
       <Popover
         placement="right"
         offset={5}
-        renderToBody={false}
-        content={(placement: Placement) => {
-          return (
-            <div className={getSideAnimateClassName(placement)}>{submenu}</div>
-          );
+        renderToBody
+        content={({ side }) => {
+          return <div className={getSideAnimateClassName(side)}>{submenu}</div>;
         }}
       >
         <MenuItem item={item} />

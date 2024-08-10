@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "./menuItem.module.less";
-import { Placement } from "@floating-ui/react";
 import { getSideAnimateClassName } from "@/utils";
 import cs from "classnames";
 import Popover from "../Tooltip/Popover";
@@ -67,13 +66,11 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
           (unique ? (
             <Popover
               placement={placement}
-              renderToBody={false}
+              renderToBody
               offset={10}
-              content={(placement: Placement) => {
+              content={({ side }) => {
                 return (
-                  <div className={getSideAnimateClassName(placement)}>
-                    {submenu}
-                  </div>
+                  <div className={getSideAnimateClassName(side)}>{submenu}</div>
                 );
               }}
             >
@@ -107,13 +104,13 @@ export function getRenderItem(item: Item) {
         <Popover
           placement={placement}
           offset={10}
-          renderToBody={false}
+          renderToBody
           hasMaxHeight
-          content={(placement: Placement) => {
+          content={({ side, maxHeight }) => {
             return (
               <div
-                className={getSideAnimateClassName(placement)}
-                style={{ height: "100%" }}
+                className={getSideAnimateClassName(side)}
+                style={{ maxHeight }}
               >
                 {submenu}
               </div>

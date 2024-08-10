@@ -18,14 +18,20 @@ import {
   useRole,
   hide,
 } from "@floating-ui/react";
+import { flushSync } from "react-dom";
 
 export type PopoverProps = {
   children?: React.ReactElement | ((open: boolean) => React.ReactNode);
   content?:
-    | ((side: Placement, arrowRef: any, context: any) => React.ReactNode)
+    | ((props: {
+        side: Placement;
+        arrowRef: any;
+        context: any;
+        maxHeight?: number;
+        maxWidth?: number;
+      }) => React.ReactNode)
     | React.ReactNode;
   trigger?: "click" | "hover";
-  strategy?: "fixed" | "absolute";
   openDelay?: number;
   offset?: number;
   enabled?: boolean;
@@ -40,7 +46,6 @@ export type PopoverProps = {
 const Popover: React.FC<PopoverProps> = ({
   trigger = "hover",
   openDelay = 0,
-  strategy = "absolute",
   enabled = true,
   onOpenChange,
   hideWhenContentClick,
@@ -64,7 +69,7 @@ const Popover: React.FC<PopoverProps> = ({
   const { refs, floatingStyles, context, middlewareData, placement } =
     useFloating({
       placement: rest.placement,
-      strategy,
+      strategy: !renderToBody ? "absolute" : "fixed",
       open,
       onOpenChange(open) {
         setOpen(open);
@@ -76,8 +81,10 @@ const Popover: React.FC<PopoverProps> = ({
         flip(),
         size({
           apply({ availableWidth, availableHeight }) {
-            hasMaxWidth && setMaxWidth(availableWidth);
-            hasMaxHeight && setMaxHeight(availableHeight);
+            flushSync(() => {
+              hasMaxWidth && setMaxWidth(availableWidth);
+              hasMaxHeight && setMaxHeight(availableHeight);
+            });
           },
         }),
         arrow({
@@ -89,11 +96,17 @@ const Popover: React.FC<PopoverProps> = ({
 
   const content = useMemo(() => {
     if (typeof rest.content === "function") {
-      return rest.content(placement, arrowRef, context);
+      return rest.content({
+        side: placement,
+        arrowRef,
+        context,
+        maxHeight,
+        maxWidth,
+      });
     } else {
       return rest.content;
     }
-  }, [placement, rest.content, arrowRef, context]);
+  }, [placement, rest.content, arrowRef, context, maxHeight, maxWidth]);
 
   const click = useClick(context, {
     enabled: isTriggerClick && enabled,
@@ -141,8 +154,6 @@ const Popover: React.FC<PopoverProps> = ({
                 : "visible",
               outline: "none",
               ...floatingStyles,
-              height: maxHeight,
-              width: maxWidth,
             }}
             {...getFloatingProps()}
             onClick={

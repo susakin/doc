@@ -27,7 +27,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       offset={8}
       hasSafePolygon={false}
       {...rest}
-      content={(placement, arrowRef, context) => {
+      content={({ side: placement, arrowRef, context }) => {
         const [side] = placement.split("-") as [Side];
         const origin = {
           right: "left",
