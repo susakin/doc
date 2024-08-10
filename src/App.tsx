@@ -13,7 +13,6 @@ function App() {
 
   return (
     <>
-      <Toolbar />
       <Tooltip content="111111111111111" size="small" placement="left">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
@@ -24,6 +23,8 @@ function App() {
       <HighlightMenu />
       <LinkEditPanel />
       <LinkMenu />
+
+      <Toolbar />
     </>
   );
 }
