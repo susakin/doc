@@ -13,6 +13,8 @@ export type Item = {
   active?: boolean;
   hasArrow?: boolean;
   placement?: Placement;
+  render?: () => React.ReactNode;
+  text?: React.ReactNode;
 };
 
 type ToolbarProps = {

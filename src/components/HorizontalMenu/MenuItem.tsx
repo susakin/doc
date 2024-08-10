@@ -41,6 +41,8 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
     icon,
     placement = "bottom",
     hasArrow = true,
+    render,
+    text,
   } = item;
   const classNamePrefix = "menu-item";
 
@@ -51,10 +53,16 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
           [styles[`${classNamePrefix}-unique`]]: unique,
           [styles[`${classNamePrefix}-hovered`]]: open && !unique,
           [styles[`${classNamePrefix}-active`]]: active,
-          [styles[`${classNamePrefix}-can-hover`]]: !submenu,
+          [styles[`${classNamePrefix}-can-hover`]]: !submenu && !render,
         })}
       >
-        <div className={styles[`${classNamePrefix}-icon`]}>{icon}</div>
+        {render?.()}
+        {!!icon && (
+          <div className={styles[`${classNamePrefix}-icon`]}>{icon}</div>
+        )}
+        {!!text && (
+          <div className={styles[`${classNamePrefix}-text`]}>{text}</div>
+        )}
         {!!submenu &&
           (unique ? (
             <Popover

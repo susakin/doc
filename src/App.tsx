@@ -5,6 +5,8 @@ import BlockMenu from "./components/BlockMenu";
 import Toolbar from "./components/Toolbar";
 import HeaderTitleMenu from "./components/HeaderTitleMenu";
 import HighlightMenu from "./components/HighlightMenu";
+import LinkEditPanel from "./components/Link/LinkEditPanel";
+import LinkMenu from "./components/Link/LinkMenu";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -20,6 +22,8 @@ function App() {
       <BlockMenu />
       <HeaderTitleMenu />
       <HighlightMenu />
+      <LinkEditPanel />
+      <LinkMenu />
     </>
   );
 }

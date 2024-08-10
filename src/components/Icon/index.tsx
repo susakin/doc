@@ -51,3 +51,8 @@ export { default as DividerOutlined } from "./DividerOutlined";
 export { default as StyleSetOutlined } from "./StyleSetOutlined";
 
 export { default as ReplaceOutlined } from "./ReplaceOutlined";
+
+export { default as EditOutlined } from "./EditOutlined";
+
+export { default as CancelLinkOutlined } from "./CancelLinkOutlined";
+export { default as TitleViewOutlined } from "./TitleViewOutlined";
