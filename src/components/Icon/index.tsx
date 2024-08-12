@@ -56,3 +56,5 @@ export { default as EditOutlined } from "./EditOutlined";
 
 export { default as CancelLinkOutlined } from "./CancelLinkOutlined";
 export { default as TitleViewOutlined } from "./TitleViewOutlined";
+
+export { default as DragOutlined } from "./DragOutlined";

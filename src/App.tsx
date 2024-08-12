@@ -7,6 +7,7 @@ import HeaderTitleMenu from "./components/HeaderTitleMenu";
 import HighlightMenu from "./components/HighlightMenu";
 import LinkEditPanel from "./components/Link/LinkEditPanel";
 import LinkMenu from "./components/Link/LinkMenu";
+import MenuTrigger from "./components/MenuTrigger";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -25,6 +26,7 @@ function App() {
       <LinkMenu />
 
       <Toolbar />
+      <MenuTrigger />
     </>
   );
 }
