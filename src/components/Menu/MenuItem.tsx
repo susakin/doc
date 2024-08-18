@@ -54,7 +54,7 @@ export function getRenderItem(item: Item) {
       <Popover
         placement="right"
         offset={5}
-        renderToBody
+        renderToBody={false}
         content={({ side }) => {
           return <div className={getSideAnimateClassName(side)}>{submenu}</div>;
         }}
