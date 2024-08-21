@@ -11,6 +11,10 @@ import { Command } from "../command";
 import { Do } from "../do";
 import { EditorSchema } from "../schema/types";
 import { Schema } from "../schema";
+import { Track } from "../track";
+import { Clipboard } from "../clipboard";
+import { PluginController } from "../plugin";
+import { State } from "../state";
 
 export class EditorKit {
   /** 原始对象 */
@@ -27,6 +31,14 @@ export class EditorKit {
   public readonly do: Do;
   /** 配置模块 */
   public readonly schema: Schema;
+  /** 历史操作与追踪 */
+  public readonly track: Track;
+  /** 剪贴板模块 */
+  public readonly clipboard: Clipboard;
+  /** 插件化控制器 */
+  public readonly plugin: PluginController;
+  /** 内部状态 */
+  public readonly state: State;
 
   constructor(config: EditorSchema, options?: Partial<EditorOptions>) {
     const raw = withReact(createEditor() as Editor & ReactEditor);
@@ -39,10 +51,17 @@ export class EditorKit {
     this.command = new Command(this);
     this.do = new Do(this);
     this.schema = schema;
+    this.track = new Track(this);
+    this.clipboard = new Clipboard(this);
+    this.plugin = new PluginController(this);
+    this.state = new State(this);
   }
 
   public destroy(): void {
     this.command.destroy();
     this.event.destroy();
+    this.track.destroy();
+    this.clipboard.destroy();
+    this.plugin.destroy();
   }
 }
