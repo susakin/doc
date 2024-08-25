@@ -5,7 +5,7 @@ import type { EditorOptions } from "../editor/types";
 import type { EditorSchema } from "../schema/types";
 
 export function makeEditor(
-  config: EditorSchema,
+  config?: EditorSchema,
   options?: Partial<EditorOptions>
 ) {
   return new EditorKit(config, options);

@@ -1,7 +1,7 @@
 import type { NodeEntry, Path } from "../delta";
 import type { BlockElement } from "../delta";
 import { Editor, Transforms } from "../delta";
-import { isBlock } from "../utils/ref";
+import { isBlock, isText } from "../utils/ref";
 import { setUnBlockNode, setUnWrapNodesExactly } from "../utils/set";
 
 export class NormalizeRules {

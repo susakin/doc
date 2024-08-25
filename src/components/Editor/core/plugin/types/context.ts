@@ -1,4 +1,4 @@
-import type { RenderElementProps, RenderLeafProps } from "doc-editor-delta";
+import type { RenderElementProps, RenderLeafProps } from "../../delta";
 
 export type BlockProps = RenderElementProps;
 export type LeafProps = RenderLeafProps;

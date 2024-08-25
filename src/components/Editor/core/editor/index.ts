@@ -15,6 +15,7 @@ import { Track } from "../track";
 import { Clipboard } from "../clipboard";
 import { PluginController } from "../plugin";
 import { State } from "../state";
+import { Reflex } from "../reflex";
 
 export class EditorKit {
   /** 原始对象 */
@@ -40,6 +41,9 @@ export class EditorKit {
   /** 内部状态 */
   public readonly state: State;
 
+  /** 内容节点获取与判断 */
+  public readonly reflex: Reflex;
+
   constructor(config: EditorSchema, options?: Partial<EditorOptions>) {
     const raw = withReact(createEditor() as Editor & ReactEditor);
     this.options = { ...DEFAULT_OPTIONS, ...options };
@@ -55,6 +59,7 @@ export class EditorKit {
     this.clipboard = new Clipboard(this);
     this.plugin = new PluginController(this);
     this.state = new State(this);
+    this.reflex = new Reflex(this);
   }
 
   public destroy(): void {

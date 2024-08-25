@@ -24,7 +24,6 @@ export class Get extends Is {
       }
       return getNodeTupleByDepth(this.raw, at, depth);
     } catch (error) {
-      this.editor.logger.error("GetNodeTuple Error", error);
       return null;
     }
   }

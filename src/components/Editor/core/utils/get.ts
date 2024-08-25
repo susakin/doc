@@ -13,7 +13,8 @@ export const getBlockNode = (
 ) => {
   const { at: location, key, above } = options;
   const match = Editor.above<BlockElement>(editor, {
-    match: (n) => Editor.isBlock(editor, n) && (key ? existKey(n, key) : true),
+    match: (n) =>
+      Editor.isBlock(editor, n as any) && (key ? existKey(n, key) : true),
     at: location,
     // 这里的`Mode`与`TF.setNodes`不一样 会实际改变迭代顺序
     // https://github.com/ianstormtaylor/slate/blob/25be3b/packages/slate/src/interfaces/editor.ts#L350
@@ -34,7 +35,8 @@ export const getNextBlockNode = (
 ) => {
   const { at: location, key, above } = options;
   const match = Editor.next<BlockElement>(editor, {
-    match: (n) => Editor.isBlock(editor, n) && (key ? existKey(n, key) : true),
+    match: (n) =>
+      Editor.isBlock(editor, n as any) && (key ? existKey(n, key) : true),
     at: location,
     mode: above ? "highest" : "lowest",
   });
@@ -113,7 +115,7 @@ export const getClosestBlockPath = (
   const path = [...Editor.path(editor, at)];
   while (path.length) {
     const tuple = Editor.node(editor, path);
-    if (tuple && Editor.isBlock(editor, tuple[0])) return path;
+    if (tuple && Editor.isBlock(editor, tuple[0] as any)) return path;
     path.pop();
   }
   return null;
@@ -131,7 +133,8 @@ export const getClosestBlockNode = (
   const path = [...Editor.path(editor, at)];
   while (path.length) {
     const tuple = Editor.node(editor, path);
-    if (tuple && Editor.isBlock(editor, tuple[0])) return tuple[0];
+    if (tuple && Editor.isBlock(editor, tuple[0] as any))
+      return tuple[0] as any;
     path.pop();
   }
   return null;

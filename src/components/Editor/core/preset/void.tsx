@@ -1,6 +1,12 @@
 import type { FC } from "react";
 
-export const Void: FC<{ className?: string; selectable?: boolean }> = props => {
+type VoidProps = {
+  className?: string;
+  selectable?: string;
+  children?: React.ReactNode;
+};
+
+export const Void: FC<VoidProps> = (props) => {
   const { className, selectable = true } = props;
   return (
     <div

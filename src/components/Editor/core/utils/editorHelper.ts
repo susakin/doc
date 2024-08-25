@@ -27,7 +27,7 @@ export const isMatchedAttributeNode = (
   const match = getBlockNode(editor, { at: path, key: firstKey });
   if (!match) return false;
   const matchedValue = match.block[firstKey];
-  let preKeyData: unknown = matchedValue;
+  let preKeyData: any = matchedValue;
   for (let i = 0, n = keys.length; i < n; ++i) {
     if (isObject(preKeyData)) {
       preKeyData = preKeyData[keys[i]];

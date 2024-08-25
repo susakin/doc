@@ -17,7 +17,7 @@ export class Schema extends NormalizeRules {
     super();
     this.raw = schema;
     this.editor = editor;
-    for (const [key, value] of Object.entries(schema)) {
+    for (const [key, value] of Object.entries(schema || {})) {
       if (value.void) {
         this.void.add(key);
         this.block.add(key);
