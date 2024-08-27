@@ -17,6 +17,8 @@ import { withHistory } from "slate-history";
 import { useCallback, useMemo } from "react";
 import { EditorPlugin, PLUGIN_TYPE } from "./plugin";
 
+const DEFAULT_PRIORITY = 100;
+
 type EditorProps = {
   initialValue?: Descendant[];
   placeholder?: string;
@@ -38,17 +40,22 @@ const Editor: React.FC<EditorProps> = ({
 
   const renderElement = useCallback(
     (props: RenderElementProps) => {
+      const blockPlugins = plugins?.filter(
+        (item) => item.type === PLUGIN_TYPE.BLOCK
+      );
+      blockPlugins?.sort(
+        (a, b) =>
+          (b.priority || DEFAULT_PRIORITY) - (a.priority || DEFAULT_PRIORITY)
+      );
       return (
         <>
-          {plugins
-            ?.filter((item) => item.type === PLUGIN_TYPE.BLOCK)
-            ?.map((item) => {
-              const match = item.match(props);
-              if (match) {
-                return item.render?.(props);
-              }
-              return null;
-            })}
+          {blockPlugins?.map((item) => {
+            const match = item.match(props);
+            if (match) {
+              return item.render?.(props);
+            }
+            return null;
+          })}
         </>
       );
     },
@@ -57,19 +64,31 @@ const Editor: React.FC<EditorProps> = ({
 
   const renderLeaf = useCallback(
     (props: RenderLeafProps) => {
+      const inlinePlugins = plugins?.filter(
+        (item) => item.type === PLUGIN_TYPE.INLINE
+      );
+      inlinePlugins?.sort(
+        (a, b) =>
+          (b.priority || DEFAULT_PRIORITY) - (a.priority || DEFAULT_PRIORITY)
+      );
       return (
         <>
-          {plugins
-            ?.filter((item) => item.type === PLUGIN_TYPE.INLINE)
-            ?.map((item) => {
-              const match = item.match(props);
-              if (match) {
-                return item.render?.(props);
-              }
-              return null;
-            })}
+          {inlinePlugins?.map((item) => {
+            const match = item.match(props);
+            if (match) {
+              return item.render?.(props);
+            }
+            return null;
+          })}
         </>
       );
+    },
+    [plugins]
+  );
+
+  const onKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      plugins?.forEach((item) => item?.onKeyDown?.(event));
     },
     [plugins]
   );
@@ -80,15 +99,7 @@ const Editor: React.FC<EditorProps> = ({
         placeholder={placeholder}
         renderElement={renderElement}
         renderLeaf={renderLeaf}
-        onKeyDown={(event) => {
-          // for (const hotkey in HOTKEYS) {
-          //   if (isHotkey(hotkey, event as any)) {
-          //     event.preventDefault();
-          //     const mark = HOTKEYS[hotkey];
-          //     toggleMark(editor, mark);
-          //   }
-          // }
-        }}
+        onKeyDown={onKeyDown}
       />
     </Slate>
   );

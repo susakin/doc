@@ -1,4 +1,5 @@
 import { RenderElementProps, RenderLeafProps } from "slate-react";
+import { EventBus } from "../event";
 
 export const PLUGIN_TYPE = {
   BLOCK: "BLOCK" as const,
@@ -10,7 +11,12 @@ abstract class BasePlugin {
   public abstract readonly key: string;
   /** 插件类型 */
   public abstract readonly type: keyof typeof PLUGIN_TYPE;
+  /** 权重 */
   public readonly priority?: number;
+  /** 键盘按下事件 */
+  public onKeyDown?(event: React.KeyboardEvent<HTMLDivElement>): void;
+  /** event事件 */
+  public abstract readonly event: EventBus;
 }
 
 export abstract class BlockPlugin extends BasePlugin {
