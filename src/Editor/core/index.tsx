@@ -1,106 +1,69 @@
 import {
-  Editable,
+  Editable as SlateEditable,
   withReact,
   useSlate,
   Slate,
-  RenderElementProps,
-  RenderLeafProps,
 } from "slate-react";
-import {
-  Editor as SlateEditor,
-  Transforms,
-  createEditor,
-  Descendant,
-  Element as SlateElement,
-} from "slate";
+import { createEditor, Descendant } from "slate";
 import { withHistory } from "slate-history";
-import { useCallback, useMemo } from "react";
-import { EditorPlugin, PLUGIN_TYPE } from "./plugin";
+import { useCallback, useEffect, useMemo } from "react";
+import styles from "./index.module.less";
+import { EDITOR_EVENT } from "./event/action";
+import { REACT_EVENTS } from "./event/react";
+import { pluginController } from "./plugin/controller";
 
-const DEFAULT_PRIORITY = 100;
+const classNamePrefix = "editor";
+const INIT_NODE = [{ children: [{ text: "" }] }];
 
 type EditorProps = {
   initialValue?: Descendant[];
-  placeholder?: string;
   onChange?: (value: Descendant[]) => void;
-  plugins?: EditorPlugin[];
+} & EditableProps;
+
+type EditableProps = {
+  placeholder?: string;
 };
 
-const Editor: React.FC<EditorProps> = ({
-  placeholder,
-  onChange,
-  plugins,
-  ...rest
-}) => {
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+const Editable: React.FC<EditableProps> = ({ placeholder }) => {
+  const baseEditor = useSlate();
 
-  const initialValue = useMemo(() => {
-    return rest?.initialValue || [];
-  }, [rest?.initialValue]);
+  useEffect(() => {
+    pluginController.event.trigger(EDITOR_EVENT.EDITOR_CHANGE, baseEditor);
+  }, [baseEditor]);
 
-  const renderElement = useCallback(
-    (props: RenderElementProps) => {
-      const blockPlugins = plugins?.filter(
-        (item) => item.type === PLUGIN_TYPE.BLOCK
-      );
-      blockPlugins?.sort(
-        (a, b) =>
-          (b.priority || DEFAULT_PRIORITY) - (a.priority || DEFAULT_PRIORITY)
-      );
-      return (
-        <>
-          {blockPlugins?.map((item) => {
-            const match = item.match(props);
-            if (match) {
-              return item.render?.(props);
-            }
-            return null;
-          })}
-        </>
-      );
-    },
-    [plugins]
-  );
-
-  const renderLeaf = useCallback(
-    (props: RenderLeafProps) => {
-      const inlinePlugins = plugins?.filter(
-        (item) => item.type === PLUGIN_TYPE.INLINE
-      );
-      inlinePlugins?.sort(
-        (a, b) =>
-          (b.priority || DEFAULT_PRIORITY) - (a.priority || DEFAULT_PRIORITY)
-      );
-      return (
-        <>
-          {inlinePlugins?.map((item) => {
-            const match = item.match(props);
-            if (match) {
-              return item.render?.(props);
-            }
-            return null;
-          })}
-        </>
-      );
-    },
-    [plugins]
-  );
+  useEffect(() => {
+    return () => {
+      pluginController.destroy();
+    };
+  }, []);
 
   const onKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
-      plugins?.forEach((item) => item?.onKeyDown?.(event));
+      pluginController.event.trigger(REACT_EVENTS.KEY_DOWN, event);
     },
-    [plugins]
+    []
   );
+  return (
+    <SlateEditable
+      className={styles[`${classNamePrefix}`]}
+      placeholder={placeholder}
+      onKeyDown={onKeyDown}
+      renderElement={pluginController.renderElement}
+      renderLeaf={pluginController.renderLeaf}
+    />
+  );
+};
+
+const Editor: React.FC<EditorProps> = ({ onChange, initialValue, ...rest }) => {
+  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   return (
-    <Slate editor={editor} initialValue={initialValue} onChange={onChange}>
-      <Editable
-        placeholder={placeholder}
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        onKeyDown={onKeyDown}
-      />
+    <Slate
+      editor={editor}
+      initialValue={initialValue || INIT_NODE}
+      onChange={onChange}
+    >
+      <Editable {...rest} />
     </Slate>
   );
 };

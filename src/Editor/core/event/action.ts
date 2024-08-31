@@ -1,4 +1,6 @@
 import { BaseEditor } from "slate";
+import type { ReactEventMap } from "./react";
+import { REACT_EVENTS } from "./react";
 
 export declare namespace Object {
   type KeyType = string | number | symbol;
@@ -11,13 +13,14 @@ export declare namespace Object {
 
 export const EDITOR_EVENT = {
   EDITOR_CHANGE: "EDITOR_CHANGE",
+  ...REACT_EVENTS,
 } as const;
 
 type EditorEventMap = {
-  [EDITOR_EVENT.EDITOR_CHANGE]: (editor: BaseEditor) => void;
+  [EDITOR_EVENT.EDITOR_CHANGE]: BaseEditor;
 };
 
-export type EventMap = EditorEventMap;
+export type EventMap = EditorEventMap & ReactEventMap;
 
 export type EventType = Object.Values<typeof EDITOR_EVENT>;
 export type Handler<T extends EventType> = {

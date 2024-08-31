@@ -1,5 +1,6 @@
 import { RenderElementProps, RenderLeafProps } from "slate-react";
-import { EventBus } from "../event";
+import { BaseEditor } from "slate";
+import { ReactEventMap } from "../event/react";
 
 export const PLUGIN_TYPE = {
   BLOCK: "BLOCK" as const,
@@ -13,10 +14,16 @@ abstract class BasePlugin {
   public abstract readonly type: keyof typeof PLUGIN_TYPE;
   /** 权重 */
   public readonly priority?: number;
-  /** 键盘按下事件 */
-  public onKeyDown?(event: React.KeyboardEvent<HTMLDivElement>): void;
-  /** event事件 */
-  public abstract readonly event: EventBus;
+
+  public editor?: BaseEditor;
+
+  public abstract destroy?: () => void;
+  public abstract onEditorChange?: (editor: BaseEditor) => void;
+  public abstract onKeyDown?: (event: ReactEventMap["react_keydown"]) => void;
+
+  public setEditor: (editor: BaseEditor) => void = (editor) => {
+    this.editor = editor;
+  };
 }
 
 export abstract class BlockPlugin extends BasePlugin {
