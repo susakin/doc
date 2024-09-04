@@ -10,9 +10,9 @@ type LeafProps = {
 
 const Leaf: React.FC<LeafProps> = ({ children, ...rest }) => {
   return (
-    <div {...rest} className={styles[`${classNamePrefix}`]}>
+    <span {...rest} className={styles[`${classNamePrefix}`]}>
       {children}
-    </div>
+    </span>
   );
 };
 

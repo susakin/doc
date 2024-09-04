@@ -1,10 +1,16 @@
 import { RenderElementProps, RenderLeafProps } from "slate-react";
-import { BlockPlugin, EditorPlugin, LeafPlugin, PLUGIN_TYPE } from ".";
-import { EventBus } from "../event";
-import { EDITOR_EVENT } from "../event/action";
-import { REACT_EVENTS } from "../event/react";
-import Block from "../components/Block";
-import Leaf from "../components/Leaf";
+import {
+  BlockContext,
+  BlockPlugin,
+  EditorPlugin,
+  LeafPlugin,
+  PLUGIN_TYPE,
+} from ".";
+import { EventBus } from "../../event";
+import { EDITOR_EVENT } from "../../event/action";
+import { REACT_EVENTS } from "../../event/react";
+import Block from "../../components/Block";
+import Leaf from "../../components/Leaf";
 
 const DEFAULT_PRIORITY = 100;
 
@@ -25,7 +31,8 @@ export class PluginController {
     //监听编辑变化
     this.event.on(EDITOR_EVENT.EDITOR_CHANGE, (editor) => {
       for (const item of Object.values(this.pluginMap)) {
-        item.onEditorChange?.(editor);
+        item.setEditor(editor);
+        item.event.trigger(EDITOR_EVENT.EDITOR_CHANGE, editor);
       }
     });
     //监听键盘事件
@@ -73,21 +80,33 @@ export class PluginController {
   public destroy = () => {
     this.reset();
     this.event.clear();
+    for (const item of Object.values(this.pluginMap)) {
+      item.event?.clear();
+      item.destroy?.();
+    }
   };
 
   public renderElement = (props: RenderElementProps) => {
     let children;
+    const context: BlockContext = {
+      props,
+      element: props.element,
+    };
     for (const item of this.blocks) {
       if (item.match(props) && item.render) {
-        children = item.render(props);
+        children = item.render(context);
+        break;
       }
     }
-    return (
-      <Block {...props.attributes}>
-        {props.children}
-        {children}
-      </Block>
-    );
+
+    for (let i = this.blocks.length - 1; i >= 0; i--) {
+      const item = this.blocks[i];
+      if (item.match(props) && item.renderLine) {
+        children = item.renderLine(context);
+      }
+    }
+
+    return <Block {...context}>{children ?? props.children}</Block>;
   };
 
   public renderLeaf = (props: RenderLeafProps) => {
@@ -95,14 +114,10 @@ export class PluginController {
     for (const item of this.leaves) {
       if (item.match(props) && item.render) {
         children = item.render(props);
+        break;
       }
     }
-    return (
-      <Leaf {...props.attributes}>
-        {props.children}
-        {children}
-      </Leaf>
-    );
+    return <Leaf {...props.attributes}>{children ?? props.children}</Leaf>;
   };
 }
 

@@ -1,11 +1,18 @@
 import { RenderElementProps, RenderLeafProps } from "slate-react";
 import { BaseEditor } from "slate";
-import { ReactEventMap } from "../event/react";
+import { ReactEventMap } from "../../event/react";
+import { EventBus } from "../../event";
 
 export const PLUGIN_TYPE = {
   BLOCK: "BLOCK" as const,
   INLINE: "INLINE" as const,
 };
+
+export type CommandPayload = {
+  [key: string]: any;
+};
+
+export type CommandFn = (data: CommandPayload) => void | Promise<void>;
 
 abstract class BasePlugin {
   /** 插件唯一标识 */
@@ -15,16 +22,25 @@ abstract class BasePlugin {
   /** 权重 */
   public readonly priority?: number;
 
+  /** 插件命令注册 */
+  public abstract onCommand?: CommandFn;
+
   public editor?: BaseEditor;
 
   public abstract destroy?: () => void;
-  public abstract onEditorChange?: (editor: BaseEditor) => void;
-  public abstract onKeyDown?: (event: ReactEventMap["react_keydown"]) => void;
+  public onKeyDown?: (event: ReactEventMap["react_keydown"]) => void;
 
   public setEditor: (editor: BaseEditor) => void = (editor) => {
     this.editor = editor;
   };
+  public event: EventBus = new EventBus();
 }
+
+export type BlockContext = {
+  props: RenderElementProps;
+  style?: React.CSSProperties;
+  element: RenderElementProps["element"];
+};
 
 export abstract class BlockPlugin extends BasePlugin {
   /** 块级节点类型 */
@@ -32,7 +48,9 @@ export abstract class BlockPlugin extends BasePlugin {
   /** 块节点匹配插件 */
   public abstract match(props: RenderElementProps): boolean;
   /** 渲染块级子节点 */
-  public render?(props: RenderElementProps): JSX.Element;
+  public render?(props: BlockContext): JSX.Element;
+  /** 渲染行节点 */
+  public renderLine?(context: BlockContext): JSX.Element;
 }
 
 export abstract class LeafPlugin extends BasePlugin {

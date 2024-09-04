@@ -6,11 +6,12 @@ import {
 } from "slate-react";
 import { createEditor, Descendant } from "slate";
 import { withHistory } from "slate-history";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo } from "react";
 import styles from "./index.module.less";
 import { EDITOR_EVENT } from "./event/action";
 import { REACT_EVENTS } from "./event/react";
-import { pluginController } from "./plugin/controller";
+import { pluginController } from "./plugin/base/controller";
+import { alignPlugin, headingPlugin } from "./plugin";
 
 const classNamePrefix = "editor";
 const INIT_NODE = [{ children: [{ text: "" }] }];
@@ -31,12 +32,6 @@ const Editable: React.FC<EditableProps> = ({ placeholder }) => {
     pluginController.event.trigger(EDITOR_EVENT.EDITOR_CHANGE, baseEditor);
   }, [baseEditor]);
 
-  useEffect(() => {
-    return () => {
-      pluginController.destroy();
-    };
-  }, []);
-
   const onKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       pluginController.event.trigger(REACT_EVENTS.KEY_DOWN, event);
@@ -56,6 +51,16 @@ const Editable: React.FC<EditableProps> = ({ placeholder }) => {
 
 const Editor: React.FC<EditorProps> = ({ onChange, initialValue, ...rest }) => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+
+  //插件注册
+  useLayoutEffect(() => {
+    pluginController.register(alignPlugin, headingPlugin);
+    pluginController.apply();
+
+    return () => {
+      //pluginController.destroy();
+    };
+  }, []);
 
   return (
     <Slate

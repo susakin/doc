@@ -14,10 +14,10 @@ import MenuTrigger from "./components/MenuTrigger";
 //   useMakeEditor,
 // } from "./components/Editor/core";
 
-import Editor from "./Editor/core";
+import Editor from "./components/Editor/core";
 
 function App() {
-  const [count, setCount] = useState(0);
+  //const [count, setCount] = useState(0);
   // const updateText = () => {
   //   console.log("Text changes", editor.raw.children);
   // };
@@ -30,13 +30,13 @@ function App() {
   //     editor.event.off(EDITOR_EVENT.CONTENT_CHANGE, updateText);
   //   };
   // }, [editor.event, updateText]);
+
+  useEffect(() => {
+    return () => {};
+  }, []);
+
   return (
     <>
-      <Tooltip content="111111111111111" size="small" placement="left">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </Tooltip>
       <BlockMenu />
       <HeaderTitleMenu />
       <HighlightMenu />

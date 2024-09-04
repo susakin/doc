@@ -597,6 +597,11 @@
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.5.tgz#a6ce3e556e00fd9895dd872dd172ad0d4bd687f4"
   integrity sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==
 
+"@types/is-hotkey@^0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@types/is-hotkey/-/is-hotkey-0.1.10.tgz#cf440fab9bf75ffba4e1a16e8df28938de0778c9"
+  integrity sha512-RvC8KMw5BCac1NvRRyaHgMMEtBaZ6wh0pyPTBu7izn4Sj/AX9Y4aXU5c7rX8PnM/knsuUpC1IeoBkANtxBypsQ==
+
 "@types/node@^20.14.12":
   version "20.14.12"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.14.12.tgz#129d7c3a822cb49fc7ff661235f19cfefd422b49"
