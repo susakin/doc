@@ -3,6 +3,7 @@ import {
   BlockContext,
   BlockPlugin,
   EditorPlugin,
+  LeafContext,
   LeafPlugin,
   PLUGIN_TYPE,
 } from ".";
@@ -110,14 +111,19 @@ export class PluginController {
   };
 
   public renderLeaf = (props: RenderLeafProps) => {
+    const context: LeafContext = {
+      props,
+      leaf: props.leaf,
+      element: props.text,
+    };
     let children;
     for (const item of this.leaves) {
       if (item.match(props) && item.render) {
-        children = item.render(props);
+        children = item.render(context);
         break;
       }
     }
-    return <Leaf {...props.attributes}>{children ?? props.children}</Leaf>;
+    return <Leaf {...context}>{children ?? props.children}</Leaf>;
   };
 }
 

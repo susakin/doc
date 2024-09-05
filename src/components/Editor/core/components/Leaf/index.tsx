@@ -1,16 +1,20 @@
 import React from "react";
 import styles from "./index.module.less";
+import { LeafContext } from "../../plugin/base";
 
 const classNamePrefix = "leaf";
 
 type LeafProps = {
   children?: React.ReactNode;
-  [x: string]: any;
-};
+} & LeafContext;
 
-const Leaf: React.FC<LeafProps> = ({ children, ...rest }) => {
+const Leaf: React.FC<LeafProps> = ({ children, style, ...rest }) => {
   return (
-    <span {...rest} className={styles[`${classNamePrefix}`]}>
+    <span
+      style={style}
+      className={styles[`${classNamePrefix}`]}
+      {...rest.props.attributes}
+    >
       {children}
     </span>
   );

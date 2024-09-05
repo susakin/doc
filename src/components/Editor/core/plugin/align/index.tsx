@@ -53,7 +53,6 @@ export class AlignPlugin extends BlockPlugin {
   }
 
   public match(props: RenderElementProps): boolean {
-    console.log(props, "align,render1");
     return !!props.element[ALIGN_KEY];
   }
 

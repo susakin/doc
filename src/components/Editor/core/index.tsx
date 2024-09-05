@@ -11,7 +11,7 @@ import styles from "./index.module.less";
 import { EDITOR_EVENT } from "./event/action";
 import { REACT_EVENTS } from "./event/react";
 import { pluginController } from "./plugin/base/controller";
-import { alignPlugin, headingPlugin } from "./plugin";
+import { alignPlugin, boldPlugin, headingPlugin } from "./plugin";
 
 const classNamePrefix = "editor";
 const INIT_NODE = [{ children: [{ text: "" }] }];
@@ -54,7 +54,7 @@ const Editor: React.FC<EditorProps> = ({ onChange, initialValue, ...rest }) => {
 
   //插件注册
   useLayoutEffect(() => {
-    pluginController.register(alignPlugin, headingPlugin);
+    pluginController.register(alignPlugin, headingPlugin, boldPlugin);
     pluginController.apply();
 
     return () => {

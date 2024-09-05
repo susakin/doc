@@ -21,3 +21,8 @@ export const isBlockActive = (
 
   return !!match;
 };
+
+export const isMarkActive = (editor: BaseEditor, format: string) => {
+  const marks = Editor.marks(editor);
+  return marks ? marks[format] === true : false;
+};

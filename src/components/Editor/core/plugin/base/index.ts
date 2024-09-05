@@ -42,6 +42,13 @@ export type BlockContext = {
   element: RenderElementProps["element"];
 };
 
+export type LeafContext = {
+  props: RenderLeafProps;
+  leaf: RenderLeafProps["leaf"];
+  element: RenderLeafProps["text"];
+  style?: React.CSSProperties;
+};
+
 export abstract class BlockPlugin extends BasePlugin {
   /** 块级节点类型 */
   public readonly type = PLUGIN_TYPE.BLOCK;
@@ -59,7 +66,7 @@ export abstract class LeafPlugin extends BasePlugin {
   /** 行内节点匹配插件 */
   public abstract match(props: RenderLeafProps): boolean;
   /** 渲染行内节点 */
-  public render?(props: RenderLeafProps): JSX.Element;
+  public render?(props: LeafContext): JSX.Element;
 }
 
 export type EditorPlugin = BlockPlugin | LeafPlugin;
