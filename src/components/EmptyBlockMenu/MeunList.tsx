@@ -6,8 +6,10 @@ import {
   GlobalLinkOutlined,
   H1Outlined,
   H2Outlined,
+  H3Outlined,
   OrderListOutlined,
   ReferenceOutlined,
+  TextOutlined,
 } from "../Icon";
 import { svgProps } from "@/utils";
 import { Item } from "../HorizontalMenu";
@@ -19,6 +21,10 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
   const items = useMemo<Item[]>(() => {
     return [
       {
+        icon: <TextOutlined {...svgProps} />,
+        tooltip: "正文(Ctrl + Alt + 0)",
+      },
+      {
         icon: <H1Outlined {...svgProps} />,
         tooltip: "一级标题(Ctrl + Alt + 1)",
       },
@@ -27,7 +33,7 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
         tooltip: "二级标题(Ctrl + Alt + 2)",
       },
       {
-        icon: <H1Outlined {...svgProps} />,
+        icon: <H3Outlined {...svgProps} />,
         tooltip: "三级标题(Ctrl + Alt + 3)",
       },
       {

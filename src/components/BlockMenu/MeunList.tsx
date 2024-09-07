@@ -4,6 +4,7 @@ import {
   DisorderListOutlined,
   H1Outlined,
   H2Outlined,
+  H3Outlined,
   OrderListOutlined,
   ReferenceOutlined,
   TextOutlined,
@@ -30,7 +31,7 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
         tooltip: "二级标题(Ctrl + Alt + 2)",
       },
       {
-        icon: <H1Outlined {...svgProps} />,
+        icon: <H3Outlined {...svgProps} />,
         tooltip: "三级标题(Ctrl + Alt + 3)",
       },
       {

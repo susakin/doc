@@ -5,6 +5,7 @@ import {
   DisorderListOutlined,
   H1Outlined,
   H2Outlined,
+  H3Outlined,
   HnOutlined,
   OrderListOutlined,
   ReferenceOutlined,
@@ -32,7 +33,7 @@ const InlineMenu: React.FC = () => {
         tooltip: "Ctrl + Alt + 2",
       },
       {
-        icon: <H1Outlined {...svgProps} />,
+        icon: <H3Outlined {...svgProps} />,
         text: "三级标题",
         tooltip: "Ctrl + Alt + 3",
       },

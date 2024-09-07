@@ -60,7 +60,6 @@ export class HeadingPlugin extends BlockPlugin {
   }
 
   public match({ element }: RenderElementProps): boolean {
-    console.log(element, "heading,render");
     return !!element[HEADING_KEY];
   }
 
@@ -71,7 +70,6 @@ export class HeadingPlugin extends BlockPlugin {
       if (isHotkey(hotkey, event)) {
         event.preventDefault();
         const heading = HOTKEYS[hotkey];
-        console.log(heading, "heading");
         this.onCommand({ heading });
       }
     }
@@ -89,7 +87,6 @@ export class HeadingPlugin extends BlockPlugin {
   public renderLine(context: BlockContext): JSX.Element {
     const { props, element } = context;
     const heading = element.heading;
-    console.log(heading, "heading");
     if (heading) {
       const headingStyles: Record<string, string> = {
         h1: styles[`${classNamePrefix}-1`],

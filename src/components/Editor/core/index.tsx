@@ -12,6 +12,9 @@ import { EDITOR_EVENT } from "./event/action";
 import { REACT_EVENTS } from "./event/react";
 import { pluginController } from "./plugin/base/controller";
 import { alignPlugin, boldPlugin, headingPlugin } from "./plugin";
+import { italicPlugin } from "./plugin/italic";
+import { underLinePlugin } from "./plugin/under-line";
+import { lineThroughPlugin } from "./plugin/line-through";
 
 const classNamePrefix = "editor";
 const INIT_NODE = [{ children: [{ text: "" }] }];
@@ -54,7 +57,14 @@ const Editor: React.FC<EditorProps> = ({ onChange, initialValue, ...rest }) => {
 
   //插件注册
   useLayoutEffect(() => {
-    pluginController.register(alignPlugin, headingPlugin, boldPlugin);
+    pluginController.register(
+      alignPlugin,
+      headingPlugin,
+      boldPlugin,
+      italicPlugin,
+      underLinePlugin,
+      lineThroughPlugin
+    );
     pluginController.apply();
 
     return () => {
