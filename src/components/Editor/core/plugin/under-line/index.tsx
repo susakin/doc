@@ -2,14 +2,14 @@ import { RenderLeafProps } from "slate-react";
 import { LeafPlugin, CommandFn, LeafContext } from "../base";
 import { Editor } from "slate";
 import { ReactEventMap } from "../../event/react";
-import isHotkey from "is-hotkey";
-import { isMarkActive } from "../utils";
+import { isMarkActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
+import { isHotkey } from "../../utils/isHotkey";
 
 export const UNDERLINE_KEY = "under-line";
 
 const HOTKEYS: Record<string, string> = {
-  "ctrl+u": "under-line",
+  "ctrl+u": UNDERLINE_KEY,
 };
 
 export class UnderLinePlugin extends LeafPlugin {
@@ -21,7 +21,7 @@ export class UnderLinePlugin extends LeafPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.EDITOR_CHANGE, (editor) => {
-      const isActive = isMarkActive(editor, "underLine");
+      const isActive = isMarkActive(editor, UNDERLINE_KEY);
       this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
         isActive,
       });
@@ -29,6 +29,7 @@ export class UnderLinePlugin extends LeafPlugin {
   }
 
   public match(props: RenderLeafProps): boolean {
+    console.log(!!props.leaf[UNDERLINE_KEY], "!!props.leaf[UNDERLINE_KEY]");
     return !!props.leaf[UNDERLINE_KEY];
   }
 
@@ -36,7 +37,7 @@ export class UnderLinePlugin extends LeafPlugin {
 
   public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
     for (const hotkey in HOTKEYS) {
-      if (isHotkey(hotkey, event)) {
+      if (isHotkey(hotkey, event.nativeEvent)) {
         event.preventDefault();
         const underLine = HOTKEYS[hotkey];
         this.onCommand({ underLine });
@@ -48,22 +49,21 @@ export class UnderLinePlugin extends LeafPlugin {
     if (this.editor) {
       const isActive = isMarkActive(this.editor, underLine);
       if (isActive) {
-        Editor.removeMark(this.editor, "underLine");
+        Editor.removeMark(this.editor, underLine);
       } else {
-        Editor.addMark(this.editor, "underLine", true);
+        Editor.addMark(this.editor, underLine, true);
       }
     }
   };
 
   public render(context: LeafContext): JSX.Element {
-    const { element, props } = context;
+    const { children } = context;
     const style = {
       "text-decoration-skip-ink": "none",
       "text-underline-offset": "0.2em",
       "text-decoration": "underline",
     };
-    context.style = (element.underLine ? style : {}) as React.CSSProperties;
-    return props.children;
+    return <u style={style as React.CSSProperties}>{children}</u>;
   }
 }
 

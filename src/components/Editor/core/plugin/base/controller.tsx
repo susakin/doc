@@ -115,15 +115,14 @@ export class PluginController {
       props,
       leaf: props.leaf,
       element: props.text,
+      children: props.children,
     };
-    let children;
     for (const item of this.leaves) {
       if (item.match(props) && item.render) {
-        children = item.render(context);
-        break;
+        context.children = item.render(context);
       }
     }
-    return <Leaf {...context}>{children ?? props.children}</Leaf>;
+    return <Leaf {...context}>{context.children}</Leaf>;
   };
 }
 

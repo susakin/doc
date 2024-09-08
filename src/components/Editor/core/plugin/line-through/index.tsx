@@ -2,14 +2,14 @@ import { RenderLeafProps } from "slate-react";
 import { LeafPlugin, CommandFn, LeafContext } from "../base";
 import { Editor } from "slate";
 import { ReactEventMap } from "../../event/react";
-import isHotkey from "is-hotkey";
-import { isMarkActive } from "../utils";
+import { isMarkActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
+import { isHotkey } from "../../utils/isHotkey";
 
 export const LINETHROUGH_KEY = "line-through";
 
 const HOTKEYS: Record<string, string> = {
-  "ctrl+i": "line-through",
+  "ctrl+shift+X": LINETHROUGH_KEY,
 };
 
 export class LineThroughPlugin extends LeafPlugin {
@@ -21,7 +21,7 @@ export class LineThroughPlugin extends LeafPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.EDITOR_CHANGE, (editor) => {
-      const isActive = isMarkActive(editor, "line-through");
+      const isActive = isMarkActive(editor, LINETHROUGH_KEY);
       this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
         isActive,
       });
@@ -29,6 +29,7 @@ export class LineThroughPlugin extends LeafPlugin {
   }
 
   public match(props: RenderLeafProps): boolean {
+    console.log(!!props.leaf[LINETHROUGH_KEY], "!!props.leaf[LINETHROUGH_KEY]");
     return !!props.leaf[LINETHROUGH_KEY];
   }
 
@@ -36,7 +37,7 @@ export class LineThroughPlugin extends LeafPlugin {
 
   public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
     for (const hotkey in HOTKEYS) {
-      if (isHotkey(hotkey, event)) {
+      if (isHotkey(hotkey, event.nativeEvent)) {
         event.preventDefault();
         const lineThrough = HOTKEYS[hotkey];
         this.onCommand({ lineThrough });
@@ -48,22 +49,26 @@ export class LineThroughPlugin extends LeafPlugin {
     if (this.editor) {
       const isActive = isMarkActive(this.editor, lineThrough);
       if (isActive) {
-        Editor.removeMark(this.editor, "line-through");
+        Editor.removeMark(this.editor, lineThrough);
       } else {
-        Editor.addMark(this.editor, "line-through", true);
+        Editor.addMark(this.editor, lineThrough, true);
       }
     }
   };
 
   public render(context: LeafContext): JSX.Element {
-    const { element, props } = context;
-    const style = {
-      "text-decoration-skip-ink": "none",
-      "text-underline-offset": "0.2em",
-      "text-decoration": "line-through",
-    };
-    context.style = (element.lineThrough ? style : {}) as React.CSSProperties;
-    return props.children;
+    const { children } = context;
+    return (
+      <del
+        style={{
+          ["text-decoration-skip-ink" as any]: "none",
+          ["text-underline-offset" as any]: "0.2em",
+          ["text-decoration" as any]: "line-through",
+        }}
+      >
+        {children}
+      </del>
+    );
   }
 }
 

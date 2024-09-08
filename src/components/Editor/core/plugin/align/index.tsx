@@ -2,8 +2,8 @@ import { RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
 import { Editor, Transforms, Element as SlateElement } from "slate";
 import { ReactEventMap } from "../../event/react";
-import isHotkey from "is-hotkey";
-import { isBlockActive } from "../utils";
+import { isHotkey } from "../../utils/isHotkey";
+import { isBlockActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 
 export const ALIGN_KEY = "align";
@@ -60,10 +60,9 @@ export class AlignPlugin extends BlockPlugin {
 
   public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
     for (const hotkey in HOTKEYS) {
-      if (isHotkey(hotkey, event)) {
+      if (isHotkey(hotkey, event.nativeEvent)) {
         event.preventDefault();
         const align = HOTKEYS[hotkey];
-        console.log(align, "align");
         this.onCommand({ align });
       }
     }

@@ -41,6 +41,7 @@ const Editable: React.FC<EditableProps> = ({ placeholder }) => {
     },
     []
   );
+
   return (
     <SlateEditable
       className={styles[`${classNamePrefix}`]}
