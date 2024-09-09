@@ -172,7 +172,6 @@ function genFilterKey(
   // 字符串依次判断是否有组合键
   const genArr = keyFilter.split("+");
   let genLen = 0;
-
   for (const key of genArr) {
     // 组合键
     const genModifier = modifierKey[key];
@@ -193,6 +192,7 @@ function genFilterKey(
    * countKeyByEvent(event) === genArr.length 判断出来触发的键位数量里有且等于监听的键位数量
    * 主要用来防止按组合键其子集也会触发的情况，例如监听 ctrl+a 会触发监听 ctrl 和 a 两个键的事件。
    */
+
   if (exactMatch) {
     return genLen === genArr.length && countKeyByEvent(event) === genArr.length
       ? keyFilter

@@ -85,7 +85,7 @@ export class HeadingPlugin extends BlockPlugin {
   };
 
   public renderLine(context: BlockContext): JSX.Element {
-    const { props, element } = context;
+    const { children, element } = context;
     const heading = element.heading;
     if (heading) {
       const headingStyles: Record<string, string> = {
@@ -99,9 +99,7 @@ export class HeadingPlugin extends BlockPlugin {
         h8: styles[`${classNamePrefix}-8`],
         h9: styles[`${classNamePrefix}-9`],
       };
-      return (
-        <div className={headingStyles[heading as any]}>{props.children}</div>
-      );
+      return <div className={headingStyles[heading as any]}>{children}</div>;
     }
     return null as any;
   }

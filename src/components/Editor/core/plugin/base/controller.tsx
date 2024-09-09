@@ -88,14 +88,14 @@ export class PluginController {
   };
 
   public renderElement = (props: RenderElementProps) => {
-    let children;
     const context: BlockContext = {
       props,
       element: props.element,
+      children: props.children,
     };
     for (const item of this.blocks) {
       if (item.match(props) && item.render) {
-        children = item.render(context);
+        context.children = item.render(context);
         break;
       }
     }
@@ -103,11 +103,11 @@ export class PluginController {
     for (let i = this.blocks.length - 1; i >= 0; i--) {
       const item = this.blocks[i];
       if (item.match(props) && item.renderLine) {
-        children = item.renderLine(context);
+        context.children = item.renderLine(context);
       }
     }
 
-    return <Block {...context}>{children ?? props.children}</Block>;
+    return <Block {...context}>{context.children}</Block>;
   };
 
   public renderLeaf = (props: RenderLeafProps) => {
