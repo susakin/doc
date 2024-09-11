@@ -3,13 +3,13 @@ import { headingPlugin } from ".";
 import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const useAlign = () => {
-  const [headingActive, setHeadingActive] = useState<ActiveChangePayload>();
+  const [heading, setHeading] = useState<ActiveChangePayload>();
 
   useEffect(() => {
     headingPlugin.event.on(EDITOR_EVENT.ACTIVE_CHANGE, (payload) => {
-      setHeadingActive(payload);
+      setHeading(payload);
     });
   }, []);
 
-  return { headingActive };
+  return { heading };
 };
