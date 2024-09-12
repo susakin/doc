@@ -10,21 +10,22 @@ export declare namespace Object {
   type Keys<T extends Record<Object.KeyType, unknown>> = keyof T;
   type Values<T extends Record<Object.KeyType, unknown>> = T[keyof T];
 }
-
 export const EDITOR_EVENT = {
   EDITOR_CHANGE: "EDITOR_CHANGE",
-  ACTIVE_CHANGE: "ACTIVE_CHANGE",
+  ELEMENT_CHANGE: "ELEMENT_CHANGE",
+  CHANGE: "CHANGE",
   ...REACT_EVENTS,
 } as const;
 
-export type ActiveChangePayload = {
+export type ElementChangePayload = {
   isActive: boolean;
   [x: string]: any;
 };
 
 type EditorEventMap = {
   [EDITOR_EVENT.EDITOR_CHANGE]: BaseEditor;
-  [EDITOR_EVENT.ACTIVE_CHANGE]: ActiveChangePayload;
+  [EDITOR_EVENT.ELEMENT_CHANGE]: ElementChangePayload;
+  [EDITOR_EVENT.CHANGE]: undefined;
 };
 
 export type EventMap = EditorEventMap & ReactEventMap;

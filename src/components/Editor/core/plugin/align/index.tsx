@@ -1,9 +1,9 @@
 import { RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
-import { Editor, Transforms, Element as SlateElement } from "slate";
+import { Transforms } from "slate";
 import { ReactEventMap } from "../../event/react";
 import { isHotkey } from "../../utils/isHotkey";
-import { isBlockActive } from "../../utils";
+import { getAttributeAtCursor, isBlockActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 
 export const ALIGN_KEY = "align";
@@ -25,29 +25,10 @@ export class AlignPlugin extends BlockPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.EDITOR_CHANGE, (editor) => {
-      const { selection } = editor;
-      if (!selection) return false;
-      for (const align of Object.values(HOTKEYS)) {
-        const [match] = Array.from(
-          Editor.nodes(editor, {
-            at: Editor.unhangRange(editor, selection),
-            match: (n) =>
-              !Editor.isEditor(n) &&
-              SlateElement.isElement(n) &&
-              n["align"] === align,
-          })
-        );
-        const isActive = !!match;
-        if (isActive) {
-          this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-            isActive: true,
-            align,
-          });
-          return;
-        }
-      }
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-        isActive: false,
+      const align = getAttributeAtCursor(editor, "align");
+      this.event.trigger(EDITOR_EVENT.ELEMENT_CHANGE, {
+        isActive: !!align,
+        align,
       });
     });
   }

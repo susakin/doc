@@ -53,7 +53,7 @@ const Editable: React.FC<EditableProps> = ({ placeholder }) => {
   );
 };
 
-const Editor: React.FC<EditorProps> = ({ onChange, initialValue, ...rest }) => {
+const Editor: React.FC<EditorProps> = ({ initialValue, ...rest }) => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   //插件注册
@@ -71,6 +71,11 @@ const Editor: React.FC<EditorProps> = ({ onChange, initialValue, ...rest }) => {
     return () => {
       //pluginController.destroy();
     };
+  }, []);
+
+  const onChange = useCallback((descendant: Descendant[]) => {
+    pluginController.event.trigger(EDITOR_EVENT.CHANGE, undefined);
+    rest?.onChange?.(descendant);
   }, []);
 
   return (

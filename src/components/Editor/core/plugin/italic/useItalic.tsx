@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { italicPlugin } from ".";
-import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { ElementChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const useItalic = () => {
-  const [italic, setItalic] = useState<ActiveChangePayload>();
+  const [italic, setItalic] = useState<ElementChangePayload>();
 
   useEffect(() => {
-    italicPlugin.event.on(EDITOR_EVENT.ACTIVE_CHANGE, (payload) => {
+    italicPlugin.event.on(EDITOR_EVENT.ELEMENT_CHANGE, (payload) => {
       setItalic(payload);
     });
   }, []);

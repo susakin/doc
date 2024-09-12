@@ -2,7 +2,7 @@ import { RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
 import { Editor, Transforms, Element as SlateElement } from "slate";
 import { ReactEventMap } from "../../event/react";
-import { isBlockActive } from "../../utils";
+import { getAttributeAtCursor, isBlockActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import styles from "./index.module.less";
 import { isHotkey } from "../../utils/isHotkey";
@@ -32,29 +32,10 @@ export class HeadingPlugin extends BlockPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.EDITOR_CHANGE, (editor) => {
-      const { selection } = editor;
-      if (!selection) return false;
-      for (const heading of Object.values(HOTKEYS)) {
-        const [match] = Array.from(
-          Editor.nodes(editor, {
-            at: Editor.unhangRange(editor, selection),
-            match: (n) =>
-              !Editor.isEditor(n) &&
-              SlateElement.isElement(n) &&
-              n[HEADING_KEY] === heading,
-          })
-        );
-        const isActive = !!match;
-        if (isActive) {
-          this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-            isActive: true,
-            heading,
-          });
-          return;
-        }
-      }
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-        isActive: false,
+      const heading = getAttributeAtCursor(editor, HEADING_KEY);
+      this.event.trigger(EDITOR_EVENT.ELEMENT_CHANGE, {
+        isActive: !!heading,
+        heading,
       });
     });
   }

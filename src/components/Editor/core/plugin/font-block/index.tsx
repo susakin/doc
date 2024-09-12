@@ -1,0 +1,52 @@
+import { RenderElementProps } from "slate-react";
+import { BlockPlugin, CommandFn, BlockContext } from "../base";
+import { Editor } from "slate";
+import { getAttributeAtCursor, isMarkActive } from "../../utils";
+import { EDITOR_EVENT } from "../../event/action";
+
+export const FONT_BLOCK_KEY = "font-block";
+
+export class FontBlockPlugin extends BlockPlugin {
+  public readonly key: string = FONT_BLOCK_KEY;
+  constructor() {
+    super();
+    this.init();
+  }
+
+  private init() {
+    this.event.on(EDITOR_EVENT.EDITOR_CHANGE, (editor) => {
+      const fontBlock = getAttributeAtCursor(editor, FONT_BLOCK_KEY);
+
+      this.event.trigger(EDITOR_EVENT.ELEMENT_CHANGE, {
+        isActive: !!fontBlock,
+        fontBlock,
+      });
+    });
+  }
+
+  public match(props: RenderElementProps): boolean {
+    return !!props.element[FONT_BLOCK_KEY];
+  }
+
+  public destroy?: (() => void) | undefined;
+
+  public onCommand: CommandFn = ({ fontBlock }) => {
+    if (this.editor) {
+      const isActive = isMarkActive(this.editor, fontBlock);
+      if (isActive) {
+        Editor.removeMark(this.editor, fontBlock);
+      } else {
+        Editor.addMark(this.editor, fontBlock, true);
+      }
+    }
+  };
+
+  public render(context: BlockContext): JSX.Element {
+    const { props } = context;
+    const config = props.element[FONT_BLOCK_KEY];
+    context.style = { ...context.style, ...(config || {}) };
+    return context.children;
+  }
+}
+
+export const fontBlockPlugin = new FontBlockPlugin();

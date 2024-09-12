@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { boldPlugin } from ".";
-import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { ElementChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const useBold = () => {
-  const [bold, setBold] = useState<ActiveChangePayload>();
+  const [bold, setBold] = useState<ElementChangePayload>();
 
   useEffect(() => {
-    boldPlugin.event.on(EDITOR_EVENT.ACTIVE_CHANGE, (payload) => {
+    boldPlugin.event.on(EDITOR_EVENT.ELEMENT_CHANGE, (payload) => {
       setBold(payload);
     });
   }, []);

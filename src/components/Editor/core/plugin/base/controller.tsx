@@ -42,6 +42,12 @@ export class PluginController {
         item.onKeyDown?.(event);
       }
     });
+    //监听编辑器onChange
+    this.event.on(EDITOR_EVENT.CHANGE, () => {
+      for (const item of Object.values(this.pluginMap)) {
+        item.event.trigger(EDITOR_EVENT.CHANGE, undefined);
+      }
+    });
   }
 
   public register = (...plugins: EditorPlugin[]) => {

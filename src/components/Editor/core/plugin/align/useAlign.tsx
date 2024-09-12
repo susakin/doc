@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { alignPlugin } from ".";
-import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { ElementChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const useAlign = () => {
-  const [align, setAlign] = useState<ActiveChangePayload>();
+  const [align, setAlign] = useState<ElementChangePayload>();
 
   useEffect(() => {
-    alignPlugin.event.on(EDITOR_EVENT.ACTIVE_CHANGE, (payload) => {
+    alignPlugin.event.on(EDITOR_EVENT.ELEMENT_CHANGE, (payload) => {
       setAlign(payload);
     });
   }, []);
