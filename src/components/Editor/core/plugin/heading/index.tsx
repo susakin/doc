@@ -31,9 +31,9 @@ export class HeadingPlugin extends BlockPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.EDITOR_CHANGE, (editor) => {
-      const heading = getAttributeAtCursor(editor, HEADING_KEY);
-      this.event.trigger(EDITOR_EVENT.ELEMENT_CHANGE, {
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
+      const heading = getAttributeAtCursor(this.editor, HEADING_KEY);
+      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
         isActive: !!heading,
         heading,
       });

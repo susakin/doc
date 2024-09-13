@@ -1,4 +1,4 @@
-import { BaseEditor } from "slate";
+import { BaseEditor, BaseSelection } from "slate";
 import type { ReactEventMap } from "./react";
 import { REACT_EVENTS } from "./react";
 
@@ -11,21 +11,19 @@ export declare namespace Object {
   type Values<T extends Record<Object.KeyType, unknown>> = T[keyof T];
 }
 export const EDITOR_EVENT = {
-  EDITOR_CHANGE: "EDITOR_CHANGE",
-  ELEMENT_CHANGE: "ELEMENT_CHANGE",
-  CHANGE: "CHANGE",
+  ACTIVE_CHANGE: "ACTIVE_CHANGE",
+  SELECTION_CHANGE: "SELECTION_CHANGE",
   ...REACT_EVENTS,
 } as const;
 
-export type ElementChangePayload = {
+export type ActiveChangePayload = {
   isActive: boolean;
   [x: string]: any;
 };
 
 type EditorEventMap = {
-  [EDITOR_EVENT.EDITOR_CHANGE]: BaseEditor;
-  [EDITOR_EVENT.ELEMENT_CHANGE]: ElementChangePayload;
-  [EDITOR_EVENT.CHANGE]: undefined;
+  [EDITOR_EVENT.ACTIVE_CHANGE]: ActiveChangePayload;
+  [EDITOR_EVENT.SELECTION_CHANGE]: BaseSelection;
 };
 
 export type EventMap = EditorEventMap & ReactEventMap;

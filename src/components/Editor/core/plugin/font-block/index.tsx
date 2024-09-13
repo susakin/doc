@@ -14,10 +14,10 @@ export class FontBlockPlugin extends BlockPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.EDITOR_CHANGE, (editor) => {
-      const fontBlock = getAttributeAtCursor(editor, FONT_BLOCK_KEY);
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
+      const fontBlock = getAttributeAtCursor(this.editor, FONT_BLOCK_KEY);
 
-      this.event.trigger(EDITOR_EVENT.ELEMENT_CHANGE, {
+      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
         isActive: !!fontBlock,
         fontBlock,
       });

@@ -42,6 +42,12 @@ const Editable: React.FC<EditableProps> = ({ placeholder }) => {
     []
   );
 
+  useEffect(() => {
+    const selection = baseEditor.selection;
+    selection?.anchor?.offset !== selection?.focus?.offset &&
+      pluginController.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, selection);
+  }, [baseEditor.selection]);
+
   return (
     <SlateEditable
       className={styles[`${classNamePrefix}`]}
@@ -53,7 +59,7 @@ const Editable: React.FC<EditableProps> = ({ placeholder }) => {
   );
 };
 
-const Editor: React.FC<EditorProps> = ({ initialValue, ...rest }) => {
+const Editor: React.FC<EditorProps> = ({ initialValue, onChange, ...rest }) => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   //插件注册
@@ -71,11 +77,6 @@ const Editor: React.FC<EditorProps> = ({ initialValue, ...rest }) => {
     return () => {
       //pluginController.destroy();
     };
-  }, []);
-
-  const onChange = useCallback((descendant: Descendant[]) => {
-    pluginController.event.trigger(EDITOR_EVENT.CHANGE, undefined);
-    rest?.onChange?.(descendant);
   }, []);
 
   return (

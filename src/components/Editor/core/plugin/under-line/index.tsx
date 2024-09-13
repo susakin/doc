@@ -20,10 +20,9 @@ export class UnderLinePlugin extends LeafPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.CHANGE, () => {
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
       const underLine = getAttributeAtCursor(this.editor, UNDERLINE_KEY);
-      console.log(underLine, "underLine");
-      this.event.trigger(EDITOR_EVENT.ELEMENT_CHANGE, {
+      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
         isActive: !!underLine,
         underLine,
       });

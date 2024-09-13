@@ -14,9 +14,9 @@ export class FontLeafPlugin extends LeafPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.EDITOR_CHANGE, (editor) => {
-      const fontLeaf = getAttributeAtCursor(editor, FONT_LEAF_KEY);
-      this.event.trigger(EDITOR_EVENT.ELEMENT_CHANGE, {
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
+      const fontLeaf = getAttributeAtCursor(this.editor, FONT_LEAF_KEY);
+      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
         isActive: !!fontLeaf,
         fontLeaf,
       });

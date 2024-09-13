@@ -20,9 +20,9 @@ export class LineThroughPlugin extends LeafPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.EDITOR_CHANGE, (editor) => {
-      const lineThrough = getAttributeAtCursor(editor, LINETHROUGH_KEY);
-      this.event.trigger(EDITOR_EVENT.ELEMENT_CHANGE, {
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
+      const lineThrough = getAttributeAtCursor(this.editor, LINETHROUGH_KEY);
+      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
         isActive: !!lineThrough,
         lineThrough,
       });
@@ -30,7 +30,6 @@ export class LineThroughPlugin extends LeafPlugin {
   }
 
   public match(props: RenderLeafProps): boolean {
-    console.log(!!props.leaf[LINETHROUGH_KEY], "!!props.leaf[LINETHROUGH_KEY]");
     return !!props.leaf[LINETHROUGH_KEY];
   }
 

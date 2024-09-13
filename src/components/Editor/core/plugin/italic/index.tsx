@@ -20,9 +20,9 @@ export class ItalicPlugin extends LeafPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.EDITOR_CHANGE, (editor) => {
-      const italic = getAttributeAtCursor(editor, ITALIC_KEY);
-      this.event.trigger(EDITOR_EVENT.ELEMENT_CHANGE, {
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
+      const italic = getAttributeAtCursor(this.editor, ITALIC_KEY);
+      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
         isActive: !!italic,
         italic,
       });

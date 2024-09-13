@@ -42,10 +42,10 @@ export class PluginController {
         item.onKeyDown?.(event);
       }
     });
-    //监听编辑器onChange
-    this.event.on(EDITOR_EVENT.CHANGE, () => {
+    //监听光标变化
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, (selection) => {
       for (const item of Object.values(this.pluginMap)) {
-        item.event.trigger(EDITOR_EVENT.CHANGE, undefined);
+        item.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, selection);
       }
     });
   }
