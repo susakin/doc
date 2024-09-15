@@ -3,19 +3,20 @@ import { BlockContext, BlockPlugin, CommandFn } from "../base";
 import { Transforms } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { isHotkey } from "../../utils/isHotkey";
-import { getAttributeAtCursor } from "../../utils";
+import { getAttributeAtCursor, isBlockActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
+import styles from "./index.module.less";
 
-export const INDENT_KEY = "indent";
+export const QUOTE_KEY = "quote-block";
 
 const HOTKEYS: Record<string, boolean> = {
-  tab: true,
-  "shift+tab": false,
+  "ctrl+shift+>": true,
 };
 
-export class IndentPlugin extends BlockPlugin {
-  public readonly key: string = INDENT_KEY;
-  public priority: number = 99;
+const classNamePrefix = "quote-block";
+
+export class QuotePlugin extends BlockPlugin {
+  public readonly key: string = QUOTE_KEY;
   constructor() {
     super();
     this.init();
@@ -23,10 +24,10 @@ export class IndentPlugin extends BlockPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const indent = getAttributeAtCursor(this.editor, INDENT_KEY);
+      const quoteBlock = getAttributeAtCursor(this.editor, QUOTE_KEY);
       this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-        isActive: !!indent,
-        indent,
+        isActive: !!quoteBlock,
+        quoteBlock,
       });
     });
 
@@ -34,7 +35,7 @@ export class IndentPlugin extends BlockPlugin {
   }
 
   public match(props: RenderElementProps): boolean {
-    return !!props.element[INDENT_KEY];
+    return !!props.element[QUOTE_KEY];
   }
 
   public destroy?: (() => void) | undefined;
@@ -43,29 +44,24 @@ export class IndentPlugin extends BlockPlugin {
     for (const hotkey in HOTKEYS) {
       if (isHotkey(hotkey, event.nativeEvent)) {
         event.preventDefault();
-        const indent = HOTKEYS[hotkey];
-        this.onCommand({ indent });
+        this.onCommand();
       }
     }
   };
 
-  public onCommand: CommandFn = ({ indent }) => {
+  public onCommand: CommandFn = () => {
     if (this.editor) {
+      const isActive = isBlockActive(this.editor, QUOTE_KEY, true);
       Transforms.setNodes(this.editor, {
-        indent,
+        "quote-block": isActive ? undefined : true,
       });
     }
   };
 
   public renderLine(context: BlockContext): JSX.Element {
-    const { props, element } = context;
-
-    context.style = {
-      ...context.style,
-      textIndent: element[INDENT_KEY] ? "2em" : undefined,
-    };
-    return props.children;
+    const { children } = context;
+    return <div className={styles[`${classNamePrefix}`]}>{children}</div>;
   }
 }
 
-export const indentPlugin = new IndentPlugin();
+export const quotePlugin = new QuotePlugin();

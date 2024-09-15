@@ -34,7 +34,7 @@ export class TextBlockPlugin extends BlockPlugin {
     if (this.editor) {
       const isActive = isBlockActive(this.editor, TEXT_BLOCK_KEY, true);
       Transforms.setNodes(this.editor, {
-        textBlock: isActive ? undefined : true,
+        "text-block": isActive ? undefined : true,
       });
     }
   };

@@ -1,4 +1,10 @@
-import { BaseEditor, Editor, Element as SlateElement } from "slate";
+import {
+  BaseEditor,
+  BaseRange,
+  Editor,
+  Element as SlateElement,
+  Range,
+} from "slate";
 
 export const getAttributeAtCursor = (
   editor: BaseEditor | undefined,
@@ -59,3 +65,10 @@ export const isNumber = (value: unknown): value is number =>
   typeof value === "number";
 export const isUndef = (value: unknown): value is undefined =>
   typeof value === "undefined";
+
+export const isCollapsed = (
+  editor: BaseEditor,
+  at = editor.selection
+): at is BaseRange => {
+  return !at || Range.isCollapsed(at);
+};

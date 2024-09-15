@@ -1,0 +1,20 @@
+.quote-block {
+  position: relative;
+  color: #646a73;
+  padding-left: 12px;
+  margin-right: -2px;
+  padding-right: 2px;
+
+  &::before {
+    width: 2px;
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -2px;
+    background: #bbbfc4;
+    border-radius: 1px;
+    -webkit-transform-origin: top;
+    transform-origin: top;
+  }
+}

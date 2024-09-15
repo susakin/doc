@@ -68,6 +68,7 @@ const aliasKeyCodeMap: any = {
   x: 88,
   y: 89,
   z: 90,
+  ">": 190,
   leftwindowkey: 91,
   rightwindowkey: 92,
   meta: [91, 92],

@@ -17,6 +17,7 @@ import { underLinePlugin } from "./plugin/under-line";
 import { lineThroughPlugin } from "./plugin/line-through";
 import { textBlockPlugin } from "./plugin/text-block";
 import { indentPlugin } from "./plugin/indent";
+import { quotePlugin } from "./plugin/quote-block";
 
 const classNamePrefix = "editor";
 const INIT_NODE = [{ children: [{ text: "" }], "text-block": true }];
@@ -74,7 +75,8 @@ const Editor: React.FC<EditorProps> = ({ initialValue, onChange, ...rest }) => {
       italicPlugin,
       underLinePlugin,
       lineThroughPlugin,
-      indentPlugin
+      indentPlugin,
+      quotePlugin
     );
     pluginController.apply();
 
