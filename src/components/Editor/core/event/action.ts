@@ -13,6 +13,7 @@ export declare namespace Object {
 export const EDITOR_EVENT = {
   ACTIVE_CHANGE: "ACTIVE_CHANGE",
   SELECTION_CHANGE: "SELECTION_CHANGE",
+  BASE_EDITOR_CHANGE: "BASE_EDITOR_CHANGE",
   ...REACT_EVENTS,
 } as const;
 
@@ -24,6 +25,7 @@ export type ActiveChangePayload = {
 type EditorEventMap = {
   [EDITOR_EVENT.ACTIVE_CHANGE]: ActiveChangePayload;
   [EDITOR_EVENT.SELECTION_CHANGE]: BaseSelection;
+  [EDITOR_EVENT.BASE_EDITOR_CHANGE]: BaseEditor;
 };
 
 export type EventMap = EditorEventMap & ReactEventMap;

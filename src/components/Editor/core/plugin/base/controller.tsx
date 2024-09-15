@@ -29,23 +29,22 @@ export class PluginController {
   }
 
   public eventListener() {
-    //监听编辑变化
-    this.event.on(EDITOR_EVENT.EDITOR_CHANGE, (editor) => {
-      for (const item of Object.values(this.pluginMap)) {
-        item.setEditor(editor);
-        item.event.trigger(EDITOR_EVENT.EDITOR_CHANGE, editor);
-      }
-    });
     //监听键盘事件
     this.event.on(REACT_EVENTS.KEY_DOWN, (event) => {
       for (const item of Object.values(this.pluginMap)) {
-        item.onKeyDown?.(event);
+        item.event.trigger(EDITOR_EVENT.KEY_DOWN, event);
       }
     });
     //监听光标变化
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, (selection) => {
       for (const item of Object.values(this.pluginMap)) {
         item.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, selection);
+      }
+    });
+    //监听基础编辑器变化
+    this.event.on(EDITOR_EVENT.BASE_EDITOR_CHANGE, (editor) => {
+      for (const item of Object.values(this.pluginMap)) {
+        item.event.trigger(EDITOR_EVENT.BASE_EDITOR_CHANGE, editor);
       }
     });
   }

@@ -1,59 +1,40 @@
 import { RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
-import { Editor, Transforms, Element as SlateElement } from "slate";
-import { ReactEventMap } from "../../event/react";
+import { Transforms } from "slate";
+import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { isHotkey } from "../../utils/isHotkey";
-import { isBlockActive } from "../../utils";
+import { getAttributeAtCursor, isBlockActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 
-export const ALIGN_KEY = "align";
+export const INDENT_KEY = "indent";
 
-export type Align = "left" | "right" | "center";
-
-const HOTKEYS: Record<string, Align> = {
-  "ctrl+shift+l": "left",
-  "ctrl+shift+r": "right",
-  "ctrl+shift+e": "center",
+const HOTKEYS: Record<string, boolean> = {
+  tab: true,
+  "shift+tab": false,
 };
 
-export class AlignPlugin extends BlockPlugin {
-  public readonly key: string = ALIGN_KEY;
+export class IndentPlugin extends BlockPlugin {
+  public readonly key: string = INDENT_KEY;
+  public priority: number = 99;
   constructor() {
     super();
     this.init();
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.EDITOR_CHANGE, (editor) => {
-      const { selection } = editor;
-      if (!selection) return false;
-      for (const align of Object.values(HOTKEYS)) {
-        const [match] = Array.from(
-          Editor.nodes(editor, {
-            at: Editor.unhangRange(editor, selection),
-            match: (n) =>
-              !Editor.isEditor(n) &&
-              SlateElement.isElement(n) &&
-              n["align"] === align,
-          })
-        );
-        const isActive = !!match;
-        if (isActive) {
-          this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-            isActive: true,
-            align,
-          });
-          return;
-        }
-      }
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
+      const indent = getAttributeAtCursor(this.editor, INDENT_KEY);
       this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-        isActive: false,
+        isActive: !!indent,
+        indent,
       });
     });
+
+    this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
 
   public match(props: RenderElementProps): boolean {
-    return !!props.element[ALIGN_KEY];
+    return !!props.element[INDENT_KEY];
   }
 
   public destroy?: (() => void) | undefined;
@@ -62,26 +43,29 @@ export class AlignPlugin extends BlockPlugin {
     for (const hotkey in HOTKEYS) {
       if (isHotkey(hotkey, event.nativeEvent)) {
         event.preventDefault();
-        const align = HOTKEYS[hotkey];
-        this.onCommand({ align });
+        const indent = HOTKEYS[hotkey];
+        this.onCommand({ indent });
       }
     }
   };
 
-  public onCommand: CommandFn = ({ align }) => {
+  public onCommand: CommandFn = ({ indent }) => {
     if (this.editor) {
-      const isActive = isBlockActive(this.editor, align, "align");
       Transforms.setNodes(this.editor, {
-        align: isActive ? undefined : align,
+        indent,
       });
     }
   };
 
-  public render(context: BlockContext): JSX.Element {
-    const { props } = context;
-    context.style = { ...context.style, textAlign: props.element.align };
+  public renderLine(context: BlockContext): JSX.Element {
+    const { props, element } = context;
+
+    context.style = {
+      ...context.style,
+      textIndent: element[INDENT_KEY] ? "2em" : undefined,
+    };
     return props.children;
   }
 }
 
-export const alignPlugin = new AlignPlugin();
+export const indentPlugin = new IndentPlugin();

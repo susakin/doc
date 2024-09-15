@@ -2,6 +2,7 @@ import { RenderElementProps, RenderLeafProps } from "slate-react";
 import { BaseEditor } from "slate";
 import { ReactEventMap } from "../../event/react";
 import { EventBus } from "../../event";
+import { EDITOR_EVENT } from "../../event/action";
 
 export const PLUGIN_TYPE = {
   BLOCK: "BLOCK" as const,
@@ -30,10 +31,13 @@ abstract class BasePlugin {
   public abstract destroy?: () => void;
   public onKeyDown?: (event: ReactEventMap["react_keydown"]) => void;
 
-  public setEditor: (editor: BaseEditor) => void = (editor) => {
-    this.editor = editor;
-  };
   public event: EventBus = new EventBus();
+
+  constructor() {
+    this.event.on(EDITOR_EVENT.BASE_EDITOR_CHANGE, (editor) => {
+      this.editor = editor;
+    });
+  }
 }
 
 export type BlockContext = {

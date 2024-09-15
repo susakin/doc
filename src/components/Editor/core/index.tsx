@@ -15,9 +15,11 @@ import { alignPlugin, boldPlugin, headingPlugin } from "./plugin";
 import { italicPlugin } from "./plugin/italic";
 import { underLinePlugin } from "./plugin/under-line";
 import { lineThroughPlugin } from "./plugin/line-through";
+import { textBlockPlugin } from "./plugin/text-block";
+import { indentPlugin } from "./plugin/indent";
 
 const classNamePrefix = "editor";
-const INIT_NODE = [{ children: [{ text: "" }] }];
+const INIT_NODE = [{ children: [{ text: "" }], "text-block": true }];
 
 type EditorProps = {
   initialValue?: Descendant[];
@@ -31,16 +33,16 @@ type EditableProps = {
 const Editable: React.FC<EditableProps> = ({ placeholder }) => {
   const baseEditor = useSlate();
 
-  useEffect(() => {
-    pluginController.event.trigger(EDITOR_EVENT.EDITOR_CHANGE, baseEditor);
-  }, [baseEditor]);
-
   const onKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       pluginController.event.trigger(REACT_EVENTS.KEY_DOWN, event);
     },
     []
   );
+
+  useEffect(() => {
+    pluginController.event.trigger(EDITOR_EVENT.BASE_EDITOR_CHANGE, baseEditor);
+  }, [baseEditor]);
 
   useEffect(() => {
     const selection = baseEditor.selection;
@@ -65,12 +67,14 @@ const Editor: React.FC<EditorProps> = ({ initialValue, onChange, ...rest }) => {
   //插件注册
   useLayoutEffect(() => {
     pluginController.register(
+      textBlockPlugin,
       alignPlugin,
       headingPlugin,
       boldPlugin,
       italicPlugin,
       underLinePlugin,
-      lineThroughPlugin
+      lineThroughPlugin,
+      indentPlugin
     );
     pluginController.apply();
 

@@ -1,7 +1,7 @@
 import { RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
-import { Editor, Transforms, Element as SlateElement } from "slate";
-import { ReactEventMap } from "../../event/react";
+import { Transforms } from "slate";
+import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { getAttributeAtCursor, isBlockActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import styles from "./index.module.less";
@@ -38,6 +38,7 @@ export class HeadingPlugin extends BlockPlugin {
         heading,
       });
     });
+    this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
 
   public match({ element }: RenderElementProps): boolean {
@@ -58,7 +59,7 @@ export class HeadingPlugin extends BlockPlugin {
 
   public onCommand: CommandFn = ({ heading }) => {
     if (this.editor) {
-      const isActive = isBlockActive(this.editor, heading, "heading");
+      const isActive = isBlockActive(this.editor, HEADING_KEY, heading);
       Transforms.setNodes(this.editor, {
         heading: isActive ? undefined : heading,
       });

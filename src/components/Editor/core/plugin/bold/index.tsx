@@ -1,7 +1,7 @@
 import { RenderLeafProps } from "slate-react";
 import { LeafPlugin, CommandFn, LeafContext } from "../base";
 import { Editor } from "slate";
-import { ReactEventMap } from "../../event/react";
+import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { getAttributeAtCursor, isMarkActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import { isHotkey } from "../../utils/isHotkey";
@@ -26,6 +26,7 @@ export class BoldPlugin extends LeafPlugin {
         isActive: !!bold,
       });
     });
+    this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
 
   public match(props: RenderLeafProps): boolean {

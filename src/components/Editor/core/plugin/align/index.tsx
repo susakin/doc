@@ -1,7 +1,7 @@
 import { RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
 import { Transforms } from "slate";
-import { ReactEventMap } from "../../event/react";
+import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { isHotkey } from "../../utils/isHotkey";
 import { getAttributeAtCursor, isBlockActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
@@ -31,6 +31,7 @@ export class AlignPlugin extends BlockPlugin {
         align,
       });
     });
+    this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
 
   public match(props: RenderElementProps): boolean {
@@ -51,17 +52,17 @@ export class AlignPlugin extends BlockPlugin {
 
   public onCommand: CommandFn = ({ align }) => {
     if (this.editor) {
-      const isActive = isBlockActive(this.editor, align, "align");
+      const isActive = isBlockActive(this.editor, ALIGN_KEY, align);
       Transforms.setNodes(this.editor, {
         align: isActive ? undefined : align,
       });
     }
   };
 
-  public render(context: BlockContext): JSX.Element {
+  public renderLine(context: BlockContext): JSX.Element {
     const { props } = context;
     context.style = { ...context.style, textAlign: props.element.align };
-    return props.children;
+    return context.children;
   }
 }
 

@@ -21,8 +21,8 @@ export const getAttributeAtCursor = (
 
 export const isBlockActive = (
   editor: BaseEditor,
-  format: string,
-  blockType: string
+  attribute: string,
+  value: any
 ) => {
   if (!editor) return false;
   const { selection } = editor;
@@ -34,7 +34,7 @@ export const isBlockActive = (
       match: (n) =>
         !Editor.isEditor(n) &&
         SlateElement.isElement(n) &&
-        n[blockType] === format,
+        n[attribute] === value,
     })
   );
 
