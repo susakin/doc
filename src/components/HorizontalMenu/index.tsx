@@ -7,6 +7,7 @@ import { Placement } from "@floating-ui/react";
 export type Item = {
   icon?: React.ReactNode;
   submenu?: React.ReactNode;
+  submenuRenderToBody?: boolean;
   devider?: boolean;
   unique?: boolean;
   tooltip?: React.ReactNode;

@@ -87,7 +87,13 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
 export default MenuItem;
 
 export function getRenderItem(item: Item) {
-  const { submenu, unique, tooltip, placement = "bottom-start" } = item;
+  const {
+    submenu,
+    unique,
+    tooltip,
+    placement = "bottom-start",
+    submenuRenderToBody = true,
+  } = item;
   if (tooltip) {
     return (
       <>
@@ -104,7 +110,7 @@ export function getRenderItem(item: Item) {
         <Popover
           placement={placement}
           offset={10}
-          renderToBody
+          renderToBody={submenuRenderToBody}
           hasMaxHeight
           content={({ side, maxHeight }) => {
             return (

@@ -45,7 +45,12 @@ function App() {
       {/* <Editable editor={editor} placeholder="Enter text ..."></Editable> */}
       <Toolbar />
       <MenuTrigger />
-      <Editor placeholder="1111111111" />
+      <Editor
+        placeholder="1111111111"
+        onChange={(v) => {
+          console.log(v);
+        }}
+      />
     </>
   );
 }

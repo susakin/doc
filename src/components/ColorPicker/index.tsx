@@ -16,7 +16,7 @@ export type ColorSetting = {
   fillColor?: string;
 };
 
-type PickerProps = {
+export type PickerProps = {
   className?: string;
   colorSetting?: ColorSetting;
   value?: ColorSetting;
@@ -31,7 +31,7 @@ const defaultColorSetting = {
   color: "rgb(31, 35, 41)",
   backgroundColor: "none",
   borderColor: "rgb(255, 165, 61)",
-  fillColor: "rgba(254, 212, 164, 0.8)",
+  fillColor: "rgb(254, 234, 210)",
 };
 
 export type Color = {
@@ -42,7 +42,7 @@ export type Color = {
 const basicBackgroundColor: Color[] = [
   {
     label: "透明",
-    color: "none",
+    color: "transparent",
   },
   {
     label: "灰色",
@@ -77,7 +77,7 @@ const basicBackgroundColor: Color[] = [
 const basicFillColor: Color[] = [
   {
     label: "透明",
-    color: "none",
+    color: "transparent",
   },
   {
     label: "浅灰色",
@@ -89,7 +89,7 @@ const basicFillColor: Color[] = [
   },
   {
     label: "浅橙色",
-    color: "rgba(254, 212, 164, 0.8)",
+    color: "rgb(254, 234, 210)",
   },
   {
     label: "浅黄色",

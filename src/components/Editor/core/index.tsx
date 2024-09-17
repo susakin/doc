@@ -11,16 +11,32 @@ import styles from "./index.module.less";
 import { EDITOR_EVENT } from "./event/action";
 import { REACT_EVENTS } from "./event/react";
 import { pluginController } from "./plugin/base/controller";
-import { alignPlugin, boldPlugin, headingPlugin } from "./plugin";
+import {
+  alignPlugin,
+  boldPlugin,
+  fontLeafPlugin,
+  headingPlugin,
+} from "./plugin";
 import { italicPlugin } from "./plugin/italic";
 import { underLinePlugin } from "./plugin/under-line";
 import { lineThroughPlugin } from "./plugin/line-through";
 import { textBlockPlugin } from "./plugin/text-block";
 import { indentPlugin } from "./plugin/indent";
 import { quotePlugin } from "./plugin/quote-block";
+import { highlightBlockPlugin } from "./plugin/highlight-block";
 
 const classNamePrefix = "editor";
-const INIT_NODE = [{ children: [{ text: "" }], "text-block": true }];
+const INIT_NODE = [
+  {
+    children: [{ text: "" }],
+    "text-block": true,
+    "highlight-block": {
+      color: "rgb(31, 35, 41)",
+      borderColor: "rgb(255, 165, 61)",
+      fillColor: "rgb(254, 234, 210)",
+    },
+  },
+];
 
 type EditorProps = {
   initialValue?: Descendant[];
@@ -68,6 +84,8 @@ const Editor: React.FC<EditorProps> = ({ initialValue, onChange, ...rest }) => {
   //插件注册
   useLayoutEffect(() => {
     pluginController.register(
+      highlightBlockPlugin,
+      fontLeafPlugin,
       textBlockPlugin,
       alignPlugin,
       headingPlugin,

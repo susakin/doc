@@ -2,20 +2,31 @@ import React, { useMemo } from "react";
 import HorizontalMenu, { Item } from "../HorizontalMenu";
 import { svgProps } from "@/utils";
 import { StyleSetOutlined } from "../Icon";
-import ColorPicker from "../ColorPicker";
+import ColorPicker, { PickerProps } from "../ColorPicker";
 
-const HighlightMenu = () => {
+export type HighlightMenuProps = Pick<PickerProps, "value" | "onChange">;
+
+const HighlightMenu: React.FC<HighlightMenuProps> = ({ value, onChange }) => {
   const items = useMemo<(Item | undefined)[]>(() => {
     return [
       {
         text: "颜色",
         icon: <StyleSetOutlined {...svgProps} />,
-        submenu: <ColorPicker hasBorderColor hasRandom hasFillColor />,
+        submenu: (
+          <ColorPicker
+            hasBorderColor
+            hasRandom
+            hasFillColor
+            value={value}
+            onChange={onChange}
+          />
+        ),
         hasArrow: false,
         placement: "bottom",
+        submenuRenderToBody: false,
       },
     ];
-  }, []);
+  }, [value]);
 
   return <HorizontalMenu items={items} />;
 };
