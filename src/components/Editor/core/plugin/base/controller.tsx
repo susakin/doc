@@ -12,6 +12,7 @@ import { EDITOR_EVENT } from "../../event/action";
 import { REACT_EVENTS } from "../../event/react";
 import Block from "../../components/Block";
 import Leaf from "../../components/Leaf";
+import React from "react";
 
 const DEFAULT_PRIORITY = 100;
 
@@ -100,7 +101,12 @@ export class PluginController {
     };
     for (const item of this.blocks) {
       if (item.match(props) && item.render) {
-        context.children = item.render(context);
+        context.children = (
+          <React.Fragment>
+            {props.children}
+            {item.render(context)}
+          </React.Fragment>
+        );
         break;
       }
     }

@@ -24,17 +24,19 @@ import { textBlockPlugin } from "./plugin/text-block";
 import { indentPlugin } from "./plugin/indent";
 import { quotePlugin } from "./plugin/quote-block";
 import { highlightBlockPlugin } from "./plugin/highlight-block";
+import { dividerBlockPlugin } from "./plugin/divider-block";
 
 const classNamePrefix = "editor";
 const INIT_NODE = [
   {
     children: [{ text: "" }],
-    "text-block": true,
-    "highlight-block": {
-      color: "rgb(31, 35, 41)",
-      borderColor: "rgb(255, 165, 61)",
-      fillColor: "rgb(254, 234, 210)",
-    },
+    // "text-block": true,
+    // "highlight-block": {
+    //   color: "rgb(31, 35, 41)",
+    //   borderColor: "rgb(255, 165, 61)",
+    //   fillColor: "rgb(254, 234, 210)",
+    // },
+    "divider-block": true,
   },
 ];
 
@@ -94,7 +96,8 @@ const Editor: React.FC<EditorProps> = ({ initialValue, onChange, ...rest }) => {
       underLinePlugin,
       lineThroughPlugin,
       indentPlugin,
-      quotePlugin
+      quotePlugin,
+      dividerBlockPlugin
     );
     pluginController.apply();
 

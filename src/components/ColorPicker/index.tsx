@@ -81,7 +81,7 @@ const basicFillColor: Color[] = [
   },
   {
     label: "浅灰色",
-    color: "rgb(242, 243, 245)",
+    color: "rgba(239, 240, 241, 0.6)",
   },
   {
     label: "浅红色",
@@ -93,19 +93,19 @@ const basicFillColor: Color[] = [
   },
   {
     label: "浅黄色",
-    color: "rgba(255, 246, 122, 0.8)",
+    color: "rgb(255, 255, 204)",
   },
   {
     label: "浅绿色",
-    color: "rgba(183, 237, 177, 0.8)",
+    color: "rgb(217, 245, 214)",
   },
   {
     label: "浅蓝色",
-    color: "rgba(186, 206, 253, 0.7)",
+    color: "rgb(225, 234, 255)",
   },
   {
     label: "浅紫色",
-    color: "rgba(205, 178, 250, 0.7)",
+    color: "rgb(236, 226, 254)",
   },
 ];
 

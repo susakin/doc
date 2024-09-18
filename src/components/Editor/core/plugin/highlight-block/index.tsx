@@ -16,10 +16,13 @@ export class HighlightBlockPlugin extends BlockPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const heading = getAttributeAtCursor(this.editor, HIGHLIGHT_BLOCK_KEY);
+      const highlightBlock = getAttributeAtCursor(
+        this.editor,
+        HIGHLIGHT_BLOCK_KEY
+      );
       this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-        isActive: !!heading,
-        heading,
+        isActive: !!highlightBlock,
+        highlightBlock,
       });
     });
   }
