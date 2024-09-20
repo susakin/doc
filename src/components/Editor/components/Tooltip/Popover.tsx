@@ -17,6 +17,7 @@ import {
   arrow,
   useRole,
   hide,
+  inline,
 } from "@floating-ui/react";
 import { flushSync } from "react-dom";
 
@@ -41,6 +42,8 @@ export type PopoverProps = {
   hasMaxHeight?: boolean;
   hasMaxWidth?: boolean;
   hasSafePolygon?: boolean;
+  hasInline?: boolean;
+  domRange?: Range;
 } & Pick<UseFloatingOptions, "placement">;
 
 const Popover: React.FC<PopoverProps> = ({
@@ -53,6 +56,8 @@ const Popover: React.FC<PopoverProps> = ({
   hasMaxWidth,
   hasMaxHeight,
   hasSafePolygon = true,
+  hasInline,
+  domRange,
   ...rest
 }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -78,6 +83,7 @@ const Popover: React.FC<PopoverProps> = ({
       middleware: [
         shift(),
         offset(rest.offset),
+        hasInline ? inline() : null,
         flip(),
         size({
           apply({ availableWidth, availableHeight }) {
@@ -131,8 +137,16 @@ const Popover: React.FC<PopoverProps> = ({
   ]);
 
   useEffect(() => {
-    refs.setReference(wrapperRef?.current?.element as any);
-  }, []);
+    !domRange && refs.setReference(wrapperRef?.current?.element as any);
+  }, [domRange]);
+
+  useEffect(() => {
+    domRange &&
+      refs.setPositionReference({
+        getBoundingClientRect: () => domRange.getBoundingClientRect(),
+        getClientRects: () => domRange.getClientRects(),
+      });
+  }, [domRange]);
 
   const Container: any = renderToBody ? FloatingPortal : React.Fragment;
   const children =
@@ -140,9 +154,11 @@ const Popover: React.FC<PopoverProps> = ({
 
   return (
     <>
-      <Wrapper ref={wrapperRef} {...getReferenceProps()}>
-        {children}
-      </Wrapper>
+      {!domRange && (
+        <Wrapper ref={wrapperRef} {...getReferenceProps()}>
+          {children}
+        </Wrapper>
+      )}
       {open && (
         <Container>
           <div

@@ -23,6 +23,9 @@ abstract class BasePlugin {
   /** 权重 */
   public readonly priority?: number;
 
+  /** 是否只读 */
+  public readonly?: boolean;
+
   /** 插件命令注册 */
   public abstract onCommand?: CommandFn;
 
@@ -36,6 +39,10 @@ abstract class BasePlugin {
   constructor() {
     this.event.on(EDITOR_EVENT.BASE_EDITOR_CHANGE, (editor) => {
       this.editor = editor;
+    });
+
+    this.event.on(EDITOR_EVENT.READONLY_CHANGE, (readonly) => {
+      this.readonly = !!readonly;
     });
   }
 }

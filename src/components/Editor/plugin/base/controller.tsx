@@ -13,6 +13,7 @@ import { REACT_EVENTS } from "../../event/react";
 import Block from "../../components/Block";
 import Leaf from "../../components/Leaf";
 import React from "react";
+import Void from "../../components/Void";
 
 const DEFAULT_PRIORITY = 100;
 
@@ -46,6 +47,13 @@ export class PluginController {
     this.event.on(EDITOR_EVENT.BASE_EDITOR_CHANGE, (editor) => {
       for (const item of Object.values(this.pluginMap)) {
         item.event.trigger(EDITOR_EVENT.BASE_EDITOR_CHANGE, editor);
+      }
+    });
+
+    //监听基础编辑器变化
+    this.event.on(EDITOR_EVENT.READONLY_CHANGE, (readOnly) => {
+      for (const item of Object.values(this.pluginMap)) {
+        item.event.trigger(EDITOR_EVENT.READONLY_CHANGE, readOnly);
       }
     });
   }
@@ -104,7 +112,7 @@ export class PluginController {
         context.children = (
           <React.Fragment>
             {props.children}
-            {item.render(context)}
+            {<Void>{item.render(context)}</Void>}
           </React.Fragment>
         );
         break;

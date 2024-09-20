@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import { Tooltip, Button } from "./components";
+import { Tooltip, Button } from "./components/Editor/components";
 import "./App.css";
-import BlockMenu from "./components/BlockMenu";
-import Toolbar from "./components/Toolbar";
-import HeaderTitleMenu from "./components/HeaderTitleMenu";
-import HighlightMenu from "./components/HighlightMenu";
-import LinkEditPanel from "./components/Link/LinkEditPanel";
-import LinkMenu from "./components/Link/LinkMenu";
-import MenuTrigger from "./components/MenuTrigger";
+import BlockMenu from "./components/Editor/components/BlockMenu";
+import Toolbar from "./components/Editor/components/Toolbar";
+import HeaderTitleMenu from "./components/Editor/components/HeaderTitleMenu";
+import HighlightMenu from "./components/Editor/components/HighlightMenu";
+import LinkEditPanel from "./components/Editor/components/Link/LinkEditPanel";
+import LinkMenu from "./components/Editor/components/Link/LinkMenu";
+import MenuTrigger from "./components/Editor/components/MenuTrigger";
 // import {
 //   Editable,
 //   EDITOR_EVENT,
 //   useMakeEditor,
 // } from "./components/Editor/core";
 
-import Editor from "./components/Editor/core";
+import Editor from "./components/Editor";
 
 function App() {
   //const [count, setCount] = useState(0);
@@ -47,6 +47,7 @@ function App() {
       <MenuTrigger />
       <Editor
         placeholder="1111111111"
+        //readOnly
         onChange={(v) => {
           console.log(v);
         }}

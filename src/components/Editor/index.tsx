@@ -3,10 +3,11 @@ import {
   withReact,
   useSlate,
   Slate,
+  ReactEditor,
 } from "slate-react";
 import { createEditor, Descendant } from "slate";
 import { withHistory } from "slate-history";
-import { useCallback, useEffect, useLayoutEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import styles from "./index.module.less";
 import { EDITOR_EVENT } from "./event/action";
 import { REACT_EVENTS } from "./event/react";
@@ -25,18 +26,44 @@ import { indentPlugin } from "./plugin/indent";
 import { quotePlugin } from "./plugin/quote-block";
 import { highlightBlockPlugin } from "./plugin/highlight-block";
 import { dividerBlockPlugin } from "./plugin/divider-block";
+import { withSchema } from "./plugin/base/withSchema";
+import React from "react";
+import HoverToolbar from "./components/HoverToolbar";
 
 const classNamePrefix = "editor";
 const INIT_NODE = [
   {
-    children: [{ text: "" }],
+    children: [{ text: "1111111111111111111111111" }],
     // "text-block": true,
     // "highlight-block": {
     //   color: "rgb(31, 35, 41)",
     //   borderColor: "rgb(255, 165, 61)",
     //   fillColor: "rgb(254, 234, 210)",
     // },
+
     "divider-block": true,
+  },
+  {
+    children: [
+      {
+        text: "3啛啛喳喳错错错错错错错错错错错错错错错错错错错错错错错错错错错错程序法",
+      },
+    ],
+    "text-block": true,
+    "highlight-block": {
+      color: "rgb(31, 35, 41)",
+      borderColor: "rgb(255, 165, 61)",
+      fillColor: "rgb(254, 234, 210)",
+    },
+  },
+  {
+    children: [{ text: "2" }],
+    "text-block": true,
+    "highlight-block": {
+      color: "rgb(31, 35, 41)",
+      borderColor: "rgb(255, 165, 61)",
+      fillColor: "rgb(254, 234, 210)",
+    },
   },
 ];
 
@@ -47,9 +74,10 @@ type EditorProps = {
 
 type EditableProps = {
   placeholder?: string;
+  readOnly?: boolean;
 };
 
-const Editable: React.FC<EditableProps> = ({ placeholder }) => {
+const Editable: React.FC<EditableProps> = ({ placeholder, readOnly }) => {
   const baseEditor = useSlate();
 
   const onKeyDown = useCallback(
@@ -64,6 +92,10 @@ const Editable: React.FC<EditableProps> = ({ placeholder }) => {
   }, [baseEditor]);
 
   useEffect(() => {
+    pluginController.event.trigger(EDITOR_EVENT.READONLY_CHANGE, !!readOnly);
+  }, [readOnly]);
+
+  useEffect(() => {
     const selection = baseEditor.selection;
     selection?.anchor?.offset !== selection?.focus?.offset &&
       pluginController.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, selection);
@@ -76,15 +108,18 @@ const Editable: React.FC<EditableProps> = ({ placeholder }) => {
       onKeyDown={onKeyDown}
       renderElement={pluginController.renderElement}
       renderLeaf={pluginController.renderLeaf}
+      readOnly={readOnly}
     />
   );
 };
 
-const Editor: React.FC<EditorProps> = ({ initialValue, onChange, ...rest }) => {
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+type EditableState = {
+  editor: ReactEditor;
+};
 
-  //插件注册
-  useLayoutEffect(() => {
+class Editor extends React.Component<EditorProps, EditableState> {
+  constructor(props: EditorProps) {
+    super(props);
     pluginController.register(
       highlightBlockPlugin,
       fontLeafPlugin,
@@ -100,21 +135,25 @@ const Editor: React.FC<EditorProps> = ({ initialValue, onChange, ...rest }) => {
       dividerBlockPlugin
     );
     pluginController.apply();
-
-    return () => {
-      //pluginController.destroy();
+    this.state = {
+      editor: withSchema(withHistory(withReact(createEditor()))) as any,
     };
-  }, []);
-
-  return (
-    <Slate
-      editor={editor}
-      initialValue={initialValue || INIT_NODE}
-      onChange={onChange}
-    >
-      <Editable {...rest} />
-    </Slate>
-  );
-};
+  }
+  componentWillUnmount(): void {
+    pluginController.destroy();
+  }
+  render() {
+    return (
+      <Slate
+        editor={this.state.editor}
+        initialValue={this.props.initialValue || INIT_NODE}
+        onChange={this.props.onChange}
+      >
+        <Editable {...this.props} />
+        <HoverToolbar />
+      </Slate>
+    );
+  }
+}
 
 export default Editor;

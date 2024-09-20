@@ -18,7 +18,7 @@ type LinkEditPanelProps = {
 const LinkEditPanel: React.FC<LinkEditPanelProps> = ({
   text,
   url,
-  hasText = true,
+  hasText = false,
   onOk,
 }) => {
   const linkRef = useRef<Link>({});
@@ -45,7 +45,9 @@ const LinkEditPanel: React.FC<LinkEditPanelProps> = ({
         </div>
       )}
       <div className={styles[`${classNamePrefix}-item`]}>
-        <div className={styles[`${classNamePrefix}-item-label`]}>链接</div>
+        {hasText && (
+          <div className={styles[`${classNamePrefix}-item-label`]}>链接</div>
+        )}
         <input
           className={styles[`${classNamePrefix}-item-input`]}
           spellCheck="false"

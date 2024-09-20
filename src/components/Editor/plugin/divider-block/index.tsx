@@ -25,6 +25,7 @@ export class DividerBlockPlugin extends BlockPlugin {
   }
 
   public match({ element }: RenderElementProps): boolean {
+    console.log(element, 1111);
     return !!element[DIVIDER_BLOCK_KEY];
   }
 

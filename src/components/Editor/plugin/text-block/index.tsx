@@ -39,7 +39,7 @@ export class TextBlockPlugin extends BlockPlugin {
     }
   };
 
-  public render(context: BlockContext): JSX.Element {
+  public renderLine(context: BlockContext): JSX.Element {
     return context.children;
   }
 }
