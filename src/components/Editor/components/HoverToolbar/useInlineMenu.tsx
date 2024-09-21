@@ -8,5 +8,9 @@ export const useInlineMenu = () => {
     icon: <TextOutlined {...svgProps} />,
     submenu: <InlineMenu />,
     devider: true,
+    submenuPopoverProps: {
+      renderToBody: false,
+      hideWhenContentClick: true,
+    },
   };
 };

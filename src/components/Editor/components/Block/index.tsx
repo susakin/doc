@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./index.module.less";
 import { BlockContext } from "../../plugin/base";
-
 const classNamePrefix = "block";
 
 type BlockProps = {

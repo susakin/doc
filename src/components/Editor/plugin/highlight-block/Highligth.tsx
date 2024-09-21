@@ -1,10 +1,10 @@
 import React from "react";
 import styles from "./highlight.module.less";
 import Popover from "@/components/Editor/components/Tooltip/Popover";
-import { getSideAnimateClassName } from "@/utils";
 import HighlightMenu, {
   HighlightMenuProps,
 } from "@/components/Editor/components/HighlightMenu";
+import AnimationWrapper from "../../components/Tooltip/AnimationWrapper";
 
 const classNamePrefix = "highlight";
 
@@ -25,12 +25,12 @@ const Highlight: React.FC<HighlightProps> = ({
       enabled={!readonly}
       offset={10}
       hasMaxHeight
-      content={({ side, maxHeight }) => {
+      content={({ side }) => {
         if (readonly) return null;
         return (
-          <div className={getSideAnimateClassName(side)} style={{ maxHeight }}>
+          <AnimationWrapper side={side}>
             <HighlightMenu value={value} onChange={onChange} />
-          </div>
+          </AnimationWrapper>
         );
       }}
     >

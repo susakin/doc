@@ -2,7 +2,7 @@ import { RenderLeafProps } from "slate-react";
 import { LeafPlugin, CommandFn, LeafContext } from "../base";
 import { Editor } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
-import { getAttributeAtCursor, isMarkActive } from "../../utils";
+import { isMarkActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import { isHotkey } from "../../utils/isHotkey";
 
@@ -21,11 +21,13 @@ export class ItalicPlugin extends LeafPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const italic = getAttributeAtCursor(this.editor, ITALIC_KEY);
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-        isActive: !!italic,
-        italic,
-      });
+      const isActive = isMarkActive(this.editor as any, ITALIC_KEY);
+      const payload = {
+        isActive,
+      };
+      this.status = payload;
+
+      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, payload);
     });
     this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
@@ -54,6 +56,12 @@ export class ItalicPlugin extends LeafPlugin {
       } else {
         Editor.addMark(this.editor, italic, true);
       }
+      setTimeout(() => {
+        this.event.trigger(
+          EDITOR_EVENT.SELECTION_CHANGE,
+          this.editor?.selection as any
+        );
+      });
     }
   };
 

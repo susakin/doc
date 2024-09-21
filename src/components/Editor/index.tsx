@@ -7,7 +7,7 @@ import {
 } from "slate-react";
 import { createEditor, Descendant } from "slate";
 import { withHistory } from "slate-history";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "./index.module.less";
 import { EDITOR_EVENT } from "./event/action";
 import { REACT_EVENTS } from "./event/react";
@@ -101,15 +101,26 @@ const Editable: React.FC<EditableProps> = ({ placeholder, readOnly }) => {
       pluginController.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, selection);
   }, [baseEditor.selection]);
 
+  const [mouseDown, setMouseDown] = useState<boolean>(false);
+
   return (
-    <SlateEditable
-      className={styles[`${classNamePrefix}`]}
-      placeholder={placeholder}
-      onKeyDown={onKeyDown}
-      renderElement={pluginController.renderElement}
-      renderLeaf={pluginController.renderLeaf}
-      readOnly={readOnly}
-    />
+    <>
+      <SlateEditable
+        className={styles[`${classNamePrefix}`]}
+        placeholder={placeholder}
+        onKeyDown={onKeyDown}
+        renderElement={pluginController.renderElement}
+        renderLeaf={pluginController.renderLeaf}
+        readOnly={readOnly}
+        onMouseDown={() => {
+          setMouseDown(true);
+        }}
+        onMouseUp={() => {
+          setMouseDown(false);
+        }}
+      />
+      <HoverToolbar editorMouseDown={mouseDown} />
+    </>
   );
 };
 
@@ -150,7 +161,6 @@ class Editor extends React.Component<EditorProps, EditableState> {
         onChange={this.props.onChange}
       >
         <Editable {...this.props} />
-        <HoverToolbar />
       </Slate>
     );
   }

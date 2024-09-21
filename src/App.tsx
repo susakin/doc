@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Tooltip, Button } from "./components/Editor/components";
 import "./App.css";
 import BlockMenu from "./components/Editor/components/BlockMenu";
-import Toolbar from "./components/Editor/components/Toolbar";
 import HeaderTitleMenu from "./components/Editor/components/HeaderTitleMenu";
 import HighlightMenu from "./components/Editor/components/HighlightMenu";
 import LinkEditPanel from "./components/Editor/components/Link/LinkEditPanel";
@@ -43,7 +42,6 @@ function App() {
       <LinkEditPanel />
       <LinkMenu />
       {/* <Editable editor={editor} placeholder="Enter text ..."></Editable> */}
-      <Toolbar />
       <MenuTrigger />
       <Editor
         placeholder="1111111111"

@@ -1,13 +1,15 @@
 import React from "react";
 import { useFocused, useSlate } from "slate-react";
 import { Editor, Range } from "slate";
-import Popover from "../Tooltip/Popover";
-import InlineMenu from "../InlineMenu";
+import Menu from "./Menu";
+import AnimationWrapper from "../Tooltip/AnimationWrapper";
+import InlinePopover from "../Tooltip/InlinePopover";
 
 export const useHasSelection = () => {
   const editor = useSlate();
   const inFocus = useFocused();
   const { selection } = editor;
+
   return !(
     !selection ||
     !inFocus ||
@@ -16,19 +18,31 @@ export const useHasSelection = () => {
   );
 };
 
-const HoverToolbar: React.FC = () => {
-  const hasSection = useHasSelection();
+type HoverToolbarProps = {
+  editorMouseDown?: boolean;
+};
 
-  if (!hasSection) {
+const HoverToolbar: React.FC<HoverToolbarProps> = ({ editorMouseDown }) => {
+  const hasSection = useHasSelection();
+  if (!hasSection || editorMouseDown) {
     return null;
   }
 
   const domSelection = window.getSelection();
-  const domRange = domSelection?.getRangeAt(0);
-
-  console.log(domRange, "domRange");
-
-  return <Popover domRange={domRange} content={<InlineMenu />} />;
+  const domRange = domSelection?.getRangeAt?.(0);
+  return (
+    <InlinePopover
+      domRange={domRange}
+      offset={10}
+      renderToBody
+      placement="top"
+      content={({ side }) => (
+        <AnimationWrapper side={side}>
+          <Menu />
+        </AnimationWrapper>
+      )}
+    />
+  );
 };
 
 export default HoverToolbar;

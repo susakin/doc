@@ -6,13 +6,18 @@ import { useColorPicker } from "./useColorPicker";
 import { useTypography } from "./useTypography";
 import { useInlineMenu } from "./useInlineMenu";
 import HorizontalMenu, { Item } from "../HorizontalMenu";
+import { useBold } from "../../plugin/bold/useBold";
+import { useItalic } from "../../plugin/italic/useItalic";
 
-type ToolbarProps = {};
+type MenuProps = {};
 
-const Toolbar: React.FC<ToolbarProps> = () => {
+const Menu: React.FC<MenuProps> = () => {
   const colorPicker = useColorPicker();
   const typography = useTypography();
   const inlineMenu = useInlineMenu();
+
+  const { bold, commandBold } = useBold();
+  const { italic, commandItalic } = useItalic();
 
   const items = useMemo<(Item | undefined)[]>(() => {
     return [
@@ -21,7 +26,10 @@ const Toolbar: React.FC<ToolbarProps> = () => {
       {
         icon: <BoldOutlined {...svgProps} />,
         tooltip: "粗体 (Ctrl + B)",
-        active: true,
+        active: !!bold?.isActive,
+        onClick() {
+          commandBold();
+        },
       },
       {
         icon: <HorizontalLineOutlined {...svgProps} />,
@@ -30,6 +38,10 @@ const Toolbar: React.FC<ToolbarProps> = () => {
       {
         icon: <ItalicOutlined {...svgProps} />,
         tooltip: "斜体 (Ctrl + I)",
+        active: !!italic.isActive,
+        onClick() {
+          commandItalic();
+        },
       },
       {
         icon: <UnderlineOutlined {...svgProps} />,
@@ -41,9 +53,9 @@ const Toolbar: React.FC<ToolbarProps> = () => {
       },
       colorPicker,
     ];
-  }, [colorPicker, typography]);
+  }, [colorPicker, typography, bold, italic]);
 
   return <HorizontalMenu items={items} />;
 };
 
-export default Toolbar;
+export default Menu;

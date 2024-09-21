@@ -2,20 +2,23 @@ import React from "react";
 import styles from "./index.module.less";
 
 import { getRenderItem } from "./MenuItem";
-import { Placement } from "@floating-ui/react";
+import { PopoverProps } from "../Tooltip/Popover";
 
 export type Item = {
   icon?: React.ReactNode;
   submenu?: React.ReactNode;
-  submenuRenderToBody?: boolean;
   devider?: boolean;
   unique?: boolean;
   tooltip?: React.ReactNode;
   active?: boolean;
   hasArrow?: boolean;
-  placement?: Placement;
   render?: () => React.ReactNode;
   text?: React.ReactNode;
+  submenuPopoverProps?: Pick<
+    PopoverProps,
+    "placement" | "renderToBody" | "hideWhenContentClick"
+  >;
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 };
 
 type ToolbarProps = {
@@ -26,7 +29,12 @@ const classNamePrefix = "horizontal-menu";
 
 const HorizontalMenu: React.FC<ToolbarProps> = ({ items }) => {
   return (
-    <div className={styles[`${classNamePrefix}`]}>
+    <div
+      className={styles[`${classNamePrefix}`]}
+      onMouseDown={(e) => {
+        e.preventDefault();
+      }}
+    >
       {items
         ?.filter((item) => !!item)
         .map((item) => {

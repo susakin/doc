@@ -8,5 +8,9 @@ export const useTypography = () => {
     icon: <TypographyOutlined {...svgProps} />,
     submenu: <Typography />,
     devider: true,
+    submenuPopoverProps: {
+      renderToBody: false,
+      hideWhenContentClick: true,
+    },
   };
 };

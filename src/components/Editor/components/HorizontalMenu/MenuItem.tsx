@@ -1,11 +1,11 @@
 import React from "react";
 import styles from "./menuItem.module.less";
-import { getSideAnimateClassName } from "@/utils";
 import cs from "classnames";
 import Popover from "../Tooltip/Popover";
 import { DownBoldOutlined } from "../Icon";
 import Tooltip from "../Tooltip";
 import { Item } from ".";
+import AnimationWrapper from "../Tooltip/AnimationWrapper";
 
 type MenuItemProps = {
   item: Omit<Item, "tooltip" | "devider">;
@@ -38,11 +38,13 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
     active,
     submenu,
     icon,
-    placement = "bottom",
+    submenuPopoverProps,
     hasArrow = true,
     render,
     text,
+    onClick,
   } = item;
+  const { placement = "bottom" } = submenuPopoverProps || {};
   const classNamePrefix = "menu-item";
 
   return (
@@ -54,6 +56,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
           [styles[`${classNamePrefix}-active`]]: active,
           [styles[`${classNamePrefix}-can-hover`]]: !submenu && !render,
         })}
+        onClick={onClick}
       >
         {render?.()}
         {!!icon && (
@@ -70,7 +73,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
               offset={10}
               content={({ side }) => {
                 return (
-                  <div className={getSideAnimateClassName(side)}>{submenu}</div>
+                  <AnimationWrapper side={side}>{submenu}</AnimationWrapper>
                 );
               }}
             >
@@ -87,13 +90,12 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
 export default MenuItem;
 
 export function getRenderItem(item: Item) {
+  const { submenu, unique, tooltip, submenuPopoverProps } = item;
   const {
-    submenu,
-    unique,
-    tooltip,
     placement = "bottom-start",
-    submenuRenderToBody = true,
-  } = item;
+    renderToBody = true,
+    hideWhenContentClick,
+  } = submenuPopoverProps || {};
   if (tooltip) {
     return (
       <>
@@ -110,16 +112,14 @@ export function getRenderItem(item: Item) {
         <Popover
           placement={placement}
           offset={10}
-          renderToBody={submenuRenderToBody}
+          renderToBody={renderToBody}
+          hideWhenContentClick={hideWhenContentClick}
           hasMaxHeight
           content={({ side, maxHeight }) => {
             return (
-              <div
-                className={getSideAnimateClassName(side)}
-                style={{ maxHeight }}
-              >
+              <AnimationWrapper side={side} style={{ maxHeight }}>
                 {submenu}
-              </div>
+              </AnimationWrapper>
             );
           }}
         >

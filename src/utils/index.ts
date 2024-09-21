@@ -7,6 +7,7 @@ export function getSideAnimateClassName(placement: Placement): string {
     right: "slide-left-in",
     top: "slide-bottom-in",
     bottom: "slide-up-in",
+    display: "inline-flex",
   };
   return position[side];
 }

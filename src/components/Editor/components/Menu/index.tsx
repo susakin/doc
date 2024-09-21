@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./index.module.less";
 import { getRenderItem } from "./MenuItem";
+import { PopoverProps } from "../Tooltip/Popover";
 
 const classNamePrefix = "menu";
 
@@ -17,6 +18,10 @@ export type Item = {
   devider?: boolean;
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   danger?: boolean;
+  submenuPopoverProps?: Pick<
+    PopoverProps,
+    "placement" | "renderToBody" | "hideWhenContentClick"
+  >;
 };
 
 type MenuProps = {

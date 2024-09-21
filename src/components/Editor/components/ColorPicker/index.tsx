@@ -29,7 +29,7 @@ export type PickerProps = {
 
 const defaultColorSetting = {
   color: "rgb(31, 35, 41)",
-  backgroundColor: "none",
+  backgroundColor: "transparent",
   borderColor: "rgb(255, 165, 61)",
   fillColor: "rgb(254, 234, 210)",
 };

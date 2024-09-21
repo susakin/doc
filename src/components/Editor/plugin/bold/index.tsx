@@ -1,8 +1,8 @@
 import { RenderLeafProps } from "slate-react";
 import { LeafPlugin, CommandFn, LeafContext } from "../base";
-import { Editor } from "slate";
+import { Editor, Transforms } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
-import { getAttributeAtCursor, isCollapsed, isMarkActive } from "../../utils";
+import { isMarkActive, isText } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import { isHotkey } from "../../utils/isHotkey";
 
@@ -21,10 +21,13 @@ export class BoldPlugin extends LeafPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const bold = getAttributeAtCursor(this.editor, "bold");
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-        isActive: !!bold,
-      });
+      const isActive = isMarkActive(this.editor as any, BOLD_KEY);
+      const payload = {
+        isActive,
+      };
+
+      this.status = payload;
+      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, payload);
     });
     this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
@@ -53,6 +56,12 @@ export class BoldPlugin extends LeafPlugin {
       } else {
         Editor.addMark(this.editor, bold, true);
       }
+      setTimeout(() => {
+        this.event.trigger(
+          EDITOR_EVENT.SELECTION_CHANGE,
+          this.editor?.selection as any
+        );
+      });
     }
   };
 

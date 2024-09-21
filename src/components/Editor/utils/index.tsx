@@ -4,6 +4,7 @@ import {
   Editor,
   Element as SlateElement,
   Range,
+  Text,
 } from "slate";
 
 export const getAttributeAtCursor = (
@@ -21,6 +22,8 @@ export const getAttributeAtCursor = (
         !Editor.isEditor(n) && SlateElement.isElement(n) && !!n[attribute],
     })
   );
+
+  console.log(match, "match");
 
   return ((match?.[0] || {}) as any)[attribute];
 };
@@ -72,3 +75,5 @@ export const isCollapsed = (
 ): at is BaseRange => {
   return !at || Range.isCollapsed(at);
 };
+
+export const isText = (node: Node) => Text.isText(node);

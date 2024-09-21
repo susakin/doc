@@ -2,11 +2,12 @@ import React from "react";
 import styles from "./menuItem.module.less";
 import { Item } from ".";
 import cs from "classnames";
-import { getSideAnimateClassName, svgProps } from "@/utils";
+import { svgProps } from "@/utils";
 import DoneOutlined from "../Icon/DoneOutlined";
 import RightSmallOutlined from "../Icon/RightSmallOutlined";
 import Popover from "../Tooltip/Popover";
 import Tooltip from "../Tooltip";
+import AnimationWrapper from "../Tooltip/AnimationWrapper";
 
 const classNamePrefix = "menu-item";
 
@@ -44,7 +45,8 @@ const MenuItem: React.FC<MenuItemProps> = ({ item }) => {
 };
 
 export function getRenderItem(item: Item) {
-  const { render, tooltip, submenu } = item;
+  const { render, tooltip, submenu, submenuPopoverProps } = item;
+  const { renderToBody } = submenuPopoverProps || {};
   if (render) {
     return render();
   }
@@ -54,9 +56,9 @@ export function getRenderItem(item: Item) {
       <Popover
         placement="right"
         offset={5}
-        renderToBody={false}
+        renderToBody={renderToBody}
         content={({ side }) => {
-          return <div className={getSideAnimateClassName(side)}>{submenu}</div>;
+          return <AnimationWrapper side={side}>{submenu}</AnimationWrapper>;
         }}
       >
         <MenuItem item={item} />
