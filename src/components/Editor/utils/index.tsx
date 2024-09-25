@@ -51,8 +51,21 @@ export const isBlockActive = (
 };
 
 export const isMarkActive = (editor: BaseEditor, format: string) => {
-  const marks = Editor.marks(editor);
-  return marks ? marks[format] === true : false;
+  try {
+    const marks = Editor.marks(editor);
+    return marks ? marks[format] === true : false;
+  } catch (e) {
+    return false;
+  }
+};
+
+export const getMarkByFormat = (editor: BaseEditor, format: string) => {
+  try {
+    const marks = Editor.marks(editor);
+    return marks?.[format];
+  } catch (e) {
+    return null;
+  }
 };
 
 export const isObject = (value: unknown): value is Record<any, any> =>

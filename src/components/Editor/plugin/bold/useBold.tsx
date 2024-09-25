@@ -6,7 +6,6 @@ export const useBold = () => {
   const [bold, setBold] = useState<ActiveChangePayload>(
     boldPlugin.getCurrentStatus()
   );
-
   useLayoutEffect(() => {
     boldPlugin.event.on(EDITOR_EVENT.ACTIVE_CHANGE, (payload) => {
       setBold(payload);

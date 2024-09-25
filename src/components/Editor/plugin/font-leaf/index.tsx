@@ -1,7 +1,7 @@
 import { RenderLeafProps } from "slate-react";
 import { LeafPlugin, CommandFn, LeafContext } from "../base";
 import { Editor } from "slate";
-import { getAttributeAtCursor, isMarkActive } from "../../utils";
+import { getMarkByFormat, isMarkActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 
 export const FONT_LEAF_KEY = "font-leaf";
@@ -15,11 +15,12 @@ export class FontLeafPlugin extends LeafPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const fontLeaf = getAttributeAtCursor(this.editor, FONT_LEAF_KEY);
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
+      const fontLeaf = getMarkByFormat(this.editor as any, FONT_LEAF_KEY);
+      const payload = {
         isActive: !!fontLeaf,
         fontLeaf,
-      });
+      };
+      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, payload);
     });
   }
 
@@ -29,14 +30,28 @@ export class FontLeafPlugin extends LeafPlugin {
 
   public destroy?: (() => void) | undefined;
 
+  public getCurrentStatus = () => {
+    const fontLeaf = getMarkByFormat(this.editor as any, this.key);
+    return {
+      isActive: !!fontLeaf,
+      fontLeaf,
+    };
+  };
+
   public onCommand: CommandFn = ({ fontLeaf }) => {
     if (this.editor) {
-      const isActive = isMarkActive(this.editor, fontLeaf);
+      const isActive = isMarkActive(this.editor, this.key);
       if (isActive) {
-        Editor.removeMark(this.editor, fontLeaf);
+        Editor.removeMark(this.editor, this.key);
       } else {
-        Editor.addMark(this.editor, fontLeaf, true);
+        Editor.addMark(this.editor, this.key, fontLeaf);
       }
+      setTimeout(() => {
+        this.event.trigger(
+          EDITOR_EVENT.SELECTION_CHANGE,
+          this.editor?.selection as any
+        );
+      });
     }
   };
 

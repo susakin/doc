@@ -27,7 +27,7 @@ export type PickerProps = {
   hasFillColor?: boolean;
 };
 
-const defaultColorSetting = {
+export const defaultColorSetting = {
   color: "rgb(31, 35, 41)",
   backgroundColor: "transparent",
   borderColor: "rgb(255, 165, 61)",

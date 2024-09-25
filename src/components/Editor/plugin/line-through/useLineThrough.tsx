@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react";
-import { lineThroughPlugin } from ".";
+import { lineThroughPlugin, LINETHROUGH_KEY } from ".";
 import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 
-export const useItalic = () => {
-  const [italic, setItalic] = useState<ActiveChangePayload>();
+export const useLineThrough = () => {
+  const [lineThrough, setLineThrough] = useState<ActiveChangePayload>(
+    lineThroughPlugin.getCurrentStatus()
+  );
 
   useEffect(() => {
     lineThroughPlugin.event.on(EDITOR_EVENT.ACTIVE_CHANGE, (payload) => {
-      setItalic(payload);
+      setLineThrough(payload);
     });
   }, []);
 
-  return { italic };
+  const commandLineThrough = () => {
+    lineThroughPlugin.onCommand({ lineThrough: LINETHROUGH_KEY });
+  };
+
+  return { lineThrough, commandLineThrough };
 };

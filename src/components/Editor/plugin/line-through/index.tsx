@@ -26,6 +26,8 @@ export class LineThroughPlugin extends LeafPlugin {
         isActive,
       };
 
+      console.log();
+
       this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, payload);
     });
 
@@ -35,6 +37,12 @@ export class LineThroughPlugin extends LeafPlugin {
   public match(props: RenderLeafProps): boolean {
     return !!props.leaf[LINETHROUGH_KEY];
   }
+  public getCurrentStatus = () => {
+    const isActive = isMarkActive(this.editor as any, this.key);
+    return {
+      isActive,
+    };
+  };
 
   public destroy?: (() => void) | undefined;
 
@@ -56,6 +64,12 @@ export class LineThroughPlugin extends LeafPlugin {
       } else {
         Editor.addMark(this.editor, lineThrough, true);
       }
+      setTimeout(() => {
+        this.event.trigger(
+          EDITOR_EVENT.SELECTION_CHANGE,
+          this.editor?.selection as any
+        );
+      });
     }
   };
 

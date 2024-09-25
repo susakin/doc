@@ -1,9 +1,9 @@
 import { RenderLeafProps } from "slate-react";
 import { LeafPlugin, CommandFn, LeafContext } from "../base";
-import { Editor, Transforms } from "slate";
+import { Editor } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
-import { isMarkActive, isText } from "../../utils";
-import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { isMarkActive } from "../../utils";
+import { EDITOR_EVENT } from "../../event/action";
 import { isHotkey } from "../../utils/isHotkey";
 
 export const BOLD_KEY = "bold";
@@ -31,9 +31,10 @@ export class BoldPlugin extends LeafPlugin {
   }
 
   public getCurrentStatus = () => {
-    const isActive = isMarkActive(this.editor as any, BOLD_KEY);
+    const fontLeaf = isMarkActive(this.editor as any, BOLD_KEY);
     return {
-      isActive,
+      isActive: !!fontLeaf,
+      fontLeaf,
     };
   };
 

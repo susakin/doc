@@ -9,6 +9,7 @@ import HorizontalMenu, { Item } from "../HorizontalMenu";
 import { useBold } from "../../plugin/bold/useBold";
 import { useItalic } from "../../plugin/italic/useItalic";
 import { useUnderLine } from "../../plugin/under-line/useUnderLine";
+import { useLineThrough } from "../../plugin/line-through/useLineThrough";
 
 type MenuProps = {};
 
@@ -20,6 +21,9 @@ const Menu: React.FC<MenuProps> = () => {
   const { bold, commandBold } = useBold();
   const { italic, commandItalic } = useItalic();
   const { underLine, commandUnderLine } = useUnderLine();
+  const { lineThrough, commandLineThrough } = useLineThrough();
+
+  console.log(lineThrough, "lineThrough");
 
   const items = useMemo<(Item | undefined)[]>(() => {
     return [
@@ -35,7 +39,11 @@ const Menu: React.FC<MenuProps> = () => {
       },
       {
         icon: <HorizontalLineOutlined {...svgProps} />,
-        tooltip: "粗体 (Ctrl + Sfhit + X)",
+        tooltip: "删除线 (Ctrl + Sfhit + X)",
+        active: !!lineThrough?.isActive,
+        onClick() {
+          commandLineThrough();
+        },
       },
       {
         icon: <ItalicOutlined {...svgProps} />,
@@ -59,7 +67,7 @@ const Menu: React.FC<MenuProps> = () => {
       },
       colorPicker,
     ];
-  }, [colorPicker, typography, bold, italic, underLine]);
+  }, [colorPicker, typography, bold, italic, underLine, lineThrough]);
 
   return <HorizontalMenu items={items} />;
 };

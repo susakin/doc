@@ -62,6 +62,12 @@ export class UnderLinePlugin extends LeafPlugin {
       } else {
         Editor.addMark(this.editor, underLine, true);
       }
+      setTimeout(() => {
+        this.event.trigger(
+          EDITOR_EVENT.SELECTION_CHANGE,
+          this.editor?.selection as any
+        );
+      });
     }
   };
 
