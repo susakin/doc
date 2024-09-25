@@ -3,7 +3,7 @@ import { LeafPlugin, CommandFn, LeafContext } from "../base";
 import { Editor, Transforms } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { isMarkActive, isText } from "../../utils";
-import { EDITOR_EVENT } from "../../event/action";
+import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 import { isHotkey } from "../../utils/isHotkey";
 
 export const BOLD_KEY = "bold";
@@ -25,12 +25,17 @@ export class BoldPlugin extends LeafPlugin {
       const payload = {
         isActive,
       };
-
-      this.status = payload;
       this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, payload);
     });
     this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
+
+  public getCurrentStatus = () => {
+    const isActive = isMarkActive(this.editor as any, BOLD_KEY);
+    return {
+      isActive,
+    };
+  };
 
   public match(props: RenderLeafProps): boolean {
     return !!props.leaf[BOLD_KEY];

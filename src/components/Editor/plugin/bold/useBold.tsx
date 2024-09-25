@@ -4,7 +4,7 @@ import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const useBold = () => {
   const [bold, setBold] = useState<ActiveChangePayload>(
-    boldPlugin.status as any
+    boldPlugin.getCurrentStatus()
   );
 
   useLayoutEffect(() => {

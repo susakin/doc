@@ -36,7 +36,7 @@ abstract class BasePlugin {
 
   public readonly event: EventBus = new EventBus();
 
-  public status?: ActiveChangePayload;
+  public getCurrentStatus?: () => ActiveChangePayload;
 
   constructor() {
     this.event.on(EDITOR_EVENT.BASE_EDITOR_CHANGE, (editor) => {

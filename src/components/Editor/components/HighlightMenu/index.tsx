@@ -22,8 +22,10 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ value, onChange }) => {
           />
         ),
         hasArrow: false,
-        placement: "bottom",
-        submenuRenderToBody: false,
+        submenuPopoverProps: {
+          placement: "bottom",
+          renderToBody: false,
+        },
       },
     ];
   }, [value]);

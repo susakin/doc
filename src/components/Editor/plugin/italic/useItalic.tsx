@@ -4,7 +4,7 @@ import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const useItalic = () => {
   const [italic, setItalic] = useState<ActiveChangePayload>(
-    italicPlugin.status as any
+    italicPlugin.getCurrentStatus()
   );
 
   useEffect(() => {

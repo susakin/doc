@@ -21,11 +21,12 @@ export class LineThroughPlugin extends LeafPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const lineThrough = getAttributeAtCursor(this.editor, LINETHROUGH_KEY);
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-        isActive: !!lineThrough,
-        lineThrough,
-      });
+      const isActive = isMarkActive(this.editor as any, this.key);
+      const payload = {
+        isActive,
+      };
+
+      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, payload);
     });
 
     this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);

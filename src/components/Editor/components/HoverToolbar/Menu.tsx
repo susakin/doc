@@ -8,6 +8,7 @@ import { useInlineMenu } from "./useInlineMenu";
 import HorizontalMenu, { Item } from "../HorizontalMenu";
 import { useBold } from "../../plugin/bold/useBold";
 import { useItalic } from "../../plugin/italic/useItalic";
+import { useUnderLine } from "../../plugin/under-line/useUnderLine";
 
 type MenuProps = {};
 
@@ -18,6 +19,7 @@ const Menu: React.FC<MenuProps> = () => {
 
   const { bold, commandBold } = useBold();
   const { italic, commandItalic } = useItalic();
+  const { underLine, commandUnderLine } = useUnderLine();
 
   const items = useMemo<(Item | undefined)[]>(() => {
     return [
@@ -46,6 +48,10 @@ const Menu: React.FC<MenuProps> = () => {
       {
         icon: <UnderlineOutlined {...svgProps} />,
         tooltip: "下划线 (Ctrl + U)",
+        active: !!underLine.isActive,
+        onClick() {
+          commandUnderLine();
+        },
       },
       {
         icon: <GlobalLinkOutlined {...svgProps} />,
@@ -53,7 +59,7 @@ const Menu: React.FC<MenuProps> = () => {
       },
       colorPicker,
     ];
-  }, [colorPicker, typography, bold, italic]);
+  }, [colorPicker, typography, bold, italic, underLine]);
 
   return <HorizontalMenu items={items} />;
 };

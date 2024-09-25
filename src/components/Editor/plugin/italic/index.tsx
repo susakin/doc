@@ -25,7 +25,6 @@ export class ItalicPlugin extends LeafPlugin {
       const payload = {
         isActive,
       };
-      this.status = payload;
 
       this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, payload);
     });
@@ -35,6 +34,13 @@ export class ItalicPlugin extends LeafPlugin {
   public match(props: RenderLeafProps): boolean {
     return !!props.leaf[ITALIC_KEY];
   }
+
+  public getCurrentStatus = () => {
+    const isActive = isMarkActive(this.editor as any, this.key);
+    return {
+      isActive,
+    };
+  };
 
   public destroy?: (() => void) | undefined;
 

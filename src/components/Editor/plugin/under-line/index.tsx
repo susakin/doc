@@ -2,7 +2,7 @@ import { RenderLeafProps } from "slate-react";
 import { LeafPlugin, CommandFn, LeafContext } from "../base";
 import { Editor } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
-import { getAttributeAtCursor, isMarkActive } from "../../utils";
+import { isMarkActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import { isHotkey } from "../../utils/isHotkey";
 
@@ -21,14 +21,22 @@ export class UnderLinePlugin extends LeafPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const underLine = getAttributeAtCursor(this.editor, UNDERLINE_KEY);
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-        isActive: !!underLine,
-        underLine,
-      });
+      const isActive = isMarkActive(this.editor as any, this.key);
+      const payload = {
+        isActive,
+      };
+
+      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, payload);
     });
     this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
+
+  public getCurrentStatus = () => {
+    const isActive = isMarkActive(this.editor as any, this.key);
+    return {
+      isActive,
+    };
+  };
 
   public match(props: RenderLeafProps): boolean {
     return !!props.leaf[UNDERLINE_KEY];
