@@ -25,9 +25,8 @@ export class AlignPlugin extends BlockPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const align = getAttributeAtCursor(this.editor, "align");
+      const align = getAttributeAtCursor(this.editor, this.key);
       this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-        isActive: !!align,
         align,
       });
     });
@@ -37,6 +36,13 @@ export class AlignPlugin extends BlockPlugin {
   public match(props: RenderElementProps): boolean {
     return !!props.element[ALIGN_KEY];
   }
+
+  public getCurrentStatus = () => {
+    const align = getAttributeAtCursor(this.editor, this.key);
+    return {
+      align,
+    };
+  };
 
   public destroy?: (() => void) | undefined;
 
@@ -52,9 +58,14 @@ export class AlignPlugin extends BlockPlugin {
 
   public onCommand: CommandFn = ({ align }) => {
     if (this.editor) {
-      const isActive = isBlockActive(this.editor, ALIGN_KEY, align);
       Transforms.setNodes(this.editor, {
-        align: isActive ? undefined : align,
+        align,
+      });
+      setTimeout(() => {
+        this.event.trigger(
+          EDITOR_EVENT.SELECTION_CHANGE,
+          this.editor?.selection as any
+        );
       });
     }
   };

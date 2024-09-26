@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFocused, useSlate } from "slate-react";
 import { Editor, Range } from "slate";
 import Menu from "./Menu";
@@ -24,17 +24,16 @@ type HoverToolbarProps = {
 
 const HoverToolbar: React.FC<HoverToolbarProps> = ({ editorMouseDown }) => {
   const hasSection = useHasSelection();
+
   if (!hasSection || editorMouseDown) {
     return null;
   }
 
-  const domSelection = window.getSelection();
-  const domRange = domSelection?.getRangeAt?.(0);
   return (
     <InlinePopover
-      domRange={domRange}
       offset={10}
       renderToBody
+      randomKey={`${Date.now()}`}
       placement="top"
       content={({ side }) => (
         <AnimationWrapper side={side}>

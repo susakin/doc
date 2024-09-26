@@ -19,7 +19,7 @@ export const EDITOR_EVENT = {
 } as const;
 
 export type ActiveChangePayload = {
-  isActive: boolean;
+  isActive?: boolean;
   [x: string]: any;
 };
 

@@ -31,10 +31,9 @@ export class BoldPlugin extends LeafPlugin {
   }
 
   public getCurrentStatus = () => {
-    const fontLeaf = isMarkActive(this.editor as any, BOLD_KEY);
+    const bold = isMarkActive(this.editor as any, BOLD_KEY);
     return {
-      isActive: !!fontLeaf,
-      fontLeaf,
+      isActive: !!bold,
     };
   };
 

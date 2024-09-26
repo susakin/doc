@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { Placement, UseFloatingOptions } from "@floating-ui/react";
 
 import {
@@ -22,7 +22,7 @@ export type InlinePopoverProps = {
   enabled?: boolean;
   onOpenChange?: (open: boolean) => void;
   renderToBody?: boolean;
-  domRange?: Range;
+  randomKey?: string;
 } & Pick<UseFloatingOptions, "placement">;
 
 const InlinePopover: React.FC<InlinePopoverProps> = ({
@@ -30,11 +30,10 @@ const InlinePopover: React.FC<InlinePopoverProps> = ({
   enabled = true,
   onOpenChange,
   renderToBody = true,
-  domRange,
+  randomKey,
   ...rest
 }) => {
   const [open, setOpen] = useState<boolean>(false);
-
   useEffect(() => {
     onOpenChange?.(open);
   }, [open]);
@@ -61,22 +60,21 @@ const InlinePopover: React.FC<InlinePopoverProps> = ({
     }
   }, [placement, rest.content]);
   const role = useRole(context);
-
   const dismiss = useDismiss(context);
-
   const { getFloatingProps } = useInteractions([dismiss, role]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const domSelection = window.getSelection();
+    const domRange = domSelection?.getRangeAt?.(0);
+
     if (domRange) {
       setOpen(true);
       refs.setPositionReference({
         getBoundingClientRect: () => domRange.getBoundingClientRect(),
         getClientRects: () => domRange.getClientRects(),
       });
-    } else {
-      //setOpen(false);
     }
-  }, [domRange]);
+  }, [randomKey]);
 
   const Container: any = renderToBody ? FloatingPortal : React.Fragment;
 
