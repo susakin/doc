@@ -13,7 +13,6 @@ const Typography: React.FC = () => {
   const indentationItems = useIndentation();
   const { align, commandAlign } = useAlign();
 
-  console.log(align, "align1111111");
   const items = useMemo<Item[]>(() => {
     return [
       {

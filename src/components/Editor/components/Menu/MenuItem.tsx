@@ -25,7 +25,9 @@ const MenuItem: React.FC<MenuItemProps> = ({ item }) => {
         [styles[`${classNamePrefix}-disabled`]]: disabled,
         [styles[`${classNamePrefix}-danger`]]: danger,
       })}
-      onClick={onClick}
+      onClick={(e) => {
+        disabled ? e.stopPropagation() : onClick?.(e);
+      }}
     >
       {!!icon && (
         <div className={styles[`${classNamePrefix}-icon`]}>{icon}</div>

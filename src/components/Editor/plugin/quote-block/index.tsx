@@ -15,7 +15,7 @@ const HOTKEYS: Record<string, boolean> = {
 
 const classNamePrefix = "quote-block";
 
-export class QuotePlugin extends BlockPlugin {
+export class QuoteBlockPlugin extends BlockPlugin {
   public readonly key: string = QUOTE_KEY;
   constructor() {
     super();
@@ -64,4 +64,4 @@ export class QuotePlugin extends BlockPlugin {
   }
 }
 
-export const quotePlugin = new QuotePlugin();
+export const quoteBlockPlugin = new QuoteBlockPlugin();

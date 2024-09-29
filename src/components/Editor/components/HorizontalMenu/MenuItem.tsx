@@ -43,6 +43,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
     render,
     text,
     onClick,
+    key,
   } = item;
   const { placement = "bottom" } = submenuPopoverProps || {};
   const classNamePrefix = "menu-item";
@@ -57,6 +58,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
           [styles[`${classNamePrefix}-can-hover`]]: !submenu && !render,
         })}
         onClick={onClick}
+        key={key}
       >
         {render?.()}
         {!!icon && (

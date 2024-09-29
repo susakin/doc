@@ -5,15 +5,17 @@ import { BoldOutlined, HorizontalLineOutlined } from "../Icon";
 import { useColorPicker } from "./useColorPicker";
 import { useTypography } from "./useTypography";
 import { useInlineMenu } from "./useInlineMenu";
-import HorizontalMenu, { Item } from "../HorizontalMenu";
+import HorizontalMenu, { Item, HorizontalMenuProps } from "../HorizontalMenu";
 import { useBold } from "../../plugin/bold/useBold";
 import { useItalic } from "../../plugin/italic/useItalic";
 import { useUnderLine } from "../../plugin/under-line/useUnderLine";
 import { useLineThrough } from "../../plugin/line-through/useLineThrough";
+import { HYPER_LINK_KEY } from "../../plugin/hyper-link";
+import { useHyperLink } from "../../plugin/hyper-link/useHyperLink";
 
-type MenuProps = {};
+type MenuProps = Pick<HorizontalMenuProps, "onClick">;
 
-const Menu: React.FC<MenuProps> = () => {
+const Menu: React.FC<MenuProps> = ({ onClick }) => {
   const colorPicker = useColorPicker();
   const typography = useTypography();
   const inlineMenu = useInlineMenu();
@@ -22,8 +24,7 @@ const Menu: React.FC<MenuProps> = () => {
   const { italic, commandItalic } = useItalic();
   const { underLine, commandUnderLine } = useUnderLine();
   const { lineThrough, commandLineThrough } = useLineThrough();
-
-  console.log(lineThrough, "lineThrough");
+  const { commandHyperLink } = useHyperLink();
 
   const items = useMemo<(Item | undefined)[]>(() => {
     return [
@@ -64,12 +65,16 @@ const Menu: React.FC<MenuProps> = () => {
       {
         icon: <GlobalLinkOutlined {...svgProps} />,
         tooltip: "链接 (Ctrl + K)",
+        key: HYPER_LINK_KEY,
+        onClick() {
+          commandHyperLink();
+        },
       },
       colorPicker,
     ];
   }, [colorPicker, typography, bold, italic, underLine, lineThrough]);
 
-  return <HorizontalMenu items={items} />;
+  return <HorizontalMenu items={items} onClick={onClick} />;
 };
 
 export default Menu;

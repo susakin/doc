@@ -25,28 +25,30 @@ export type Item = {
 };
 
 type MenuProps = {
-  items?: Item[];
+  items?: (Item | undefined)[];
 };
 
 const Menu: React.FC<MenuProps> = ({ items }) => {
   return (
     <div className={styles[`${classNamePrefix}`]}>
       <div className={styles[`${classNamePrefix}-inner`]}>
-        {items?.map((item, index) => {
-          const { devider } = item;
-          const renderItem = getRenderItem(item);
-          return (
-            <>
-              {renderItem}
-              {devider && (
-                <div
-                  className={styles[`${classNamePrefix}-inner-devider`]}
-                  key={index}
-                />
-              )}
-            </>
-          );
-        })}
+        {items
+          ?.filter((item) => !!item)
+          ?.map((item, index) => {
+            const { devider } = item;
+            const renderItem = getRenderItem(item);
+            return (
+              <>
+                {renderItem}
+                {devider && (
+                  <div
+                    className={styles[`${classNamePrefix}-inner-devider`]}
+                    key={index}
+                  />
+                )}
+              </>
+            );
+          })}
       </div>
     </div>
   );

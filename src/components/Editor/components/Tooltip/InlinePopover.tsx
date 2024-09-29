@@ -14,6 +14,7 @@ import {
   hide,
   inline,
 } from "@floating-ui/react";
+import { useUpdateEffect } from "ahooks";
 
 export type InlinePopoverProps = {
   content?: ((props: { side: Placement }) => React.ReactNode) | React.ReactNode;
@@ -23,6 +24,7 @@ export type InlinePopoverProps = {
   onOpenChange?: (open: boolean) => void;
   renderToBody?: boolean;
   randomKey?: string;
+  open?: boolean | undefined;
 } & Pick<UseFloatingOptions, "placement">;
 
 const InlinePopover: React.FC<InlinePopoverProps> = ({
@@ -34,9 +36,13 @@ const InlinePopover: React.FC<InlinePopoverProps> = ({
   ...rest
 }) => {
   const [open, setOpen] = useState<boolean>(false);
-  useEffect(() => {
+  useUpdateEffect(() => {
     onOpenChange?.(open);
   }, [open]);
+
+  useEffect(() => {
+    typeof rest.open !== "undefined" && setOpen(rest.open);
+  }, [rest.open]);
 
   const { refs, floatingStyles, context, middlewareData, placement } =
     useFloating({

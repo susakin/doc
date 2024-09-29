@@ -2,7 +2,7 @@ import { RenderLeafProps } from "slate-react";
 import { LeafPlugin, CommandFn, LeafContext } from "../base";
 import { Editor } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
-import { getAttributeAtCursor, isMarkActive } from "../../utils";
+import { isMarkActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import { isHotkey } from "../../utils/isHotkey";
 

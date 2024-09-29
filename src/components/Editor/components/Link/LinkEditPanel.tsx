@@ -22,9 +22,11 @@ const LinkEditPanel: React.FC<LinkEditPanelProps> = ({
   onOk,
 }) => {
   const linkRef = useRef<Link>({});
+  const linkInputRef = useRef<HTMLInputElement>(null);
   const [linkButtonDisabled, setLinkeButtonDisabled] = useState<boolean>(false);
 
   useEffect(() => {
+    linkInputRef.current?.focus();
     setLinkeButtonDisabled(linkify.test((url as string) || "", "url") || !url);
   }, []);
 
@@ -53,6 +55,7 @@ const LinkEditPanel: React.FC<LinkEditPanelProps> = ({
           spellCheck="false"
           defaultValue={url}
           placeholder="粘贴或输入链接"
+          ref={linkInputRef}
           onChange={(e) => {
             const url = e.target.value;
             linkRef.current.url = url;

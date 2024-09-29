@@ -15,6 +15,7 @@ export const EDITOR_EVENT = {
   SELECTION_CHANGE: "SELECTION_CHANGE",
   BASE_EDITOR_CHANGE: "BASE_EDITOR_CHANGE",
   READONLY_CHANGE: "READONLY_CHANGE",
+  PLUGIN_COMMANT: "PLUGIN_COMMANT",
   ...REACT_EVENTS,
 } as const;
 
@@ -28,6 +29,7 @@ type EditorEventMap = {
   [EDITOR_EVENT.SELECTION_CHANGE]: BaseSelection;
   [EDITOR_EVENT.BASE_EDITOR_CHANGE]: BaseEditor;
   [EDITOR_EVENT.READONLY_CHANGE]: boolean;
+  [EDITOR_EVENT.PLUGIN_COMMANT]: Record<string, any>;
 };
 
 export type EventMap = EditorEventMap & ReactEventMap;

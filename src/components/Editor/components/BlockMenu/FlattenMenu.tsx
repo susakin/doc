@@ -13,6 +13,7 @@ const FlattenMenu: React.FC<FlattenMenuProps> = ({ items }) => {
   return (
     <div className={styles[`${classNamePrefix}`]}>
       {items?.map((item) => {
+        if (!item) return null;
         const renderItem = getRenderItem(item);
         return (
           <div className={styles[`${classNamePrefix}-item`]}>{renderItem}</div>

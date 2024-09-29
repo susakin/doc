@@ -17,13 +17,14 @@ import {
   boldPlugin,
   fontLeafPlugin,
   headingPlugin,
+  hyperLinkPlugin,
 } from "./plugin";
 import { italicPlugin } from "./plugin/italic";
 import { underLinePlugin } from "./plugin/under-line";
 import { lineThroughPlugin } from "./plugin/line-through";
 import { textBlockPlugin } from "./plugin/text-block";
 import { indentPlugin } from "./plugin/indent";
-import { quotePlugin } from "./plugin/quote-block";
+import { quoteBlockPlugin } from "./plugin/quote-block";
 import { highlightBlockPlugin } from "./plugin/highlight-block";
 import { dividerBlockPlugin } from "./plugin/divider-block";
 import { withSchema } from "./plugin/base/withSchema";
@@ -142,8 +143,9 @@ class Editor extends React.Component<EditorProps, EditableState> {
       underLinePlugin,
       lineThroughPlugin,
       indentPlugin,
-      quotePlugin,
-      dividerBlockPlugin
+      quoteBlockPlugin,
+      dividerBlockPlugin,
+      hyperLinkPlugin
     );
     pluginController.apply();
     this.state = {

@@ -49,10 +49,23 @@ export class IndentPlugin extends BlockPlugin {
     }
   };
 
+  public getCurrentStatus = () => {
+    const indent = getAttributeAtCursor(this.editor, this.key);
+    return {
+      indent,
+    };
+  };
+
   public onCommand: CommandFn = ({ indent }) => {
     if (this.editor) {
       Transforms.setNodes(this.editor, {
         indent,
+      });
+      setTimeout(() => {
+        this.event.trigger(
+          EDITOR_EVENT.SELECTION_CHANGE,
+          this.editor?.selection as any
+        );
       });
     }
   };

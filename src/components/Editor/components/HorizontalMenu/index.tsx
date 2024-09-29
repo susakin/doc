@@ -14,6 +14,7 @@ export type Item = {
   hasArrow?: boolean;
   render?: () => React.ReactNode;
   text?: React.ReactNode;
+  key?: string;
   submenuPopoverProps?: Pick<
     PopoverProps,
     "placement" | "renderToBody" | "hideWhenContentClick"
@@ -21,13 +22,17 @@ export type Item = {
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 };
 
-type ToolbarProps = {
+export type HorizontalMenuProps = {
   items?: (Item | undefined)[];
+  onClick?: (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    item: Item
+  ) => void;
 };
 
 const classNamePrefix = "horizontal-menu";
 
-const HorizontalMenu: React.FC<ToolbarProps> = ({ items }) => {
+const HorizontalMenu: React.FC<HorizontalMenuProps> = ({ items, onClick }) => {
   return (
     <div
       className={styles[`${classNamePrefix}`]}
@@ -38,6 +43,11 @@ const HorizontalMenu: React.FC<ToolbarProps> = ({ items }) => {
       {items
         ?.filter((item) => !!item)
         .map((item) => {
+          const _onClick = item.onClick;
+          item.onClick = (e) => {
+            _onClick?.(e);
+            onClick?.(e, item);
+          };
           const renderItem = getRenderItem(item);
           return (
             <>
