@@ -9,9 +9,9 @@ import {
   ReferenceOutlined,
   TextOutlined,
 } from "../Icon";
-import { svgProps } from "@/utils";
 import { Item } from "../HorizontalMenu";
 import FlattenMenu from "./FlattenMenu";
+import { svgProps } from "../../utils/getSideAnimateClassName";
 
 type MenuListProps = {};
 

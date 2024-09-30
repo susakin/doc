@@ -30,6 +30,7 @@ import { dividerBlockPlugin } from "./plugin/divider-block";
 import { withSchema } from "./plugin/base/withSchema";
 import React from "react";
 import HoverToolbar from "./components/HoverToolbar";
+import { mockSelectionPlugin } from "./plugin/mock-selection";
 
 const classNamePrefix = "editor";
 const INIT_NODE = [
@@ -145,7 +146,8 @@ class Editor extends React.Component<EditorProps, EditableState> {
       indentPlugin,
       quoteBlockPlugin,
       dividerBlockPlugin,
-      hyperLinkPlugin
+      hyperLinkPlugin,
+      mockSelectionPlugin
     );
     pluginController.apply();
     this.state = {

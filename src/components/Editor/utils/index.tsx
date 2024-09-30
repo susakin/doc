@@ -89,4 +89,4 @@ export const isCollapsed = (
   return !at || Range.isCollapsed(at);
 };
 
-export const isText = (node: Node) => Text.isText(node);
+export const isText = ((node: Node) => Text.isText(node)) as any;

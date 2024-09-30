@@ -1,6 +1,6 @@
-import { getSideAnimateClassName } from "@/utils";
 import { Placement } from "@floating-ui/react";
 import React from "react";
+import { getSideAnimateClassName } from "../../utils/getSideAnimateClassName";
 
 type AnimationWrapperProps = {
   side: Placement;

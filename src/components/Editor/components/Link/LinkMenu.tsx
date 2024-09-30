@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import HorizontalMenu, { Item } from "../HorizontalMenu";
 import styles from "./linkMenu.module.less";
 import { CancelLinkOutlined, EditOutlined, GlobalLinkOutlined } from "../Icon";
-import { svgProps } from "@/utils";
+import { svgProps } from "../../utils/getSideAnimateClassName";
 import LinkViewMenu from "./LinkVewMenu";
 
 const LinkMenu: React.FC = () => {

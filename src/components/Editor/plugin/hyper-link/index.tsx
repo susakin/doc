@@ -8,6 +8,7 @@ import renderToContainer from "../../utils/renderToContainer";
 import InlinePopover from "../../components/Tooltip/InlinePopover";
 import AnimationWrapper from "../../components/Tooltip/AnimationWrapper";
 import LinkEditPanel from "../../components/Link/LinkEditPanel";
+import { mockSelectionPlugin } from "../mock-selection";
 
 export const HYPER_LINK_KEY = "hyper-link";
 
@@ -64,22 +65,35 @@ export class HyperLinkPlugin extends LeafPlugin {
 
   public onCommand: CommandFn = () => {
     if (this.editor) {
+      const { selection } = this.editor;
+      mockSelectionPlugin.onCommand({
+        isActive: true,
+        location: selection,
+      });
       this.event.trigger(EDITOR_EVENT.PLUGIN_COMMANT, null as any);
-      const unmount = renderToContainer(
-        <InlinePopover
-          renderToBody
-          offset={5}
-          onOpenChange={(open) => {
-            open === false && unmount();
-          }}
-          placement="bottom-start"
-          content={({ side }) => (
-            <AnimationWrapper side={side}>
-              <LinkEditPanel />
-            </AnimationWrapper>
-          )}
-        />
-      );
+      Promise.resolve().then(() => {
+        const unmount = renderToContainer(
+          <InlinePopover
+            renderToBody
+            offset={5}
+            onOpenChange={(open) => {
+              if (open === false) {
+                mockSelectionPlugin.onCommand({
+                  isActive: false,
+                  location: selection,
+                });
+                unmount();
+              }
+            }}
+            placement="bottom-start"
+            content={({ side }) => (
+              <AnimationWrapper side={side}>
+                <LinkEditPanel />
+              </AnimationWrapper>
+            )}
+          />
+        );
+      });
     }
   };
 

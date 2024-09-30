@@ -24,6 +24,7 @@ const Highlight: React.FC<HighlightProps> = ({
       placement={"top"}
       enabled={!readonly}
       offset={10}
+      openDelay={2}
       hasMaxHeight
       content={({ side }) => {
         if (readonly) return null;

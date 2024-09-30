@@ -1,4 +1,3 @@
-import { svgProps } from "@/utils";
 import React, { useMemo } from "react";
 import {
   IncreaseIndentationOutlined,
@@ -7,6 +6,7 @@ import {
 } from "../Icon";
 import { Item } from "../Menu";
 import { useIndent } from "../../plugin/indent/useIndent";
+import { svgProps } from "../../utils/getSideAnimateClassName";
 
 export const useIndentation = () => {
   const { indent, commandIndent } = useIndent();

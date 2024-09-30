@@ -2,12 +2,12 @@ import React from "react";
 import styles from "./menuItem.module.less";
 import { Item } from ".";
 import cs from "classnames";
-import { svgProps } from "@/utils";
 import DoneOutlined from "../Icon/DoneOutlined";
 import RightSmallOutlined from "../Icon/RightSmallOutlined";
 import Popover from "../Tooltip/Popover";
 import Tooltip from "../Tooltip";
 import AnimationWrapper from "../Tooltip/AnimationWrapper";
+import { svgProps } from "../../utils/getSideAnimateClassName";
 
 const classNamePrefix = "menu-item";
 

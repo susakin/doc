@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TextOutlined } from "../Icon";
 import InlineMenu from "../InlineMenu";
-import { svgProps } from "@/utils";
+import { svgProps } from "../../utils/getSideAnimateClassName";
 
 export const useInlineMenu = () => {
   return {

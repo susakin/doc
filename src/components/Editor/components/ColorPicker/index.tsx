@@ -2,12 +2,12 @@ import React from "react";
 import styles from "./index.module.less";
 import cs from "classnames";
 import "@/assets/less/variable.less";
-import { usePropsValue } from "@/hooks/usePropsValue";
+import { usePropsValue } from "@/components/Editor/hooks/usePropsValue";
 import Button from "../Button";
 import FontColorSelect from "./FontColorSelect";
 import BackgroundColorSelect from "./BackgroundColorSelect";
-import { svgProps } from "@/utils";
 import { ReplaceOutlined } from "../Icon";
+import { svgProps } from "../../utils/getSideAnimateClassName";
 
 export type ColorSetting = {
   color: string;

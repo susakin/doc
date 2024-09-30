@@ -1,7 +1,7 @@
 import styles from "./useColorPicker.module.less";
 import { FontcolorOutlined } from "../Icon";
 import ColorPicker, { defaultColorSetting } from "../ColorPicker";
-import { svgProps } from "@/utils";
+import { svgProps } from "../../utils/getSideAnimateClassName";
 import { useFontLeaf } from "../../plugin/font-leaf/useFontLeaf";
 
 export const useColorPicker = () => {

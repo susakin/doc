@@ -11,7 +11,7 @@ import {
   ReferenceOutlined,
   TextOutlined,
 } from "../Icon";
-import { svgProps } from "@/utils";
+import { svgProps } from "../../utils/getSideAnimateClassName";
 import TitleMenu from "./TitleMenu";
 
 const InlineMenu: React.FC = () => {

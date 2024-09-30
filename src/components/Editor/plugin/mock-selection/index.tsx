@@ -1,8 +1,8 @@
 import { RenderLeafProps } from "slate-react";
 import { LeafPlugin, CommandFn, LeafContext } from "../base";
-import { Editor } from "slate";
+import { Editor, Transforms } from "slate";
 import { ReactEventMap } from "../../event/react";
-import { isMarkActive } from "../../utils";
+import { isMarkActive, isText } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import styles from "./index.module.less";
 
@@ -27,20 +27,23 @@ export class MockSelectionPlugin extends LeafPlugin {
 
   public onKeyDown = (event: ReactEventMap["react_keydown"]) => {};
 
-  public onCommand: CommandFn = ({ bold }) => {
+  public onCommand: CommandFn = ({ isActive, location }) => {
     if (this.editor) {
-      const isActive = isMarkActive(this.editor, bold);
       if (isActive) {
-        Editor.removeMark(this.editor, bold);
-      } else {
-        Editor.addMark(this.editor, bold, true);
-      }
-      setTimeout(() => {
-        this.event.trigger(
-          EDITOR_EVENT.SELECTION_CHANGE,
-          this.editor?.selection as any
+        Transforms.setNodes(
+          this.editor,
+          {
+            [this.key]: true,
+          },
+          { match: isText as any, split: true, at: location }
         );
-      });
+      } else {
+        Transforms.unsetNodes(this.editor, [this.key], {
+          match: isText as any,
+          split: true,
+          at: location,
+        });
+      }
     }
   };
 

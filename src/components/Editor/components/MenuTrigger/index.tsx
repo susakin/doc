@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./index.module.less";
-import { svgProps } from "@/utils";
+import { svgProps } from "../../utils/getSideAnimateClassName";
 import { DragOutlined } from "../Icon";
 
 const classNamePrefix = "menu-trigger";

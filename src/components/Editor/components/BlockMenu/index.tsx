@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import Menu, { Item } from "../Menu";
-import { svgProps } from "@/utils";
 import StyleSetOutlined from "../Icon/StyleSetOutlined";
 import ColorPicker from "../ColorPicker";
 import {
@@ -12,6 +11,7 @@ import {
 import MenuList from "./MeunList";
 import EmptyBlockMenu from "../EmptyBlockMenu";
 import { useTypography } from "../HoverToolbar/useTypography";
+import { svgProps } from "../../utils/getSideAnimateClassName";
 
 const BlockMenu: React.FC = () => {
   const typography = useTypography();

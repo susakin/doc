@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { GlobalLinkOutlined, ItalicOutlined, UnderlineOutlined } from "../Icon";
-import { svgProps } from "@/utils";
+import { svgProps } from "../../utils/getSideAnimateClassName";
 import { BoldOutlined, HorizontalLineOutlined } from "../Icon";
 import { useColorPicker } from "./useColorPicker";
 import { useTypography } from "./useTypography";

@@ -8,7 +8,7 @@ import {
   H8Outlined,
   H9Outlined,
 } from "../Icon";
-import { svgProps } from "@/utils";
+import { svgProps } from "../../utils/getSideAnimateClassName";
 
 const TitleMenu: React.FC = () => {
   const menus = useMemo<Item[]>(() => {
