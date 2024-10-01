@@ -17,7 +17,11 @@ export type Item = {
   key?: string;
   submenuPopoverProps?: Pick<
     PopoverProps,
-    "placement" | "renderToBody" | "hideWhenContentClick"
+    | "placement"
+    | "renderToBody"
+    | "hideWhenContentClick"
+    | "openDelay"
+    | "offset"
   >;
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 };

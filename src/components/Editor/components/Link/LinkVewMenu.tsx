@@ -2,22 +2,41 @@ import React, { useMemo } from "react";
 import Menu, { Item } from "../Menu";
 import { GlobalLinkOutlined, TitleViewOutlined } from "../Icon";
 import { svgProps } from "../../utils/getSideAnimateClassName";
+import { HyperLinkConfig } from "../../plugin/hyper-link";
 
-const LinkViewMenu: React.FC = () => {
+type LinkViewMenuProps = {
+  onClick?: (key: HyperLinkConfig["displayMode"]) => void;
+} & Pick<HyperLinkConfig, "displayMode">;
+
+const LinkViewMenu: React.FC<LinkViewMenuProps> = ({
+  displayMode,
+  onClick,
+}) => {
   const items = useMemo<Item[]>(() => {
     return [
       {
         icon: <GlobalLinkOutlined {...svgProps} />,
         text: "链接视图",
+        key: "link",
+        active: displayMode === "link",
       },
       {
         icon: <TitleViewOutlined {...svgProps} />,
         text: "标题视图",
+        key: "title",
+        active: displayMode === "title",
       },
     ];
-  }, []);
+  }, [displayMode]);
 
-  return <Menu items={items} />;
+  return (
+    <Menu
+      items={items}
+      onClick={(e, key) => {
+        onClick?.(key as any);
+      }}
+    />
+  );
 };
 
 export default LinkViewMenu;

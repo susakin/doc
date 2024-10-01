@@ -44,6 +44,9 @@ const HoverToolbar: React.FC<HoverToolbarProps> = ({ editorMouseDown }) => {
       offset={10}
       renderToBody
       open={open}
+      onOpenChange={(open) => {
+        setOpen(open);
+      }}
       randomKey={`${Date.now()}`}
       placement="top"
       content={({ side }) => (

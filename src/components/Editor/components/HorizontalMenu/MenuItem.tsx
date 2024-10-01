@@ -45,7 +45,8 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
     onClick,
     key,
   } = item;
-  const { placement = "bottom" } = submenuPopoverProps || {};
+  const { placement = "bottom", renderToBody = true } =
+    submenuPopoverProps || {};
   const classNamePrefix = "menu-item";
 
   return (
@@ -71,7 +72,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, open, className }) => {
           (unique ? (
             <Popover
               placement={placement}
-              renderToBody
+              renderToBody={renderToBody}
               offset={10}
               content={({ side }) => {
                 return (
@@ -97,6 +98,8 @@ export function getRenderItem(item: Item) {
     placement = "bottom-start",
     renderToBody = true,
     hideWhenContentClick,
+    openDelay,
+    offset = 10,
   } = submenuPopoverProps || {};
   if (tooltip) {
     return (
@@ -113,7 +116,8 @@ export function getRenderItem(item: Item) {
       <>
         <Popover
           placement={placement}
-          offset={10}
+          offset={offset}
+          openDelay={openDelay}
           renderToBody={renderToBody}
           hideWhenContentClick={hideWhenContentClick}
           hasMaxHeight

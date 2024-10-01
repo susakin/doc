@@ -1,7 +1,7 @@
-import { RenderLeafProps } from "slate-react";
+import { ReactEditor, RenderLeafProps } from "slate-react";
 import { LeafPlugin, CommandFn, LeafContext } from "../base";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
-import { getMarkByFormat } from "../../utils";
+import { getMarkByFormat, isText } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import { isHotkey } from "../../utils/isHotkey";
 import renderToContainer from "../../utils/renderToContainer";
@@ -9,6 +9,8 @@ import InlinePopover from "../../components/Tooltip/InlinePopover";
 import AnimationWrapper from "../../components/Tooltip/AnimationWrapper";
 import LinkEditPanel from "../../components/Link/LinkEditPanel";
 import { mockSelectionPlugin } from "../mock-selection";
+import HyperLink from "./HyperLink";
+import { Transforms } from "slate";
 
 export const HYPER_LINK_KEY = "hyper-link";
 
@@ -16,8 +18,9 @@ const HOTKEYS: Record<string, string> = {
   "ctrl+k": HYPER_LINK_KEY,
 };
 
-export type HyperLink = {
-  link?: string;
+export type HyperLinkConfig = {
+  url?: string;
+  text?: string;
   displayMode?: "link" | "title";
 };
 
@@ -80,7 +83,6 @@ export class HyperLinkPlugin extends LeafPlugin {
               if (open === false) {
                 mockSelectionPlugin.onCommand({
                   isActive: false,
-                  location: selection,
                 });
                 unmount();
               }
@@ -88,7 +90,32 @@ export class HyperLinkPlugin extends LeafPlugin {
             placement="bottom-start"
             content={({ side }) => (
               <AnimationWrapper side={side}>
-                <LinkEditPanel />
+                <LinkEditPanel
+                  onOk={({ url }) => {
+                    const path = ReactEditor.findPath(
+                      this.editor as any,
+                      mockSelectionPlugin.element
+                    );
+                    Transforms.setNodes(
+                      this.editor as any,
+                      {
+                        [this.key]: {
+                          url,
+                          displayMode: "link",
+                        },
+                      },
+                      {
+                        match: isText,
+                        split: true,
+                        at: path,
+                      }
+                    );
+                    mockSelectionPlugin.onCommand({
+                      isActive: false,
+                    });
+                    unmount();
+                  }}
+                />
               </AnimationWrapper>
             )}
           />
@@ -98,8 +125,10 @@ export class HyperLinkPlugin extends LeafPlugin {
   };
 
   public render(context: LeafContext): JSX.Element {
-    const { children } = context;
-    return <strong style={{ fontWeight: "bold" }}>{children}</strong>;
+    const { children, props } = context;
+    const config = props.leaf[HYPER_LINK_KEY];
+
+    return <HyperLink config={config}>{children}</HyperLink>;
   }
 }
 

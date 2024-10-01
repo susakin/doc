@@ -6,6 +6,7 @@ import { PopoverProps } from "../Tooltip/Popover";
 const classNamePrefix = "menu";
 
 export type Item = {
+  key?: string;
   icon?: React.ReactNode;
   text?: React.ReactNode;
   suffix?: React.ReactNode;
@@ -26,9 +27,13 @@ export type Item = {
 
 type MenuProps = {
   items?: (Item | undefined)[];
+  onClick?: (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    item: Item
+  ) => void;
 };
 
-const Menu: React.FC<MenuProps> = ({ items }) => {
+const Menu: React.FC<MenuProps> = ({ items, onClick }) => {
   return (
     <div className={styles[`${classNamePrefix}`]}>
       <div className={styles[`${classNamePrefix}-inner`]}>
@@ -36,6 +41,11 @@ const Menu: React.FC<MenuProps> = ({ items }) => {
           ?.filter((item) => !!item)
           ?.map((item, index) => {
             const { devider } = item;
+            const _onClick = item.onClick;
+            item.onClick = (e) => {
+              _onClick?.(e);
+              onClick?.(e, item);
+            };
             const renderItem = getRenderItem(item);
             return (
               <>

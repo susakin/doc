@@ -2,25 +2,24 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./linkEditPanel.module.less";
 import cs from "classnames";
 import * as linkify from "linkifyjs";
+import { HyperLinkConfig } from "../../plugin/hyper-link";
 
 const classNamePrefix = "link-edit-panel";
 
-type Link = {
-  text?: string;
-  url?: string;
-};
+type Link = Omit<HyperLinkConfig, "displayMode">;
 
 type LinkEditPanelProps = {
   hasText?: boolean;
   onOk?: (params: Link) => void;
-} & Link;
+  config?: Link;
+};
 
 const LinkEditPanel: React.FC<LinkEditPanelProps> = ({
-  text,
-  url,
+  config,
   hasText = false,
   onOk,
 }) => {
+  const { url, text } = config || {};
   const linkRef = useRef<Link>({});
   const linkInputRef = useRef<HTMLInputElement>(null);
   const [linkButtonDisabled, setLinkeButtonDisabled] = useState<boolean>(false);
@@ -58,8 +57,10 @@ const LinkEditPanel: React.FC<LinkEditPanelProps> = ({
           ref={linkInputRef}
           onChange={(e) => {
             const url = e.target.value;
-            linkRef.current.url = url;
             const isValid = linkify.test(url, "url");
+            linkRef.current.url = isValid
+              ? linkify.find(url)?.[0]?.href
+              : undefined;
             setLinkeButtonDisabled(!isValid);
           }}
         />

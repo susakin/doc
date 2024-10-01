@@ -43,7 +43,7 @@ const INIT_NODE = [
     //   fillColor: "rgb(254, 234, 210)",
     // },
 
-    "divider-block": true,
+    //"divider-block": true,
   },
   {
     children: [
@@ -58,15 +58,15 @@ const INIT_NODE = [
       fillColor: "rgb(254, 234, 210)",
     },
   },
-  {
-    children: [{ text: "2" }],
-    "text-block": true,
-    "highlight-block": {
-      color: "rgb(31, 35, 41)",
-      borderColor: "rgb(255, 165, 61)",
-      fillColor: "rgb(254, 234, 210)",
-    },
-  },
+  // {
+  //   children: [{ text: "2" }],
+  //   "text-block": true,
+  //   "highlight-block": {
+  //     color: "rgb(31, 35, 41)",
+  //     borderColor: "rgb(255, 165, 61)",
+  //     fillColor: "rgb(254, 234, 210)",
+  //   },
+  // },
 ];
 
 type EditorProps = {

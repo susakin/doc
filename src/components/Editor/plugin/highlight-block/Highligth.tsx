@@ -23,7 +23,6 @@ const Highlight: React.FC<HighlightProps> = ({
     <Popover
       placement={"top"}
       enabled={!readonly}
-      offset={10}
       openDelay={2}
       hasMaxHeight
       content={({ side }) => {
