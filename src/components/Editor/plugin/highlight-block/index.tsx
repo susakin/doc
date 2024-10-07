@@ -28,6 +28,14 @@ export class HighlightBlockPlugin extends BlockPlugin {
     });
   }
 
+  public getCurrentStatus = () => {
+    const highlightBlock = getAttributeAtCursor(this.editor, this.key);
+    return {
+      isActive: !!highlightBlock,
+      highlightBlock,
+    };
+  };
+
   public match({ element }: RenderElementProps): boolean {
     return !!element[HIGHLIGHT_BLOCK_KEY];
   }

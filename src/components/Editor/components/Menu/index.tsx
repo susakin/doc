@@ -19,6 +19,7 @@ export type Item = {
   devider?: boolean;
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   danger?: boolean;
+  hidden?: boolean;
   submenuPopoverProps?: Pick<
     PopoverProps,
     "placement" | "renderToBody" | "hideWhenContentClick"
@@ -41,6 +42,7 @@ const Menu: React.FC<MenuProps> = ({ items, onClick }) => {
           ?.filter((item) => !!item)
           ?.map((item, index) => {
             const { devider } = item;
+            if (item.hidden) return null;
             const _onClick = item.onClick;
             item.onClick = (e) => {
               _onClick?.(e);

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { dividerBlockPlugin } from ".";
 import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 
-export const useHighlightBlock = () => {
+export const useDividerBlock = () => {
   const [dividerBlock, setDividerBlock] = useState<ActiveChangePayload>();
 
   useEffect(() => {

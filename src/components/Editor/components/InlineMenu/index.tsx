@@ -15,10 +15,15 @@ import { svgProps } from "../../utils/getSideAnimateClassName";
 import TitleMenu from "./TitleMenu";
 import { useTextBlock } from "../../plugin/text-block/useTextBlock";
 import { useHeading } from "../../plugin/heading/useHeading";
+import { useQuoteBlock } from "../../plugin/quote-block/useQuoteBlock";
+import { useHighlightBlock } from "../../plugin/highlight-block/useHighlightBlock";
+import { defaultColorSetting } from "../ColorPicker";
 
 const InlineMenu: React.FC = () => {
   const { textBlock, commandTextBlock } = useTextBlock();
   const { heading, commandHeading } = useHeading();
+  const { quoteBlock, commandQuoteBlock } = useQuoteBlock();
+  const { highlightBlock, commandHighlightBlock } = useHighlightBlock();
 
   const menus = useMemo<Item[]>(() => {
     return [
@@ -81,14 +86,24 @@ const InlineMenu: React.FC = () => {
         icon: <ReferenceOutlined {...svgProps} />,
         text: "引用",
         tooltip: "Ctrl + Shift + >",
+        active: quoteBlock?.isActive,
+        onClick() {
+          commandQuoteBlock();
+        },
       },
       {
         icon: <CalloutOutlined {...svgProps} />,
         text: "高亮块",
         tooltip: "高亮块",
+        hidden: highlightBlock?.isActive,
+        onClick() {
+          commandHighlightBlock({
+            highlightBlock: defaultColorSetting,
+          });
+        },
       },
     ];
-  }, [textBlock, heading]);
+  }, [textBlock, heading, quoteBlock]);
 
   return <Menu items={menus} />;
 };

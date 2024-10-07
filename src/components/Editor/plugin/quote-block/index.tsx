@@ -27,7 +27,6 @@ export class QuoteBlockPlugin extends BlockPlugin {
       const quoteBlock = getAttributeAtCursor(this.editor, QUOTE_KEY);
       this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
         isActive: !!quoteBlock,
-        quoteBlock,
       });
     });
 
@@ -44,16 +43,29 @@ export class QuoteBlockPlugin extends BlockPlugin {
     for (const hotkey in HOTKEYS) {
       if (isHotkey(hotkey, event.nativeEvent)) {
         event.preventDefault();
-        this.onCommand();
+        this.onCommand(undefined as any);
       }
     }
+  };
+
+  public getCurrentStatus = () => {
+    const quoteBlock = getAttributeAtCursor(this.editor, this.key);
+    return {
+      isActive: !!quoteBlock,
+    };
   };
 
   public onCommand: CommandFn = () => {
     if (this.editor) {
       const isActive = isBlockActive(this.editor, QUOTE_KEY, true);
       Transforms.setNodes(this.editor, {
-        "quote-block": isActive ? undefined : true,
+        [this.key]: isActive ? undefined : true,
+      });
+      setTimeout(() => {
+        this.event.trigger(
+          EDITOR_EVENT.SELECTION_CHANGE,
+          this.editor?.selection as any
+        );
       });
     }
   };
