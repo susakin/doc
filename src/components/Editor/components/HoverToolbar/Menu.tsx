@@ -24,7 +24,7 @@ const Menu: React.FC<MenuProps> = ({ onClick }) => {
   const { italic, commandItalic } = useItalic();
   const { underLine, commandUnderLine } = useUnderLine();
   const { lineThrough, commandLineThrough } = useLineThrough();
-  const { commandHyperLink } = useHyperLink();
+  const { commandHyperLink, hyperLink } = useHyperLink();
 
   const items = useMemo<(Item | undefined)[]>(() => {
     return [
@@ -66,13 +66,22 @@ const Menu: React.FC<MenuProps> = ({ onClick }) => {
         icon: <GlobalLinkOutlined {...svgProps} />,
         tooltip: "链接 (Ctrl + K)",
         key: HYPER_LINK_KEY,
+        active: hyperLink?.isActive,
         onClick() {
           commandHyperLink();
         },
       },
       colorPicker,
     ];
-  }, [colorPicker, typography, bold, italic, underLine, lineThrough]);
+  }, [
+    colorPicker,
+    typography,
+    bold,
+    italic,
+    underLine,
+    lineThrough,
+    hyperLink,
+  ]);
 
   return <HorizontalMenu items={items} onClick={onClick} />;
 };

@@ -10,13 +10,20 @@ import {
 import { svgProps } from "../../utils/getSideAnimateClassName";
 import LinkViewMenu from "./LinkVewMenu";
 import { HyperLinkConfig } from "../../plugin/hyper-link";
-import ColorPicker from "../ColorPicker";
 
-type LinkMenuProps = {
+export type LinkMenuProps = {
   config?: HyperLinkConfig;
+  onRemoveLink?: () => void;
+  onEdit?: () => void;
+  onSwitchDisplayMode?: (key: HyperLinkConfig["displayMode"]) => void;
 };
 
-const LinkMenu: React.FC<LinkMenuProps> = ({ config }) => {
+const LinkMenu: React.FC<LinkMenuProps> = ({
+  config,
+  onRemoveLink,
+  onSwitchDisplayMode,
+  onEdit,
+}) => {
   const { url } = config || {};
 
   const items = useMemo<Item[]>(() => {
@@ -30,11 +37,13 @@ const LinkMenu: React.FC<LinkMenuProps> = ({ config }) => {
       {
         icon: <EditOutlined {...svgProps} />,
         tooltip: "编辑链接",
+        onClick: onEdit,
       },
       {
         icon: <CancelLinkOutlined {...svgProps} />,
         tooltip: "移除链接",
         devider: true,
+        onClick: onRemoveLink,
       },
       {
         icon: isLinkDisplayMode ? (
@@ -43,7 +52,12 @@ const LinkMenu: React.FC<LinkMenuProps> = ({ config }) => {
           <TitleViewOutlined {...svgProps} />
         ),
         text: isLinkDisplayMode ? "链接视图" : "标题视图",
-        submenu: <LinkViewMenu displayMode={config?.displayMode} />,
+        submenu: (
+          <LinkViewMenu
+            displayMode={config?.displayMode}
+            onClick={onSwitchDisplayMode}
+          />
+        ),
         submenuPopoverProps: {
           placement: "bottom-start",
           renderToBody: false,

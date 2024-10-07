@@ -10,7 +10,7 @@ import AnimationWrapper from "../../components/Tooltip/AnimationWrapper";
 import LinkEditPanel from "../../components/Link/LinkEditPanel";
 import { mockSelectionPlugin } from "../mock-selection";
 import HyperLink from "./HyperLink";
-import { Transforms } from "slate";
+import { BaseText, Editor, Transforms } from "slate";
 
 export const HYPER_LINK_KEY = "hyper-link";
 
@@ -26,6 +26,7 @@ export type HyperLinkConfig = {
 
 export class HyperLinkPlugin extends LeafPlugin {
   public readonly key: string = HYPER_LINK_KEY;
+
   constructor() {
     super();
     this.init();
@@ -66,14 +67,50 @@ export class HyperLinkPlugin extends LeafPlugin {
     }
   };
 
+  public onEditLink({ url, text }: HyperLinkConfig) {
+    const editor = this.editor as any;
+    const path = ReactEditor.findPath(editor, mockSelectionPlugin.element);
+    Transforms.setNodes(
+      editor,
+      {
+        [this.key]: {
+          url,
+          displayMode: "title",
+        },
+      },
+      {
+        match: isText,
+        split: true,
+        at: path,
+      }
+    );
+    if (text) {
+      const range = Editor.range(editor, path);
+      Transforms.insertText(editor, text, { at: range });
+    }
+
+    const end = Editor.end(editor, path);
+    Transforms.select(editor, end);
+    setTimeout(() => {
+      //聚焦到设置文本的 末尾
+      ReactEditor.focus(this.editor as ReactEditor);
+    });
+
+    mockSelectionPlugin.onCommand({
+      isActive: false,
+    });
+  }
+
   public onCommand: CommandFn = () => {
-    if (this.editor) {
-      const { selection } = this.editor;
+    const editor = this.editor as any;
+    if (editor) {
+      const { selection } = editor;
       mockSelectionPlugin.onCommand({
         isActive: true,
         location: selection,
       });
       this.event.trigger(EDITOR_EVENT.PLUGIN_COMMANT, null as any);
+
       Promise.resolve().then(() => {
         const unmount = renderToContainer(
           <InlinePopover
@@ -81,8 +118,10 @@ export class HyperLinkPlugin extends LeafPlugin {
             offset={5}
             onOpenChange={(open) => {
               if (open === false) {
-                mockSelectionPlugin.onCommand({
-                  isActive: false,
+                Promise.resolve().then(() => {
+                  mockSelectionPlugin.onCommand({
+                    isActive: false,
+                  });
                 });
                 unmount();
               }
@@ -92,27 +131,7 @@ export class HyperLinkPlugin extends LeafPlugin {
               <AnimationWrapper side={side}>
                 <LinkEditPanel
                   onOk={({ url }) => {
-                    const path = ReactEditor.findPath(
-                      this.editor as any,
-                      mockSelectionPlugin.element
-                    );
-                    Transforms.setNodes(
-                      this.editor as any,
-                      {
-                        [this.key]: {
-                          url,
-                          displayMode: "link",
-                        },
-                      },
-                      {
-                        match: isText,
-                        split: true,
-                        at: path,
-                      }
-                    );
-                    mockSelectionPlugin.onCommand({
-                      isActive: false,
-                    });
+                    this.onEditLink({ url });
                     unmount();
                   }}
                 />
@@ -125,10 +144,59 @@ export class HyperLinkPlugin extends LeafPlugin {
   };
 
   public render(context: LeafContext): JSX.Element {
-    const { children, props } = context;
-    const config = props.leaf[HYPER_LINK_KEY];
+    const { children, props, element } = context;
+    const config = { ...props.leaf[HYPER_LINK_KEY] };
+    config.text = element?.text;
+    if (config.displayMode === "link") {
+      config.url = element?.text;
+    }
+    return (
+      <HyperLink
+        config={config}
+        readonly={this.readonly}
+        onRemoveLink={() => {
+          this.removeLink(element);
+        }}
+        onOk={this.onEditLink.bind(this)}
+        onSwitchDisplayMode={(displayMode) => {
+          const editor = this.editor as any;
+          const path = ReactEditor.findPath(editor, element);
 
-    return <HyperLink config={config}>{children}</HyperLink>;
+          Transforms.setNodes(
+            this.editor as any,
+            {
+              [this.key]: {
+                ...config,
+                displayMode,
+              },
+            },
+            {
+              at: path,
+              match: isText,
+              split: true,
+            }
+          );
+          const range = Editor.range(editor, path);
+          Transforms.insertText(
+            editor,
+            displayMode === "link"
+              ? config?.url
+              : (new URL(config?.text as any)?.hostname as any),
+            { at: range }
+          );
+        }}
+      >
+        {children}
+      </HyperLink>
+    );
+  }
+  public removeLink(element: BaseText) {
+    const path = ReactEditor.findPath(this.editor as any, element);
+    Transforms.unsetNodes(this.editor as any, [this.key], {
+      match: isText,
+      split: true,
+      at: path,
+    });
   }
 }
 

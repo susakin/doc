@@ -36,7 +36,6 @@ export class HighlightBlockPlugin extends BlockPlugin {
 
   public onCommand: CommandFn = ({ highlightBlock, at }) => {
     if (this.editor) {
-      console.log(at, "at");
       Transforms.setNodes(
         this.editor,
         {

@@ -18,7 +18,6 @@ import { useUpdateEffect } from "ahooks";
 
 export type InlinePopoverProps = {
   content?: ((props: { side: Placement }) => React.ReactNode) | React.ReactNode;
-  openDelay?: number;
   offset?: number;
   enabled?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -28,7 +27,6 @@ export type InlinePopoverProps = {
 } & Pick<UseFloatingOptions, "placement">;
 
 const InlinePopover: React.FC<InlinePopoverProps> = ({
-  openDelay = 0,
   enabled = true,
   onOpenChange,
   renderToBody = true,

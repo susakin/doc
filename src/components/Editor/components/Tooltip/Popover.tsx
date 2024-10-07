@@ -35,6 +35,7 @@ export type PopoverProps = {
   openDelay?: number;
   offset?: number;
   enabled?: boolean;
+  open?: boolean;
   onOpenChange?: (open: boolean) => void;
   hideWhenContentClick?: boolean;
   renderToBody?: boolean;
@@ -61,6 +62,10 @@ const Popover: React.FC<PopoverProps> = ({
   const arrowRef = useRef(null);
   const [maxHeight, setMaxHeight] = useState<number>();
   const [maxWidth, setMaxWidth] = useState<number>();
+
+  useEffect(() => {
+    typeof rest.open !== "undefined" && setOpen(rest.open);
+  }, [rest.open]);
 
   useEffect(() => {
     onOpenChange?.(open);

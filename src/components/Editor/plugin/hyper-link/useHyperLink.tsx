@@ -13,7 +13,7 @@ export const useHyperLink = () => {
   }, []);
 
   const commandHyperLink = () => {
-    hyperLinkPlugin.onCommand();
+    hyperLinkPlugin.onCommand(undefined as any);
   };
 
   return { hyperLink, commandHyperLink };

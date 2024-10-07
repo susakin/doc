@@ -32,8 +32,8 @@ const LinkViewMenu: React.FC<LinkViewMenuProps> = ({
   return (
     <Menu
       items={items}
-      onClick={(e, key) => {
-        onClick?.(key as any);
+      onClick={(e, item) => {
+        onClick?.(item?.key as any);
       }}
     />
   );

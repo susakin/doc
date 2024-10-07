@@ -3,7 +3,7 @@ import styles from "./linkEditPanel.module.less";
 import cs from "classnames";
 import * as linkify from "linkifyjs";
 import { HyperLinkConfig } from "../../plugin/hyper-link";
-
+import { useKeyPress } from "ahooks";
 const classNamePrefix = "link-edit-panel";
 
 type Link = Omit<HyperLinkConfig, "displayMode">;
@@ -22,12 +22,29 @@ const LinkEditPanel: React.FC<LinkEditPanelProps> = ({
   const { url, text } = config || {};
   const linkRef = useRef<Link>({});
   const linkInputRef = useRef<HTMLInputElement>(null);
+  const textInputRef = useRef<HTMLInputElement>(null);
   const [linkButtonDisabled, setLinkeButtonDisabled] = useState<boolean>(false);
 
   useEffect(() => {
     linkInputRef.current?.focus();
-    setLinkeButtonDisabled(linkify.test((url as string) || "", "url") || !url);
-  }, []);
+    setLinkeButtonDisabled(!linkify.test((url as string) || "", "url") || !url);
+    linkRef.current = {
+      url,
+      text,
+    };
+  }, [url]);
+
+  function onEnter() {
+    !linkButtonDisabled && onOk?.(linkRef.current);
+  }
+
+  useKeyPress("enter", onEnter, {
+    target: linkInputRef,
+  });
+
+  useKeyPress("enter", onEnter, {
+    target: textInputRef,
+  });
 
   return (
     <div className={styles[`${classNamePrefix}`]}>
@@ -39,6 +56,7 @@ const LinkEditPanel: React.FC<LinkEditPanelProps> = ({
             className={styles[`${classNamePrefix}-item-input`]}
             spellCheck="false"
             placeholder="输入文本"
+            ref={textInputRef}
             onChange={(e) => {
               linkRef.current.text = e.target.value;
             }}
@@ -70,9 +88,7 @@ const LinkEditPanel: React.FC<LinkEditPanelProps> = ({
             [styles[`${classNamePrefix}-item-button-disabled`]]:
               linkButtonDisabled,
           })}
-          onClick={() => {
-            !linkButtonDisabled && onOk?.(linkRef.current);
-          }}
+          onClick={onEnter}
         >
           确定
         </button>

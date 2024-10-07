@@ -41,6 +41,9 @@ const InlineMenu: React.FC = () => {
         icon: <HnOutlined {...svgProps} />,
         text: "其他标题",
         submenu: <TitleMenu />,
+        submenuPopoverProps: {
+          renderToBody: false,
+        },
       },
       {
         icon: <OrderListOutlined {...svgProps} />,
