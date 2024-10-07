@@ -6,12 +6,24 @@ import { getAttributeAtCursor, isBlockActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import styles from "./index.module.less";
 import { isHotkey } from "../../utils/isHotkey";
+import { TEXT_BLOCK_KEY, textBlockPlugin } from "../text-block";
 
 const classNamePrefix = "heading";
 
 export const HEADING_KEY = "heading";
 
-const HOTKEYS: Record<string, string> = {
+export type Heading =
+  | "h1"
+  | "h2"
+  | "h3"
+  | "h4"
+  | "h5"
+  | "h6"
+  | "h7"
+  | "h8"
+  | "h9";
+
+const HOTKEYS: Record<string, Heading> = {
   "ctrl+alt+1": "h1",
   "ctrl+alt+2": "h2",
   "ctrl+alt+3": "h3",
@@ -41,6 +53,14 @@ export class HeadingPlugin extends BlockPlugin {
     this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
 
+  public getCurrentStatus = () => {
+    const heading = getAttributeAtCursor(this.editor, HEADING_KEY);
+    return {
+      isActive: !!heading,
+      heading,
+    };
+  };
+
   public match({ element }: RenderElementProps): boolean {
     return !!element[HEADING_KEY];
   }
@@ -60,8 +80,24 @@ export class HeadingPlugin extends BlockPlugin {
   public onCommand: CommandFn = ({ heading }) => {
     if (this.editor) {
       const isActive = isBlockActive(this.editor, HEADING_KEY, heading);
-      Transforms.setNodes(this.editor, {
-        heading: isActive ? undefined : heading,
+      Transforms.setNodes(
+        this.editor,
+        Object.assign(
+          {
+            heading: isActive ? undefined : heading,
+          },
+          !isActive ? { [TEXT_BLOCK_KEY]: undefined } : {}
+        )
+      );
+      setTimeout(() => {
+        this.event.trigger(
+          EDITOR_EVENT.SELECTION_CHANGE,
+          this.editor?.selection as any
+        );
+        textBlockPlugin.event.trigger(
+          EDITOR_EVENT.SELECTION_CHANGE,
+          this.editor?.selection as any
+        );
       });
     }
   };

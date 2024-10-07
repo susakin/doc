@@ -81,6 +81,7 @@ const Menu: React.FC<MenuProps> = ({ onClick }) => {
     underLine,
     lineThrough,
     hyperLink,
+    inlineMenu,
   ]);
 
   return <HorizontalMenu items={items} onClick={onClick} />;

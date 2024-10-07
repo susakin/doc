@@ -19,11 +19,11 @@ export const getAttributeAtCursor = (
     Editor.nodes(editor, {
       at: Editor.unhangRange(editor, selection),
       match: (n) =>
-        !Editor.isEditor(n) && SlateElement.isElement(n) && !!n[attribute],
+        !Editor.isEditor(n) &&
+        SlateElement.isElement(n) &&
+        !!(n as any)[attribute],
     })
   );
-
-  console.log(match, "match");
 
   return ((match?.[0] || {}) as any)[attribute];
 };
@@ -43,7 +43,7 @@ export const isBlockActive = (
       match: (n) =>
         !Editor.isEditor(n) &&
         SlateElement.isElement(n) &&
-        n[attribute] === value,
+        (n as any)[attribute] === value,
     })
   );
 
@@ -53,7 +53,7 @@ export const isBlockActive = (
 export const isMarkActive = (editor: BaseEditor, format: string) => {
   try {
     const marks = Editor.marks(editor);
-    return marks ? marks[format] === true : false;
+    return marks ? (marks as any)[format] === true : false;
   } catch (e) {
     return false;
   }
@@ -62,7 +62,7 @@ export const isMarkActive = (editor: BaseEditor, format: string) => {
 export const getMarkByFormat = (editor: BaseEditor, format: string) => {
   try {
     const marks = Editor.marks(editor);
-    return marks?.[format];
+    return (marks as any)?.[format];
   } catch (e) {
     return null;
   }

@@ -13,29 +13,50 @@ import {
 } from "../Icon";
 import { svgProps } from "../../utils/getSideAnimateClassName";
 import TitleMenu from "./TitleMenu";
+import { useTextBlock } from "../../plugin/text-block/useTextBlock";
+import { useHeading } from "../../plugin/heading/useHeading";
 
 const InlineMenu: React.FC = () => {
+  const { textBlock, commandTextBlock } = useTextBlock();
+  const { heading, commandHeading } = useHeading();
+
   const menus = useMemo<Item[]>(() => {
     return [
       {
         icon: <TextOutlined {...svgProps} />,
         text: "正文",
         tooltip: "Ctrl + Alt + 0",
+        active: textBlock?.isActive,
+        onClick() {
+          commandTextBlock();
+        },
       },
       {
         icon: <H1Outlined {...svgProps} />,
         text: "一级标题",
         tooltip: "Ctrl + Alt + 1",
+        active: heading?.heading === "h1",
+        onClick() {
+          commandHeading("h1");
+        },
       },
       {
         icon: <H2Outlined {...svgProps} />,
         text: "二级标题",
         tooltip: "Ctrl + Alt + 2",
+        active: heading?.heading === "h2",
+        onClick() {
+          commandHeading("h2");
+        },
       },
       {
         icon: <H3Outlined {...svgProps} />,
         text: "三级标题",
         tooltip: "Ctrl + Alt + 3",
+        active: heading?.heading === "h3",
+        onClick() {
+          commandHeading("h3");
+        },
       },
       {
         icon: <HnOutlined {...svgProps} />,
@@ -67,7 +88,7 @@ const InlineMenu: React.FC = () => {
         tooltip: "高亮块",
       },
     ];
-  }, []);
+  }, [textBlock, heading]);
 
   return <Menu items={menus} />;
 };
