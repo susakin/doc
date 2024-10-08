@@ -77,7 +77,7 @@ export class HeadingPlugin extends BlockPlugin {
     }
   };
 
-  public onCommand: CommandFn = ({ heading }) => {
+  public onCommand: CommandFn = ({ heading, at }) => {
     if (this.editor) {
       const isActive = isBlockActive(this.editor, HEADING_KEY, heading);
       Transforms.setNodes(
@@ -87,7 +87,8 @@ export class HeadingPlugin extends BlockPlugin {
             heading: isActive ? undefined : heading,
           },
           !isActive ? { [TEXT_BLOCK_KEY]: undefined } : {}
-        )
+        ),
+        { at }
       );
       setTimeout(() => {
         this.event.trigger(

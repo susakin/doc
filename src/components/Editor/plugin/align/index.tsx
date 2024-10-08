@@ -56,11 +56,15 @@ export class AlignPlugin extends BlockPlugin {
     }
   };
 
-  public onCommand: CommandFn = ({ align }) => {
+  public onCommand: CommandFn = ({ align, at }) => {
     if (this.editor) {
-      Transforms.setNodes(this.editor, {
-        align,
-      });
+      Transforms.setNodes(
+        this.editor,
+        {
+          align,
+        },
+        { at }
+      );
       setTimeout(() => {
         this.event.trigger(
           EDITOR_EVENT.SELECTION_CHANGE,

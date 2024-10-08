@@ -19,7 +19,7 @@ export const useIndentation = () => {
         tooltip: indent?.indent ? "当前内容已达最大缩进层级" : "tab",
         disabled: indent?.indent,
         onClick() {
-          commandIndent(true);
+          commandIndent({ indent: true });
         },
         suffix: indent?.indent ? <MaybeOutlined {...svgProps} /> : null,
       },
@@ -29,7 +29,7 @@ export const useIndentation = () => {
         text: "减少缩进",
         disabled: !indent?.indent,
         onClick() {
-          commandIndent(false);
+          commandIndent({ indent: false });
         },
       },
     ];

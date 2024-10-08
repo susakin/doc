@@ -42,7 +42,7 @@ const InlineMenu: React.FC = () => {
         tooltip: "Ctrl + Alt + 1",
         active: heading?.heading === "h1",
         onClick() {
-          commandHeading("h1");
+          commandHeading({ heading: "h1" });
         },
       },
       {
@@ -51,7 +51,7 @@ const InlineMenu: React.FC = () => {
         tooltip: "Ctrl + Alt + 2",
         active: heading?.heading === "h2",
         onClick() {
-          commandHeading("h2");
+          commandHeading({ heading: "h2" });
         },
       },
       {
@@ -60,7 +60,7 @@ const InlineMenu: React.FC = () => {
         tooltip: "Ctrl + Alt + 3",
         active: heading?.heading === "h3",
         onClick() {
-          commandHeading("h3");
+          commandHeading({ heading: "h3" });
         },
       },
       {

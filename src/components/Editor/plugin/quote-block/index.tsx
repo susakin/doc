@@ -55,12 +55,16 @@ export class QuoteBlockPlugin extends BlockPlugin {
     };
   };
 
-  public onCommand: CommandFn = () => {
+  public onCommand: CommandFn = ({ at }: any) => {
     if (this.editor) {
       const isActive = isBlockActive(this.editor, QUOTE_KEY, true);
-      Transforms.setNodes(this.editor, {
-        [this.key]: isActive ? undefined : true,
-      });
+      Transforms.setNodes(
+        this.editor,
+        {
+          [this.key]: isActive ? undefined : true,
+        },
+        { at }
+      );
       setTimeout(() => {
         this.event.trigger(
           EDITOR_EVENT.SELECTION_CHANGE,

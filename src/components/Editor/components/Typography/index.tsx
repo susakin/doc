@@ -21,7 +21,7 @@ const Typography: React.FC = () => {
         tooltip: "Ctrl + Shift + L",
         active: align?.align === "left" || align?.align === undefined,
         onClick() {
-          commandAlign("left");
+          commandAlign({ align: "left" });
         },
       },
       {
@@ -30,7 +30,7 @@ const Typography: React.FC = () => {
         tooltip: "Ctrl + Shift + E",
         active: align?.align === "center",
         onClick() {
-          commandAlign("center");
+          commandAlign({ align: "center" });
         },
       },
       {
@@ -40,7 +40,7 @@ const Typography: React.FC = () => {
         tooltip: "Ctrl + Shift + R",
         active: align?.align === "right",
         onClick() {
-          commandAlign("right");
+          commandAlign({ align: "right" });
         },
       },
       ...indentationItems,

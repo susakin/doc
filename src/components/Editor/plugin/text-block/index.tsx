@@ -1,6 +1,6 @@
 import { RenderElementProps } from "slate-react";
 import { BlockPlugin, CommandFn, BlockContext } from "../base";
-import { Transforms } from "slate";
+import { Location, Transforms } from "slate";
 import { getAttributeAtCursor, isBlockActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import { HEADING_KEY, headingPlugin } from "../heading";
@@ -41,7 +41,7 @@ export class TextBlockPlugin extends BlockPlugin {
 
   public destroy?: (() => void) | undefined;
 
-  public onCommand: CommandFn = () => {
+  public onCommand: CommandFn = ({ at }) => {
     if (this.editor) {
       const isActive = isBlockActive(this.editor, TEXT_BLOCK_KEY, true);
       Transforms.setNodes(
@@ -51,7 +51,10 @@ export class TextBlockPlugin extends BlockPlugin {
             [this.key]: isActive ? undefined : true,
           },
           !isActive ? { [HEADING_KEY]: undefined } : {}
-        )
+        ),
+        {
+          at,
+        }
       );
       setTimeout(() => {
         this.event.trigger(

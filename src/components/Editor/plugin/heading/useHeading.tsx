@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Heading, headingPlugin } from ".";
+import { headingPlugin } from ".";
 import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { getSelectionAbovePath } from "../../utils";
 
 export const useHeading = () => {
   const [heading, setHeading] = useState<ActiveChangePayload>(
@@ -13,8 +14,12 @@ export const useHeading = () => {
     });
   }, []);
 
-  const commandHeading = (heading: Heading) => {
-    headingPlugin.onCommand({ heading });
+  const commandHeading = ({ heading, at }: any) => {
+    if (!at) {
+      const editor = headingPlugin.editor;
+      at = getSelectionAbovePath(editor);
+    }
+    headingPlugin.onCommand({ heading, at });
   };
 
   return { heading, commandHeading };

@@ -30,18 +30,18 @@ export class DividerBlockPlugin extends BlockPlugin {
 
   public destroy?: (() => void) | undefined;
 
-  public onCommand: CommandFn = () => {
+  public onCommand: CommandFn = (at: any) => {
     if (this.editor) {
       const key = this.key;
       const editor = this.editor;
-      Transforms.insertNodes(editor, {
-        [key]: true,
-        children: [{ text: "" }],
-      });
-      Transforms.insertNodes(editor, {
-        children: [{ text: "" }],
-        "text-block": true,
-      });
+      Transforms.insertNodes(
+        editor,
+        {
+          [key]: true,
+          children: [{ text: "" }],
+        },
+        { at }
+      );
     }
   };
 

@@ -90,3 +90,22 @@ export const isCollapsed = (
 };
 
 export const isText = ((node: Node) => Text.isText(node)) as any;
+
+export const getSelectionAbovePath = (editor: BaseEditor | undefined) => {
+  let at: any;
+  if (editor) {
+    const selection = editor.selection;
+    if (selection) {
+      const match = Editor.above(editor, {
+        at: selection,
+        match: (n) => Editor.isBlock(editor, n as any),
+      });
+
+      if (match) {
+        // 找到了第一个父级 block 节点的路径
+        at = match[1];
+      }
+    }
+  }
+  return at;
+};

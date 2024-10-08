@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { alignPlugin } from ".";
 import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { getSelectionAbovePath } from "../../utils";
 
 export const useAlign = () => {
   const [align, setAlign] = useState<ActiveChangePayload>(
@@ -13,8 +14,12 @@ export const useAlign = () => {
     });
   }, []);
 
-  const commandAlign = (align: string) => {
-    alignPlugin.onCommand({ align });
+  const commandAlign = ({ align, at }: any) => {
+    if (!at) {
+      const editor = alignPlugin.editor;
+      at = getSelectionAbovePath(editor);
+    }
+    alignPlugin.onCommand({ align, at });
   };
 
   return { align, commandAlign };

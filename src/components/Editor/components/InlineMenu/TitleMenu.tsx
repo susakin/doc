@@ -22,7 +22,7 @@ const TitleMenu: React.FC = () => {
         tooltip: "Ctrl + Alt + 4",
         active: heading?.heading === "h4",
         onClick() {
-          commandHeading("h4");
+          commandHeading({ heading: "h4" });
         },
       },
       {
@@ -31,7 +31,7 @@ const TitleMenu: React.FC = () => {
         tooltip: "Ctrl + Alt + 5",
         active: heading?.heading === "h5",
         onClick() {
-          commandHeading("h5");
+          commandHeading({ heading: "h5" });
         },
       },
       {
@@ -40,7 +40,7 @@ const TitleMenu: React.FC = () => {
         tooltip: "Ctrl + Alt + 6",
         active: heading?.heading === "h6",
         onClick() {
-          commandHeading("h6");
+          commandHeading({ heading: "h6" });
         },
       },
       {
@@ -49,7 +49,7 @@ const TitleMenu: React.FC = () => {
         tooltip: "Ctrl + Alt + 7",
         active: heading?.heading === "h7",
         onClick() {
-          commandHeading("h7");
+          commandHeading({ heading: "h7" });
         },
       },
       {
@@ -58,7 +58,7 @@ const TitleMenu: React.FC = () => {
         tooltip: "Ctrl + Alt + 8",
         active: heading?.heading === "h8",
         onClick() {
-          commandHeading("h8");
+          commandHeading({ heading: "h8" });
         },
       },
       {
@@ -67,7 +67,7 @@ const TitleMenu: React.FC = () => {
         tooltip: "Ctrl + Alt + 9",
         active: heading?.heading === "h9",
         onClick() {
-          commandHeading("h9");
+          commandHeading({ heading: "h9" });
         },
       },
     ];

@@ -56,11 +56,15 @@ export class IndentPlugin extends BlockPlugin {
     };
   };
 
-  public onCommand: CommandFn = ({ indent }) => {
+  public onCommand: CommandFn = ({ indent, at }) => {
     if (this.editor) {
-      Transforms.setNodes(this.editor, {
-        indent,
-      });
+      Transforms.setNodes(
+        this.editor,
+        {
+          indent,
+        },
+        { at }
+      );
       setTimeout(() => {
         this.event.trigger(
           EDITOR_EVENT.SELECTION_CHANGE,
