@@ -16,9 +16,7 @@ export class FontBlockPlugin extends BlockPlugin {
   private init() {
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
       const fontBlock = getAttributeAtCursor(this.editor, FONT_BLOCK_KEY);
-
       this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
-        isActive: !!fontBlock,
         fontBlock,
       });
     });
@@ -30,12 +28,21 @@ export class FontBlockPlugin extends BlockPlugin {
 
   public destroy?: (() => void) | undefined;
 
-  public onCommand: CommandFn = ({ fontBlock }) => {
+  public onCommand: CommandFn = ({ fontBlock, at }) => {
     if (this.editor) {
-      Transforms.setNodes(this.editor, {
+      Transforms.setNodes(
+        this.editor,
+        {
+          [this.key]: fontBlock,
+        },
+        { at }
+      );
+    }
+    setTimeout(() => {
+      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
         fontBlock,
       });
-    }
+    });
   };
 
   public render(context: BlockContext): JSX.Element {

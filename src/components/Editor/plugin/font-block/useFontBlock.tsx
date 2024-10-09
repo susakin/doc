@@ -11,5 +11,9 @@ export const useFontBlock = () => {
     });
   }, []);
 
-  return { fontBlock };
+  const commandFontBlock = ({ fontBlock, at }: any) => {
+    fontBlockPlugin.onCommand({ fontBlock, at });
+  };
+
+  return { fontBlock, commandFontBlock };
 };
