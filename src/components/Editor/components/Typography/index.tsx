@@ -45,7 +45,7 @@ const Typography: React.FC = () => {
       },
       ...indentationItems,
     ];
-  }, [indentationItems]);
+  }, [indentationItems, align]);
   return <Menu items={items} />;
 };
 

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { alignPlugin } from ".";
 import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
-import { getSelectionAbovePath } from "../../utils";
 
 export const useAlign = () => {
   const [align, setAlign] = useState<PluginActiveChangePayload>(

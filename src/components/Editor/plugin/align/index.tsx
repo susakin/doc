@@ -69,6 +69,7 @@ export class AlignPlugin extends BlockPlugin {
         },
         { at }
       );
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, { align });
     }
   };
 
