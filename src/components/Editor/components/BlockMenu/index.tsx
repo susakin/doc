@@ -32,6 +32,10 @@ const BlockMenu: React.FC = () => {
         icon: <StyleSetOutlined {...svgProps} />,
         submenu: <ColorPicker />,
         devider: true,
+        submenuPopoverProps: {
+          renderToBody: false,
+          hideWhenContentClick: true,
+        },
       },
       {
         text: "剪切",
@@ -53,6 +57,10 @@ const BlockMenu: React.FC = () => {
         text: "在下方添加",
         icon: <NewJoinMeetingOutlined {...svgProps} />,
         submenu: <EmptyBlockMenu />,
+        submenuPopoverProps: {
+          renderToBody: false,
+          hideWhenContentClick: true,
+        },
       },
     ];
   }, [typography]);

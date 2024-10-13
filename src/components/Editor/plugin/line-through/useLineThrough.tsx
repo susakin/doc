@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { lineThroughPlugin, LINETHROUGH_KEY } from ".";
-import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const useLineThrough = () => {
-  const [lineThrough, setLineThrough] = useState<ActiveChangePayload>(
+  const [lineThrough, setLineThrough] = useState<PluginActiveChangePayload>(
     lineThroughPlugin.getCurrentStatus()
   );
 
   useEffect(() => {
-    lineThroughPlugin.event.on(EDITOR_EVENT.ACTIVE_CHANGE, (payload) => {
+    lineThroughPlugin.event.on(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, (payload) => {
       setLineThrough(payload);
     });
   }, []);

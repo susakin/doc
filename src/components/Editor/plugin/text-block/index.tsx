@@ -19,7 +19,7 @@ export class TextBlockPlugin extends BlockPlugin {
       const textBlock = getAttributeAtCursor(this.editor, TEXT_BLOCK_KEY);
       const heading = getAttributeAtCursor(this.editor, HEADING_KEY);
 
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!textBlock || !heading,
         textBlock,
       });

@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { underLinePlugin } from ".";
-import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const useUnderLine = () => {
-  const [underLine, setUnderLine] = useState<ActiveChangePayload>(
+  const [underLine, setUnderLine] = useState<PluginActiveChangePayload>(
     underLinePlugin.getCurrentStatus()
   );
 
   useEffect(() => {
-    underLinePlugin.event.on(EDITOR_EVENT.ACTIVE_CHANGE, (payload) => {
+    underLinePlugin.event.on(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, (payload) => {
       setUnderLine(payload);
     });
   }, []);

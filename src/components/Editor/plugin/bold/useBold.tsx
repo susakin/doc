@@ -1,13 +1,13 @@
 import { useLayoutEffect, useState } from "react";
 import { boldPlugin, BOLD_KEY } from ".";
-import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const useBold = () => {
-  const [bold, setBold] = useState<ActiveChangePayload>(
+  const [bold, setBold] = useState<PluginActiveChangePayload>(
     boldPlugin.getCurrentStatus()
   );
   useLayoutEffect(() => {
-    boldPlugin.event.on(EDITOR_EVENT.ACTIVE_CHANGE, (payload) => {
+    boldPlugin.event.on(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, (payload) => {
       setBold(payload);
     });
   }, []);

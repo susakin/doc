@@ -17,7 +17,7 @@ export class DividerBlockPlugin extends BlockPlugin {
   private init() {
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
       const dividerBlock = getAttributeAtCursor(this.editor, DIVIDER_BLOCK_KEY);
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!dividerBlock,
         dividerBlock,
       });

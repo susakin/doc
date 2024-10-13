@@ -25,7 +25,7 @@ export class QuoteBlockPlugin extends BlockPlugin {
   private init() {
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
       const quoteBlock = getAttributeAtCursor(this.editor, QUOTE_KEY);
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!quoteBlock,
       });
     });

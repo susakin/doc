@@ -20,7 +20,7 @@ export class FontLeafPlugin extends LeafPlugin {
         isActive: !!fontLeaf,
         fontLeaf,
       };
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, payload);
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, payload);
     });
   }
 

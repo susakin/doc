@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { quoteBlockPlugin } from ".";
-import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 import { getSelectionAbovePath } from "../../utils";
 
 export const useQuoteBlock = () => {
-  const [quoteBlock, setQuoteBlock] = useState<ActiveChangePayload>(
+  const [quoteBlock, setQuoteBlock] = useState<PluginActiveChangePayload>(
     quoteBlockPlugin.getCurrentStatus()
   );
 
   useEffect(() => {
-    quoteBlockPlugin.event.on(EDITOR_EVENT.ACTIVE_CHANGE, (payload) => {
+    quoteBlockPlugin.event.on(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, (payload) => {
       setQuoteBlock(payload);
     });
   }, []);

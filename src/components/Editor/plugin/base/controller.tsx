@@ -56,6 +56,13 @@ export class PluginController {
         item.event.trigger(EDITOR_EVENT.READONLY_CHANGE, readOnly);
       }
     });
+
+    //监听element mouse enter
+    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, (event) => {
+      for (const item of Object.values(this.pluginMap)) {
+        item.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, event);
+      }
+    });
   }
 
   public register = (...plugins: EditorPlugin[]) => {

@@ -35,7 +35,7 @@ function App() {
   }, []);
 
   return (
-    <>
+    <div style={{ padding: "0 400px" }}>
       <BlockMenu />
       <HeaderTitleMenu />
       <HighlightMenu />
@@ -50,7 +50,7 @@ function App() {
           console.log(v);
         }}
       />
-    </>
+    </div>
   );
 }
 

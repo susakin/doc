@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { fontLeafPlugin } from ".";
-import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const useFontLeaf = () => {
-  const [fontLeaf, setFontLeaf] = useState<ActiveChangePayload>(
+  const [fontLeaf, setFontLeaf] = useState<PluginActiveChangePayload>(
     fontLeafPlugin.getCurrentStatus()?.fontLeaf
   );
   useEffect(() => {
-    fontLeafPlugin.event.on(EDITOR_EVENT.ACTIVE_CHANGE, (payload) => {
+    fontLeafPlugin.event.on(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, (payload) => {
       setFontLeaf(payload?.fontLeaf);
     });
   }, []);

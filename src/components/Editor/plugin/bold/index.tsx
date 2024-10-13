@@ -25,7 +25,7 @@ export class BoldPlugin extends LeafPlugin {
       const payload = {
         isActive,
       };
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, payload);
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, payload);
     });
     this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }

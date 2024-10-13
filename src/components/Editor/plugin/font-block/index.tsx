@@ -16,7 +16,7 @@ export class FontBlockPlugin extends BlockPlugin {
   private init() {
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
       const fontBlock = getAttributeAtCursor(this.editor, FONT_BLOCK_KEY);
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         fontBlock,
       });
     });
@@ -39,7 +39,7 @@ export class FontBlockPlugin extends BlockPlugin {
       );
     }
     setTimeout(() => {
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         fontBlock,
       });
     });

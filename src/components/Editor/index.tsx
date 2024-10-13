@@ -31,6 +31,7 @@ import { withSchema } from "./plugin/base/withSchema";
 import React from "react";
 import HoverToolbar from "./components/HoverToolbar";
 import { mockSelectionPlugin } from "./plugin/mock-selection";
+import FloatMenu from "./components/FloatMenu";
 
 const classNamePrefix = "editor";
 const INIT_NODE = [
@@ -122,6 +123,7 @@ const Editable: React.FC<EditableProps> = ({ placeholder, readOnly }) => {
         }}
       />
       <HoverToolbar editorMouseDown={mouseDown} />
+      <FloatMenu />
     </>
   );
 };

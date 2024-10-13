@@ -39,7 +39,7 @@ export class HyperLinkPlugin extends LeafPlugin {
         isActive: !!hyperLink,
         hyperLink,
       };
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, payload);
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, payload);
     });
     this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }

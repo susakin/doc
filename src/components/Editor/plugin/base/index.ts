@@ -2,7 +2,7 @@ import { RenderElementProps, RenderLeafProps } from "slate-react";
 import { BaseEditor } from "slate";
 import { ReactEventMap } from "../../event/react";
 import { EventBus } from "../../event";
-import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const PLUGIN_TYPE = {
   BLOCK: "BLOCK" as const,
@@ -36,7 +36,7 @@ abstract class BasePlugin {
 
   public readonly event: EventBus = new EventBus();
 
-  public getCurrentStatus?: () => ActiveChangePayload;
+  public getCurrentStatus?: () => PluginActiveChangePayload;
 
   constructor() {
     this.event.on(EDITOR_EVENT.BASE_EDITOR_CHANGE, (editor) => {
@@ -73,6 +73,13 @@ export abstract class BlockPlugin extends BasePlugin {
   public render?(props: BlockContext): JSX.Element;
   /** 渲染行节点 */
   public renderLine?(context: BlockContext): JSX.Element;
+  public hoveringElement?: RenderElementProps["element"];
+  constructor() {
+    super();
+    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, ({ element }) => {
+      this.hoveringElement = element;
+    });
+  }
 }
 
 export abstract class LeafPlugin extends BasePlugin {

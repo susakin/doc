@@ -1,4 +1,4 @@
-import { RenderElementProps } from "slate-react";
+import { ReactEditor, RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
 import { Transforms } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
@@ -24,9 +24,9 @@ export class AlignPlugin extends BlockPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const align = getAttributeAtCursor(this.editor, this.key);
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
+    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, () => {
+      const align = (this.hoveringElement as any)?.[this.key];
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         align,
       });
     });
@@ -38,7 +38,7 @@ export class AlignPlugin extends BlockPlugin {
   }
 
   public getCurrentStatus = () => {
-    const align = getAttributeAtCursor(this.editor, this.key);
+    const align = (this.hoveringElement as any)?.[this.key];
     return {
       align,
     };
@@ -56,8 +56,12 @@ export class AlignPlugin extends BlockPlugin {
     }
   };
 
-  public onCommand: CommandFn = ({ align, at }) => {
+  public onCommand: CommandFn = ({ align }) => {
     if (this.editor) {
+      const at = ReactEditor.findPath(
+        this.editor as any,
+        this.hoveringElement as any
+      );
       Transforms.setNodes(
         this.editor,
         {
@@ -65,12 +69,6 @@ export class AlignPlugin extends BlockPlugin {
         },
         { at }
       );
-      setTimeout(() => {
-        this.event.trigger(
-          EDITOR_EVENT.SELECTION_CHANGE,
-          this.editor?.selection as any
-        );
-      });
     }
   };
 

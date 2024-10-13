@@ -1,6 +1,7 @@
 import { BaseEditor, BaseSelection } from "slate";
 import type { ReactEventMap } from "./react";
 import { REACT_EVENTS } from "./react";
+import { RenderElementProps } from "slate-react";
 
 export declare namespace Object {
   type KeyType = string | number | symbol;
@@ -11,25 +12,35 @@ export declare namespace Object {
   type Values<T extends Record<Object.KeyType, unknown>> = T[keyof T];
 }
 export const EDITOR_EVENT = {
-  ACTIVE_CHANGE: "ACTIVE_CHANGE",
+  PLUGIN_ACTIVE_CHANGE: "PLUGIN_ACTIVE_CHANGE",
   SELECTION_CHANGE: "SELECTION_CHANGE",
   BASE_EDITOR_CHANGE: "BASE_EDITOR_CHANGE",
   READONLY_CHANGE: "READONLY_CHANGE",
   PLUGIN_COMMANT: "PLUGIN_COMMANT",
+  ELEMENT_MOUSE_ENTER: "ELEMENT_MOUSE_ENTER",
+  ELEMENT_MOUSE_LEAVE: "ELEMENT_MOUSE_LEAVE",
+
   ...REACT_EVENTS,
 } as const;
 
-export type ActiveChangePayload = {
+export type PluginActiveChangePayload = {
   isActive?: boolean;
   [x: string]: any;
 };
 
+type ElementMouseEventPayload = {
+  element: RenderElementProps["element"];
+  domElement: HTMLElement;
+};
+
 type EditorEventMap = {
-  [EDITOR_EVENT.ACTIVE_CHANGE]: ActiveChangePayload;
+  [EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE]: PluginActiveChangePayload;
   [EDITOR_EVENT.SELECTION_CHANGE]: BaseSelection;
   [EDITOR_EVENT.BASE_EDITOR_CHANGE]: BaseEditor;
   [EDITOR_EVENT.READONLY_CHANGE]: boolean;
   [EDITOR_EVENT.PLUGIN_COMMANT]: Record<string, any>;
+  [EDITOR_EVENT.ELEMENT_MOUSE_ENTER]: ElementMouseEventPayload;
+  [EDITOR_EVENT.ELEMENT_MOUSE_LEAVE]: ElementMouseEventPayload;
 };
 
 export type EventMap = EditorEventMap & ReactEventMap;

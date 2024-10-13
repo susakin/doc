@@ -21,7 +21,7 @@ export class HighlightBlockPlugin extends BlockPlugin {
         this.editor,
         HIGHLIGHT_BLOCK_KEY
       );
-      this.event.trigger(EDITOR_EVENT.ACTIVE_CHANGE, {
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!highlightBlock,
         highlightBlock,
       });

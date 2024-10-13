@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { fontBlockPlugin } from ".";
-import { ActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const useFontBlock = () => {
-  const [fontBlock, setFontBlock] = useState<ActiveChangePayload>();
+  const [fontBlock, setFontBlock] = useState<PluginActiveChangePayload>();
 
   useEffect(() => {
-    fontBlockPlugin.event.on(EDITOR_EVENT.ACTIVE_CHANGE, (payload) => {
+    fontBlockPlugin.event.on(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, (payload) => {
       setFontBlock(payload);
     });
   }, []);
