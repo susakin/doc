@@ -3,6 +3,7 @@ import { BaseEditor } from "slate";
 import { ReactEventMap } from "../../event/react";
 import { EventBus } from "../../event";
 import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { getSelectionAboveNode } from "../../utils";
 
 export const PLUGIN_TYPE = {
   BLOCK: "BLOCK" as const,
@@ -37,6 +38,7 @@ abstract class BasePlugin {
   public readonly event: EventBus = new EventBus();
 
   public getCurrentStatus?: () => PluginActiveChangePayload;
+  public selectedElement?: RenderElementProps["element"];
 
   constructor() {
     this.event.on(EDITOR_EVENT.BASE_EDITOR_CHANGE, (editor) => {
@@ -45,6 +47,9 @@ abstract class BasePlugin {
 
     this.event.on(EDITOR_EVENT.READONLY_CHANGE, (readonly) => {
       this.readonly = !!readonly;
+    });
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
+      this.selectedElement = getSelectionAboveNode(this.editor);
     });
   }
 }
@@ -79,6 +84,9 @@ export abstract class BlockPlugin extends BasePlugin {
     this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, ({ element }) => {
       this.hoveringElement = element;
     });
+  }
+  public getElement() {
+    return this.selectedElement || this.hoveringElement;
   }
 }
 

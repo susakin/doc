@@ -1,4 +1,4 @@
-import { RenderElementProps } from "slate-react";
+import { ReactEditor, RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
 import { Transforms } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
@@ -43,18 +43,20 @@ export class HeadingPlugin extends BlockPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, () => {
-      const heading = getAttributeAtCursor(this.editor, HEADING_KEY);
+    const triger = () => {
+      const heading = (this.getElement() as any)?.[this.key];
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!heading,
         heading,
       });
-    });
+    };
+    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, triger);
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, triger);
     this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
 
   public getCurrentStatus = () => {
-    const heading = getAttributeAtCursor(this.editor, HEADING_KEY);
+    const heading = (this.getElement() as any)?.[this.key];
     return {
       isActive: !!heading,
       heading,
@@ -77,9 +79,13 @@ export class HeadingPlugin extends BlockPlugin {
     }
   };
 
-  public onCommand: CommandFn = ({ heading, at }) => {
+  public onCommand: CommandFn = ({ heading }) => {
     if (this.editor) {
-      const isActive = isBlockActive(this.editor, HEADING_KEY, heading);
+      const isActive = (this.getElement() as any)?.[this.key] === heading;
+      const at = ReactEditor.findPath(
+        this.editor as any,
+        this.getElement() as any
+      );
       Transforms.setNodes(
         this.editor,
         Object.assign(
@@ -90,16 +96,13 @@ export class HeadingPlugin extends BlockPlugin {
         ),
         { at }
       );
-      setTimeout(() => {
-        this.event.trigger(
-          EDITOR_EVENT.SELECTION_CHANGE,
-          this.editor?.selection as any
-        );
-        textBlockPlugin.event.trigger(
-          EDITOR_EVENT.SELECTION_CHANGE,
-          this.editor?.selection as any
-        );
-      });
+
+      this.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, this.editor.selection);
+
+      textBlockPlugin.event.trigger(
+        EDITOR_EVENT.SELECTION_CHANGE,
+        this.editor.selection
+      );
     }
   };
 

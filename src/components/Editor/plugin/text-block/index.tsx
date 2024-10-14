@@ -1,4 +1,4 @@
-import { RenderElementProps } from "slate-react";
+import { ReactEditor, RenderElementProps } from "slate-react";
 import { BlockPlugin, CommandFn, BlockContext } from "../base";
 import { Location, Transforms } from "slate";
 import { getAttributeAtCursor, isBlockActive } from "../../utils";
@@ -15,20 +15,23 @@ export class TextBlockPlugin extends BlockPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const textBlock = getAttributeAtCursor(this.editor, TEXT_BLOCK_KEY);
-      const heading = getAttributeAtCursor(this.editor, HEADING_KEY);
+    const trigger = () => {
+      const textBlock = (this.getElement() as any)?.[this.key];
+      const heading = (this.getElement() as any)?.[HEADING_KEY];
 
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!textBlock || !heading,
         textBlock,
       });
-    });
+    };
+
+    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, trigger);
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, trigger);
   }
 
   public getCurrentStatus = () => {
-    const textBlock = getAttributeAtCursor(this.editor, TEXT_BLOCK_KEY);
-    const heading = getAttributeAtCursor(this.editor, HEADING_KEY);
+    const textBlock = (this.getElement() as any)?.[this.key];
+    const heading = (this.getElement() as any)?.[HEADING_KEY];
     return {
       isActive: !!textBlock || !heading,
       textBlock,
@@ -41,9 +44,14 @@ export class TextBlockPlugin extends BlockPlugin {
 
   public destroy?: (() => void) | undefined;
 
-  public onCommand: CommandFn = ({ at }) => {
+  public onCommand: CommandFn = () => {
     if (this.editor) {
-      const isActive = isBlockActive(this.editor, TEXT_BLOCK_KEY, true);
+      const isActive = (this.getElement() as any)?.[this.key] === true;
+      const at = ReactEditor.findPath(
+        this.editor as any,
+        this.getElement() as any
+      );
+
       Transforms.setNodes(
         this.editor,
         Object.assign(
@@ -56,16 +64,14 @@ export class TextBlockPlugin extends BlockPlugin {
           at,
         }
       );
-      setTimeout(() => {
-        this.event.trigger(
-          EDITOR_EVENT.SELECTION_CHANGE,
-          this.editor?.selection as any
-        );
-        headingPlugin.event.trigger(
-          EDITOR_EVENT.SELECTION_CHANGE,
-          this.editor?.selection as any
-        );
-      });
+      this.event.trigger(
+        EDITOR_EVENT.SELECTION_CHANGE,
+        this.editor?.selection as any
+      );
+      headingPlugin.event.trigger(
+        EDITOR_EVENT.SELECTION_CHANGE,
+        this.editor?.selection as any
+      );
     }
   };
 

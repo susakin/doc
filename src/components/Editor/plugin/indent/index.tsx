@@ -1,4 +1,4 @@
-import { RenderElementProps } from "slate-react";
+import { ReactEditor, RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
 import { Transforms } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
@@ -22,8 +22,9 @@ export class IndentPlugin extends BlockPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const indent = getAttributeAtCursor(this.editor, INDENT_KEY);
+    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, () => {
+      const indent = (this.getElement() as any)?.[this.key];
+
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!indent,
         indent,
@@ -50,14 +51,18 @@ export class IndentPlugin extends BlockPlugin {
   };
 
   public getCurrentStatus = () => {
-    const indent = getAttributeAtCursor(this.editor, this.key);
+    const indent = (this.getElement() as any)?.[this.key];
     return {
       indent,
     };
   };
 
-  public onCommand: CommandFn = ({ indent, at }) => {
+  public onCommand: CommandFn = ({ indent }) => {
     if (this.editor) {
+      const at = ReactEditor.findPath(
+        this.editor as any,
+        this.getElement() as any
+      );
       Transforms.setNodes(
         this.editor,
         {
@@ -65,12 +70,8 @@ export class IndentPlugin extends BlockPlugin {
         },
         { at }
       );
-      setTimeout(() => {
-        this.event.trigger(
-          EDITOR_EVENT.SELECTION_CHANGE,
-          this.editor?.selection as any
-        );
-      });
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, { indent });
+      this.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, this.editor.selection);
     }
   };
 

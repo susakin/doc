@@ -109,3 +109,22 @@ export const getSelectionAbovePath = (editor: BaseEditor | undefined) => {
   }
   return at;
 };
+
+export const getSelectionAboveNode = (editor: BaseEditor | undefined) => {
+  let node: any;
+  if (editor) {
+    const selection = editor.selection;
+    if (selection) {
+      const match = Editor.above(editor, {
+        at: selection,
+        match: (n) => Editor.isBlock(editor, n as any),
+      });
+
+      if (match) {
+        // 找到了第一个父级 block 节点的路径
+        node = match[0];
+      }
+    }
+  }
+  return node;
+};

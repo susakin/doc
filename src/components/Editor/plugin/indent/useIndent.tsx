@@ -14,12 +14,8 @@ export const useIndent = () => {
     });
   }, []);
 
-  const commandIndent = ({ indent, at }: any) => {
-    if (!at) {
-      const editor = indentPlugin.editor;
-      at = getSelectionAbovePath(editor);
-    }
-    indentPlugin.onCommand({ indent, at });
+  const commandIndent = ({ indent }: any) => {
+    indentPlugin.onCommand({ indent });
   };
 
   return { indent, commandIndent };
