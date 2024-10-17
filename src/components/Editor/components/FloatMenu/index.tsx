@@ -37,11 +37,19 @@ const FloatMenu: React.FC = () => {
   const { getFloatingProps } = useInteractions([dismiss, role]);
 
   useEffect(() => {
+    let isHoverMenuActive = false;
     pluginController.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, (payload) => {
-      if (payload.domElement) {
+      if (payload.domElement && !isHoverMenuActive) {
         refs.setReference(payload.domElement);
         setOpen(true);
       }
+    });
+
+    pluginController.event.on(EDITOR_EVENT.HOVER_MENU_ACTIVE, (isActive) => {
+      if (isActive) {
+        setOpen(false);
+      }
+      isHoverMenuActive = isActive;
     });
   }, []);
 

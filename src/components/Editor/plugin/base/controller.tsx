@@ -63,6 +63,13 @@ export class PluginController {
         item.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, event);
       }
     });
+
+    //
+    this.event.on(EDITOR_EVENT.HOVER_MENU_ACTIVE, (isActive) => {
+      for (const item of Object.values(this.pluginMap)) {
+        item.event.trigger(EDITOR_EVENT.HOVER_MENU_ACTIVE, isActive);
+      }
+    });
   }
 
   public register = (...plugins: EditorPlugin[]) => {

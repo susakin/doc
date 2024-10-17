@@ -86,6 +86,9 @@ export abstract class BlockPlugin extends BasePlugin {
 
   constructor() {
     super();
+    this.event.on(EDITOR_EVENT.HOVER_MENU_ACTIVE, (isActive) => {
+      this.isHoverMenuActive = isActive;
+    });
     this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, ({ element }) => {
       if (!this.isHoverMenuActive) {
         this.setSelectedElement(element);

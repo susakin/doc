@@ -42,7 +42,7 @@ type EditorEventMap = {
   [EDITOR_EVENT.PLUGIN_COMMANT]: Record<string, any>;
   [EDITOR_EVENT.ELEMENT_MOUSE_ENTER]: ElementMouseEventPayload;
   [EDITOR_EVENT.ELEMENT_MOUSE_LEAVE]: ElementMouseEventPayload;
-  [EDITOR_EVENT.HOVER_MENU_ACTIVE]: { isActive: boolean };
+  [EDITOR_EVENT.HOVER_MENU_ACTIVE]: boolean;
   [EDITOR_EVENT.SELECTED_ELEMENT_CHANGE]: RenderElementProps["element"];
 };
 
