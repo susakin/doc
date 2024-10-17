@@ -38,7 +38,6 @@ abstract class BasePlugin {
   public readonly event: EventBus = new EventBus();
 
   public getCurrentStatus?: () => PluginActiveChangePayload;
-  public selectedElement?: RenderElementProps["element"];
 
   constructor() {
     this.event.on(EDITOR_EVENT.BASE_EDITOR_CHANGE, (editor) => {
@@ -47,9 +46,6 @@ abstract class BasePlugin {
 
     this.event.on(EDITOR_EVENT.READONLY_CHANGE, (readonly) => {
       this.readonly = !!readonly;
-    });
-    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      this.selectedElement = getSelectionAboveNode(this.editor);
     });
   }
 }
@@ -78,15 +74,27 @@ export abstract class BlockPlugin extends BasePlugin {
   public render?(props: BlockContext): JSX.Element;
   /** 渲染行节点 */
   public renderLine?(context: BlockContext): JSX.Element;
-  public hoveringElement?: RenderElementProps["element"];
+
+  public selectedElement?: RenderElementProps["element"];
+
+  public isHoverMenuActive?: boolean = false;
+
+  public setSelectedElement(element: RenderElementProps["element"]) {
+    this.selectedElement = element;
+    this.event.trigger(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, element);
+  }
+
   constructor() {
     super();
     this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, ({ element }) => {
-      this.hoveringElement = element;
+      if (!this.isHoverMenuActive) {
+        this.setSelectedElement(element);
+      }
     });
-  }
-  public getElement() {
-    return this.selectedElement || this.hoveringElement;
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
+      const element = getSelectionAboveNode(this.editor);
+      this.setSelectedElement(element);
+    });
   }
 }
 

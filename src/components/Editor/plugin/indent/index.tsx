@@ -3,7 +3,6 @@ import { BlockContext, BlockPlugin, CommandFn } from "../base";
 import { Transforms } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { isHotkey } from "../../utils/isHotkey";
-import { getAttributeAtCursor } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 
 export const INDENT_KEY = "indent";
@@ -22,8 +21,8 @@ export class IndentPlugin extends BlockPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, () => {
-      const indent = (this.getElement() as any)?.[this.key];
+    this.event.on(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, (element) => {
+      const indent = (element as any)?.[this.key];
 
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!indent,
@@ -51,7 +50,7 @@ export class IndentPlugin extends BlockPlugin {
   };
 
   public getCurrentStatus = () => {
-    const indent = (this.getElement() as any)?.[this.key];
+    const indent = (this.selectedElement as any)?.[this.key];
     return {
       indent,
     };
@@ -61,7 +60,7 @@ export class IndentPlugin extends BlockPlugin {
     if (this.editor) {
       const at = ReactEditor.findPath(
         this.editor as any,
-        this.getElement() as any
+        this.selectedElement as any
       );
       Transforms.setNodes(
         this.editor,
@@ -71,7 +70,6 @@ export class IndentPlugin extends BlockPlugin {
         { at }
       );
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, { indent });
-      this.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, this.editor.selection);
     }
   };
 

@@ -12,9 +12,13 @@ import MenuList from "./MeunList";
 import EmptyBlockMenu from "../EmptyBlockMenu";
 import { useTypography } from "../HoverToolbar/useTypography";
 import { svgProps } from "../../utils/getSideAnimateClassName";
+import { useHighlightBlock } from "../../plugin/highlight-block/useHighlightBlock";
+import { useFontBlock } from "../../plugin/font-block/useFontBlock";
 
 const BlockMenu: React.FC = () => {
   const typography = useTypography();
+  const { highlightBlock } = useHighlightBlock();
+  const { fontBlock, commandFontBlock } = useFontBlock();
   const items = useMemo<Item[]>(() => {
     return [
       {
@@ -30,8 +34,18 @@ const BlockMenu: React.FC = () => {
       {
         text: "颜色",
         icon: <StyleSetOutlined {...svgProps} />,
-        submenu: <ColorPicker />,
+        submenu: (
+          <ColorPicker
+            value={fontBlock?.fontBlock}
+            onChange={(fontBlock) => {
+              commandFontBlock({
+                fontBlock,
+              });
+            }}
+          />
+        ),
         devider: true,
+        hidden: highlightBlock?.isActive,
         submenuPopoverProps: {
           renderToBody: false,
           hideWhenContentClick: true,
@@ -63,7 +77,7 @@ const BlockMenu: React.FC = () => {
         },
       },
     ];
-  }, [typography]);
+  }, [typography, highlightBlock, fontBlock]);
 
   return <Menu items={items} />;
 };

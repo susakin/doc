@@ -1,7 +1,6 @@
 import { ReactEditor, RenderElementProps } from "slate-react";
 import { BlockPlugin, CommandFn, BlockContext } from "../base";
-import { Location, Transforms } from "slate";
-import { getAttributeAtCursor, isBlockActive } from "../../utils";
+import { Transforms } from "slate";
 import { EDITOR_EVENT } from "../../event/action";
 import { HEADING_KEY, headingPlugin } from "../heading";
 
@@ -15,23 +14,20 @@ export class TextBlockPlugin extends BlockPlugin {
   }
 
   private init() {
-    const trigger = () => {
-      const textBlock = (this.getElement() as any)?.[this.key];
-      const heading = (this.getElement() as any)?.[HEADING_KEY];
+    this.event.on(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, (element) => {
+      const textBlock = (element as any)?.[this.key];
+      const heading = (element as any)?.[HEADING_KEY];
 
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!textBlock || !heading,
         textBlock,
       });
-    };
-
-    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, trigger);
-    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, trigger);
+    });
   }
 
   public getCurrentStatus = () => {
-    const textBlock = (this.getElement() as any)?.[this.key];
-    const heading = (this.getElement() as any)?.[HEADING_KEY];
+    const textBlock = (this.selectedElement as any)?.[this.key];
+    const heading = (this.selectedElement as any)?.[HEADING_KEY];
     return {
       isActive: !!textBlock || !heading,
       textBlock,
@@ -46,10 +42,10 @@ export class TextBlockPlugin extends BlockPlugin {
 
   public onCommand: CommandFn = () => {
     if (this.editor) {
-      const isActive = (this.getElement() as any)?.[this.key] === true;
+      const isActive = (this.selectedElement as any)?.[this.key] === true;
       const at = ReactEditor.findPath(
         this.editor as any,
-        this.getElement() as any
+        this.selectedElement as any
       );
 
       Transforms.setNodes(

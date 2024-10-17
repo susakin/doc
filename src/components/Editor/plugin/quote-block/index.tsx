@@ -1,4 +1,4 @@
-import { RenderElementProps } from "slate-react";
+import { ReactEditor, RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
 import { Transforms } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
@@ -23,8 +23,8 @@ export class QuoteBlockPlugin extends BlockPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const quoteBlock = getAttributeAtCursor(this.editor, QUOTE_KEY);
+    this.event.on(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, (element) => {
+      const quoteBlock = (element as any)?.[this.key];
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!quoteBlock,
       });
@@ -49,15 +49,19 @@ export class QuoteBlockPlugin extends BlockPlugin {
   };
 
   public getCurrentStatus = () => {
-    const quoteBlock = getAttributeAtCursor(this.editor, this.key);
+    const quoteBlock = (this.selectedElement as any)?.[this.key];
     return {
       isActive: !!quoteBlock,
     };
   };
 
-  public onCommand: CommandFn = ({ at }: any) => {
+  public onCommand: CommandFn = () => {
     if (this.editor) {
-      const isActive = isBlockActive(this.editor, QUOTE_KEY, true);
+      const isActive = !!(this.selectedElement as any)?.[this.key];
+      const at = ReactEditor.findPath(
+        this.editor as any,
+        this.selectedElement as any
+      );
       Transforms.setNodes(
         this.editor,
         {
@@ -65,12 +69,8 @@ export class QuoteBlockPlugin extends BlockPlugin {
         },
         { at }
       );
-      setTimeout(() => {
-        this.event.trigger(
-          EDITOR_EVENT.SELECTION_CHANGE,
-          this.editor?.selection as any
-        );
-      });
+
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, { isActive });
     }
   };
 

@@ -43,20 +43,18 @@ export class HeadingPlugin extends BlockPlugin {
   }
 
   private init() {
-    const triger = () => {
-      const heading = (this.getElement() as any)?.[this.key];
+    this.event.on(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, (element) => {
+      const heading = (element as any)?.[this.key];
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!heading,
         heading,
       });
-    };
-    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, triger);
-    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, triger);
+    });
     this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
 
   public getCurrentStatus = () => {
-    const heading = (this.getElement() as any)?.[this.key];
+    const heading = (this.selectedElement as any)?.[this.key];
     return {
       isActive: !!heading,
       heading,
@@ -81,10 +79,10 @@ export class HeadingPlugin extends BlockPlugin {
 
   public onCommand: CommandFn = ({ heading }) => {
     if (this.editor) {
-      const isActive = (this.getElement() as any)?.[this.key] === heading;
+      const isActive = (this.selectedElement as any)?.[this.key] === heading;
       const at = ReactEditor.findPath(
         this.editor as any,
-        this.getElement() as any
+        this.selectedElement as any
       );
       Transforms.setNodes(
         this.editor,

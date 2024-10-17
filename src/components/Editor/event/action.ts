@@ -19,7 +19,8 @@ export const EDITOR_EVENT = {
   PLUGIN_COMMANT: "PLUGIN_COMMANT",
   ELEMENT_MOUSE_ENTER: "ELEMENT_MOUSE_ENTER",
   ELEMENT_MOUSE_LEAVE: "ELEMENT_MOUSE_LEAVE",
-
+  HOVER_MENU_ACTIVE: "HOVER_MENU_ACTIVE",
+  SELECTED_ELEMENT_CHANGE: "SELECTED_ELEMENT_CHANGE",
   ...REACT_EVENTS,
 } as const;
 
@@ -41,6 +42,8 @@ type EditorEventMap = {
   [EDITOR_EVENT.PLUGIN_COMMANT]: Record<string, any>;
   [EDITOR_EVENT.ELEMENT_MOUSE_ENTER]: ElementMouseEventPayload;
   [EDITOR_EVENT.ELEMENT_MOUSE_LEAVE]: ElementMouseEventPayload;
+  [EDITOR_EVENT.HOVER_MENU_ACTIVE]: { isActive: boolean };
+  [EDITOR_EVENT.SELECTED_ELEMENT_CHANGE]: RenderElementProps["element"];
 };
 
 export type EventMap = EditorEventMap & ReactEventMap;

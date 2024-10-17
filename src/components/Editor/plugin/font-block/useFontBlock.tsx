@@ -3,7 +3,9 @@ import { fontBlockPlugin } from ".";
 import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const useFontBlock = () => {
-  const [fontBlock, setFontBlock] = useState<PluginActiveChangePayload>();
+  const [fontBlock, setFontBlock] = useState<PluginActiveChangePayload>(
+    fontBlockPlugin.getCurrentStatus()
+  );
 
   useEffect(() => {
     fontBlockPlugin.event.on(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, (payload) => {
@@ -11,8 +13,8 @@ export const useFontBlock = () => {
     });
   }, []);
 
-  const commandFontBlock = ({ fontBlock, at }: any) => {
-    fontBlockPlugin.onCommand({ fontBlock, at });
+  const commandFontBlock = ({ fontBlock }: any) => {
+    fontBlockPlugin.onCommand({ fontBlock });
   };
 
   return { fontBlock, commandFontBlock };

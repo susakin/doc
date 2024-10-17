@@ -1,8 +1,8 @@
-import { RenderElementProps } from "slate-react";
+import { ReactEditor, RenderElementProps } from "slate-react";
 import { BlockPlugin, CommandFn, BlockContext } from "../base";
 import { Transforms } from "slate";
-import { getAttributeAtCursor } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
+import styles from "./index.module.less";
 
 export const FONT_BLOCK_KEY = "font-block";
 
@@ -14,8 +14,8 @@ export class FontBlockPlugin extends BlockPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const fontBlock = getAttributeAtCursor(this.editor, FONT_BLOCK_KEY);
+    this.event.on(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, (element) => {
+      const fontBlock = (element as any)?.[this.key];
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         fontBlock,
       });
@@ -28,8 +28,12 @@ export class FontBlockPlugin extends BlockPlugin {
 
   public destroy?: (() => void) | undefined;
 
-  public onCommand: CommandFn = ({ fontBlock, at }) => {
+  public onCommand: CommandFn = ({ fontBlock }) => {
     if (this.editor) {
+      const at = ReactEditor.findPath(
+        this.editor as any,
+        this.selectedElement as any
+      );
       Transforms.setNodes(
         this.editor,
         {
@@ -38,18 +42,32 @@ export class FontBlockPlugin extends BlockPlugin {
         { at }
       );
     }
-    setTimeout(() => {
-      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
-        fontBlock,
-      });
+    this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
+      fontBlock,
     });
+  };
+
+  public getCurrentStatus = () => {
+    const fontBlock = (this.selectedElement as any)?.[this.key];
+    return {
+      fontBlock,
+    };
   };
 
   public render(context: BlockContext): JSX.Element {
     const { props } = context;
     const config = props.element[FONT_BLOCK_KEY];
-    context.style = { ...context.style, ...(config || {}) };
-    return context.children;
+    context.style = { ...context.style, color: config?.color };
+
+    return (
+      <>
+        {context.children}
+        <div
+          className={styles[`background-mask`]}
+          style={{ backgroundColor: config?.backgroundColor }}
+        />
+      </>
+    );
   }
 }
 

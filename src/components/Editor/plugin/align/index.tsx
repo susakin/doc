@@ -24,8 +24,8 @@ export class AlignPlugin extends BlockPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, () => {
-      const align = (this.getElement() as any)?.[this.key];
+    this.event.on(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, (element) => {
+      const align = (element as any)?.[this.key];
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         align,
       });
@@ -38,7 +38,7 @@ export class AlignPlugin extends BlockPlugin {
   }
 
   public getCurrentStatus = () => {
-    const align = (this.getElement() as any)?.[this.key];
+    const align = (this.selectedElement as any)?.[this.key];
     return {
       align,
     };
@@ -60,7 +60,7 @@ export class AlignPlugin extends BlockPlugin {
     if (this.editor) {
       const at = ReactEditor.findPath(
         this.editor as any,
-        this.getElement() as any
+        this.selectedElement as any
       );
       Transforms.setNodes(
         this.editor,
@@ -70,7 +70,6 @@ export class AlignPlugin extends BlockPlugin {
         { at }
       );
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, { align });
-      this.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, this.editor.selection);
     }
   };
 

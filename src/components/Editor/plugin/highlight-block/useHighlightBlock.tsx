@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { highlightBlockPlugin } from ".";
 import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
-import { Editor } from "slate";
-import { getSelectionAbovePath } from "../../utils";
 
 export const useHighlightBlock = () => {
   const [highlightBlock, setHighlightBlock] =
@@ -19,14 +17,9 @@ export const useHighlightBlock = () => {
     );
   }, []);
 
-  const commandHighlightBlock = ({ highlightBlock, at }: any) => {
-    if (!at) {
-      const editor = highlightBlockPlugin.editor;
-      at = getSelectionAbovePath(editor);
-    }
+  const commandHighlightBlock = ({ highlightBlock }: any) => {
     highlightBlockPlugin.onCommand({
       highlightBlock,
-      at,
     });
   };
 

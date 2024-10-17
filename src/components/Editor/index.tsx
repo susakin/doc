@@ -32,6 +32,7 @@ import React from "react";
 import HoverToolbar from "./components/HoverToolbar";
 import { mockSelectionPlugin } from "./plugin/mock-selection";
 import FloatMenu from "./components/FloatMenu";
+import { fontBlockPlugin } from "./plugin/font-block";
 
 const classNamePrefix = "editor";
 const INIT_NODE = [
@@ -149,7 +150,8 @@ class Editor extends React.Component<EditorProps, EditableState> {
       quoteBlockPlugin,
       dividerBlockPlugin,
       hyperLinkPlugin,
-      mockSelectionPlugin
+      mockSelectionPlugin,
+      fontBlockPlugin
     );
     pluginController.apply();
     this.state = {

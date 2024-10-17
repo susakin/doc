@@ -267,7 +267,7 @@ const ColorPicker: React.FC<PickerProps> = ({
         {hasFillColor ? "填充" : "背景"}颜色
       </p>
       <BackgroundColorSelect
-        items={hasFillColor ? fillColor : backgroundColor}
+        items={fillColor}
         selectedColor={value?.[hasFillColor ? "fillColor" : "backgroundColor"]}
         onClick={({ color }) => {
           setValue((v) => ({

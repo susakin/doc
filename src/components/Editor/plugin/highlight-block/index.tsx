@@ -16,11 +16,8 @@ export class HighlightBlockPlugin extends BlockPlugin {
   }
 
   private init() {
-    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const highlightBlock = getAttributeAtCursor(
-        this.editor,
-        HIGHLIGHT_BLOCK_KEY
-      );
+    this.event.on(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, (element) => {
+      const highlightBlock = (element as any)?.[this.key];
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!highlightBlock,
         highlightBlock,
@@ -29,7 +26,7 @@ export class HighlightBlockPlugin extends BlockPlugin {
   }
 
   public getCurrentStatus = () => {
-    const highlightBlock = getAttributeAtCursor(this.editor, this.key);
+    const highlightBlock = (this.selectedElement as any)?.[this.key];
     return {
       isActive: !!highlightBlock,
       highlightBlock,
@@ -42,8 +39,12 @@ export class HighlightBlockPlugin extends BlockPlugin {
 
   public destroy?: (() => void) | undefined;
 
-  public onCommand: CommandFn = ({ highlightBlock, at }) => {
+  public onCommand: CommandFn = ({ highlightBlock }) => {
     if (this.editor) {
+      const at = ReactEditor.findPath(
+        this.editor as any,
+        this.selectedElement as any
+      );
       Transforms.setNodes(
         this.editor,
         {
@@ -51,6 +52,7 @@ export class HighlightBlockPlugin extends BlockPlugin {
         },
         { at }
       );
+      this.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, this.editor.selection);
     }
   };
 

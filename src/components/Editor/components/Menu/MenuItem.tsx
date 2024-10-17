@@ -48,7 +48,11 @@ const MenuItem: React.FC<MenuItemProps> = ({ item }) => {
 
 export function getRenderItem(item: Item) {
   const { render, tooltip, submenu, submenuPopoverProps } = item;
-  const { renderToBody } = submenuPopoverProps || {};
+  const {
+    renderToBody,
+    hideWhenContentClick,
+    placement = "right",
+  } = submenuPopoverProps || {};
   if (render) {
     return render();
   }
@@ -56,9 +60,10 @@ export function getRenderItem(item: Item) {
   if (submenu) {
     return (
       <Popover
-        placement="right"
+        placement={placement}
         offset={5}
         renderToBody={renderToBody}
+        hideWhenContentClick={hideWhenContentClick}
         content={({ side }) => {
           return <AnimationWrapper side={side}>{submenu}</AnimationWrapper>;
         }}
