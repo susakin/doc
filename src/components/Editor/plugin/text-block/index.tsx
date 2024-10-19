@@ -54,7 +54,7 @@ export class TextBlockPlugin extends BlockPlugin {
           {
             [this.key]: isActive ? undefined : true,
           },
-          !isActive ? { [HEADING_KEY]: undefined } : {}
+          !isActive ? { [HEADING_KEY]: undefined, placeholder: undefined } : {}
         ),
         {
           at,

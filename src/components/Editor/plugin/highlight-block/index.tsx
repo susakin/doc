@@ -1,7 +1,6 @@
 import { ReactEditor, RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
 import { Transforms } from "slate";
-import { getAttributeAtCursor } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import Highlight from "./Highligth";
 import { useHasSelection } from "../../components/HoverToolbar";
