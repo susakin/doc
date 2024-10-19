@@ -21,6 +21,8 @@ export const EDITOR_EVENT = {
   ELEMENT_MOUSE_LEAVE: "ELEMENT_MOUSE_LEAVE",
   HOVER_MENU_ACTIVE: "HOVER_MENU_ACTIVE",
   SELECTED_ELEMENT_CHANGE: "SELECTED_ELEMENT_CHANGE",
+  FLOAT_MENU_MOUSE_ENTER: "FLOAT_MENU_MOUSE_ENTER",
+  FLOAT_MENU_MOUSE_LEAVE: "FLOAT_MENU_MOUSE_LEAVE",
   ...REACT_EVENTS,
 } as const;
 
@@ -29,7 +31,7 @@ export type PluginActiveChangePayload = {
   [x: string]: any;
 };
 
-type ElementMouseEventPayload = {
+export type ElementMouseEventPayload = {
   element: RenderElementProps["element"];
   domElement: HTMLElement;
 };
@@ -42,6 +44,8 @@ type EditorEventMap = {
   [EDITOR_EVENT.PLUGIN_COMMANT]: Record<string, any>;
   [EDITOR_EVENT.ELEMENT_MOUSE_ENTER]: ElementMouseEventPayload;
   [EDITOR_EVENT.ELEMENT_MOUSE_LEAVE]: ElementMouseEventPayload;
+  [EDITOR_EVENT.FLOAT_MENU_MOUSE_ENTER]: ElementMouseEventPayload;
+  [EDITOR_EVENT.FLOAT_MENU_MOUSE_LEAVE]: undefined;
   [EDITOR_EVENT.HOVER_MENU_ACTIVE]: boolean;
   [EDITOR_EVENT.SELECTED_ELEMENT_CHANGE]: RenderElementProps["element"];
 };

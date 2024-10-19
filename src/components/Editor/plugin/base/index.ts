@@ -55,6 +55,7 @@ export type BlockContext = {
   style?: React.CSSProperties;
   children: JSX.Element;
   element: RenderElementProps["element"];
+  classNameList?: string[];
 };
 
 export type LeafContext = {
@@ -63,6 +64,7 @@ export type LeafContext = {
   element: RenderLeafProps["text"];
   style?: React.CSSProperties;
   children: JSX.Element;
+  classNameList?: string[];
 };
 
 export abstract class BlockPlugin extends BasePlugin {

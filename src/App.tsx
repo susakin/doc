@@ -36,15 +36,7 @@ function App() {
 
   return (
     <div style={{ padding: "0 400px" }}>
-      <BlockMenu />
-      <HeaderTitleMenu />
-      <HighlightMenu />
-      <LinkEditPanel />
-      <LinkMenu />
-      {/* <Editable editor={editor} placeholder="Enter text ..."></Editable> */}
-      <MenuTrigger />
       <Editor
-        placeholder="1111111111"
         //readOnly
         onChange={(v) => {
           console.log(v);

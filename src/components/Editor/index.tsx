@@ -47,19 +47,19 @@ const INIT_NODE = [
 
     //"divider-block": true,
   },
-  {
-    children: [
-      {
-        text: "3啛啛喳喳错错错错错错错错错错错错错错错错错错错错错错错错错错错错程序法",
-      },
-    ],
-    "text-block": true,
-    "highlight-block": {
-      color: "rgb(31, 35, 41)",
-      borderColor: "rgb(255, 165, 61)",
-      fillColor: "rgb(254, 234, 210)",
-    },
-  },
+  // {
+  //   children: [
+  //     {
+  //       text: "3啛啛喳喳错错错错错错错错错错错错错错错错错错错错错错错错错错错错程序法",
+  //     },
+  //   ],
+  //   "text-block": true,
+  //   "highlight-block": {
+  //     color: "rgb(31, 35, 41)",
+  //     borderColor: "rgb(255, 165, 61)",
+  //     fillColor: "rgb(254, 234, 210)",
+  //   },
+  // },
   // {
   //   children: [{ text: "2" }],
   //   "text-block": true,
@@ -107,6 +107,22 @@ const Editable: React.FC<EditableProps> = ({ placeholder, readOnly }) => {
 
   const [mouseDown, setMouseDown] = useState<boolean>(false);
 
+  const onMouseDown = () => {
+    setMouseDown(true);
+  };
+
+  const onMouseUp = () => {
+    setMouseDown(false);
+  };
+
+  const onBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    pluginController.event.trigger(EDITOR_EVENT.BLUR, event);
+  };
+
+  const onFocus = (event: React.FocusEvent<HTMLDivElement>) => {
+    pluginController.event.trigger(EDITOR_EVENT.FOCUS, event);
+  };
+
   return (
     <>
       <SlateEditable
@@ -116,12 +132,10 @@ const Editable: React.FC<EditableProps> = ({ placeholder, readOnly }) => {
         renderElement={pluginController.renderElement}
         renderLeaf={pluginController.renderLeaf}
         readOnly={readOnly}
-        onMouseDown={() => {
-          setMouseDown(true);
-        }}
-        onMouseUp={() => {
-          setMouseDown(false);
-        }}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+        onBlur={onBlur}
+        onFocus={onFocus}
       />
       <HoverToolbar editorMouseDown={mouseDown} />
       <FloatMenu />

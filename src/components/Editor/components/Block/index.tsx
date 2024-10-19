@@ -1,9 +1,13 @@
-import React, { useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./index.module.less";
 import { BlockContext } from "../../plugin/base";
 import mergeRefs from "merge-refs";
 import { pluginController } from "../../plugin/base/controller";
 import { EDITOR_EVENT } from "../../event/action";
+import SelectedMask from "../SelectedMask";
+import cs from "classnames";
+import { RenderElementProps, useSlate, ReactEditor } from "slate-react";
+import { BaseEditor, Editor, Path } from "slate";
 
 const classNamePrefix = "block";
 
@@ -11,22 +15,100 @@ type BlockProps = {
   children?: React.ReactNode;
 } & BlockContext;
 
+let timer: any;
+
+const isEmptyText = (element: RenderElementProps["element"]) => {
+  return (
+    element?.children?.length === 1 &&
+    (element.children[0] as any)?.text?.length === 0
+  );
+};
+
+function isElementFocused(
+  editor: BaseEditor,
+  element: RenderElementProps["element"]
+) {
+  const { selection } = editor;
+  if (!selection || !element) return false;
+  const selectionPath = Editor.path(editor, selection);
+  const elementPath = ReactEditor.findPath(editor as any, element as any);
+  return Path.isChild(selectionPath, elementPath);
+}
+
 const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
   const elementRef = useRef<HTMLDivElement>(null);
+  const [selected, setSelected] = useState<boolean>(false);
+  const mouseEnterRef = useRef<boolean>(false);
+  const baseEdior = useSlate();
+  const isFocused = isElementFocused(baseEdior, rest.element);
+  const isEmpty = isEmptyText(rest?.element as any);
+  const [isBlured, setIsBlured] = useState<boolean>(false);
+
+  useEffect(() => {
+    pluginController.event.on(
+      EDITOR_EVENT.FLOAT_MENU_MOUSE_ENTER,
+      (payload) => {
+        setSelected(payload.domElement === elementRef.current);
+      }
+    );
+    pluginController.event.on(EDITOR_EVENT.FLOAT_MENU_MOUSE_LEAVE, () => {
+      setSelected(false);
+    });
+
+    pluginController.event.on(EDITOR_EVENT.BLUR, () => {
+      setIsBlured(true);
+    });
+
+    pluginController.event.on(EDITOR_EVENT.FOCUS, () => {
+      setIsBlured(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (mouseEnterRef.current) {
+      pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, {
+        element: rest.element,
+        domElement: elementRef.current as any,
+      });
+    }
+  }, [rest.element]);
+
+  const elementMouseActive = () => {
+    clearTimeout(timer);
+    mouseEnterRef.current = true;
+    pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, {
+      element: rest.element,
+      domElement: elementRef.current as any,
+    });
+  };
+
+  const elementMouseInactive = () => {
+    timer = setTimeout(() => {
+      mouseEnterRef.current = false;
+      pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_LEAVE, {
+        element: rest.element,
+        domElement: elementRef.current as any,
+      });
+    }, 1000);
+  };
+
   return (
     <div
       style={style}
-      className={styles[`${classNamePrefix}`]}
+      className={cs(styles[`${classNamePrefix}`], rest.classNameList)}
       {...rest.props.attributes}
-      onMouseEnter={() => {
-        pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, {
-          element: rest.element,
-          domElement: elementRef.current as any,
-        });
-      }}
+      onMouseEnter={elementMouseActive}
+      onMouseMove={elementMouseActive}
+      onMouseLeave={elementMouseInactive}
       ref={mergeRefs(elementRef, rest.props.attributes?.ref)}
+      data-placeholder={
+        isEmpty && isFocused && !isBlured
+          ? rest.element?.placeholder
+          : undefined
+      }
     >
       {children}
+      {selected && <SelectedMask />}
     </div>
   );
 };

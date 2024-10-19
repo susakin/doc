@@ -6,6 +6,7 @@ import AnimationWrapper from "../Tooltip/AnimationWrapper";
 import InlinePopover from "../Tooltip/InlinePopover";
 import { HYPER_LINK_KEY, hyperLinkPlugin } from "../../plugin/hyper-link";
 import { EDITOR_EVENT } from "../../event/action";
+import { pluginController } from "../../plugin/base/controller";
 
 export const useHasSelection = () => {
   const editor = useSlate();
@@ -26,8 +27,10 @@ type HoverToolbarProps = {
 
 const HoverToolbar: React.FC<HoverToolbarProps> = ({ editorMouseDown }) => {
   const hasSection = useHasSelection();
+  const active = !hasSection || editorMouseDown;
 
-  if (!hasSection || editorMouseDown) {
+  if (active) {
+    pluginController.event.trigger(EDITOR_EVENT.HOVER_MENU_ACTIVE, false);
     return null;
   }
 
@@ -38,6 +41,10 @@ const HoverToolbar: React.FC<HoverToolbarProps> = ({ editorMouseDown }) => {
   }, []);
 
   const [open, setOpen] = useState<boolean | undefined>(undefined);
+
+  useEffect(() => {
+    pluginController.event.trigger(EDITOR_EVENT.HOVER_MENU_ACTIVE, !!open);
+  }, [open]);
 
   return (
     <InlinePopover

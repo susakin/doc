@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./index.module.less";
 import { LeafContext } from "../../plugin/base";
+import cs from "classnames";
 
 const classNamePrefix = "leaf";
 
@@ -12,7 +13,7 @@ const Leaf: React.FC<LeafProps> = ({ children, style, ...rest }) => {
   return (
     <span
       style={style}
-      className={styles[`${classNamePrefix}`]}
+      className={cs(styles[`${classNamePrefix}`], rest.classNameList)}
       {...rest.props.attributes}
     >
       {children}

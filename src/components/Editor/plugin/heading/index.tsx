@@ -89,6 +89,7 @@ export class HeadingPlugin extends BlockPlugin {
         Object.assign(
           {
             heading: isActive ? undefined : heading,
+            placeholder: isActive ? undefined : heading,
           },
           !isActive ? { [TEXT_BLOCK_KEY]: undefined } : {}
         ),
@@ -119,9 +120,9 @@ export class HeadingPlugin extends BlockPlugin {
         h8: styles[`${classNamePrefix}-8`],
         h9: styles[`${classNamePrefix}-9`],
       };
-      return <div className={headingStyles[heading as any]}>{children}</div>;
+      context.classNameList?.push(headingStyles[heading as any]);
     }
-    return null as any;
+    return children;
   }
 }
 

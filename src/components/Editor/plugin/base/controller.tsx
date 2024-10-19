@@ -14,6 +14,7 @@ import Block from "../../components/Block";
 import Leaf from "../../components/Leaf";
 import React from "react";
 import Void from "../../components/Void";
+import { BaseEditor } from "slate";
 
 const DEFAULT_PRIORITY = 100;
 
@@ -22,6 +23,7 @@ export class PluginController {
   public leaves: LeafPlugin[];
   private pluginMap: Record<string, EditorPlugin>;
   public event: EventBus;
+  public editor?: BaseEditor;
   constructor() {
     this.pluginMap = {};
     this.blocks = [];
@@ -45,6 +47,7 @@ export class PluginController {
     });
     //监听基础编辑器变化
     this.event.on(EDITOR_EVENT.BASE_EDITOR_CHANGE, (editor) => {
+      this.editor = editor;
       for (const item of Object.values(this.pluginMap)) {
         item.event.trigger(EDITOR_EVENT.BASE_EDITOR_CHANGE, editor);
       }
@@ -120,6 +123,7 @@ export class PluginController {
       props,
       element: props.element,
       children: props.children,
+      classNameList: [],
     };
     for (const item of this.blocks) {
       if (item.match(props) && item.render) {
@@ -149,6 +153,7 @@ export class PluginController {
       leaf: props.leaf,
       element: props.text,
       children: props.children,
+      classNameList: [],
     };
     for (const item of this.leaves) {
       if (item.match(props) && item.render) {
