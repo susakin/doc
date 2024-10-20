@@ -15,6 +15,8 @@ import Leaf from "../../components/Leaf";
 import React from "react";
 import Void from "../../components/Void";
 import { BaseEditor } from "slate";
+import { getSelectionAboveNode } from "../../utils";
+import { DIVIDER_BLOCK_KEY } from "../divider-block";
 
 const DEFAULT_PRIORITY = 100;
 
@@ -24,6 +26,8 @@ export class PluginController {
   private pluginMap: Record<string, EditorPlugin>;
   public event: EventBus;
   public editor?: BaseEditor;
+  public selectedElement?: RenderElementProps["element"];
+  public isHoverMenuActive?: boolean = false;
   constructor() {
     this.pluginMap = {};
     this.blocks = [];
@@ -32,15 +36,32 @@ export class PluginController {
     this.eventListener();
   }
 
+  public setSelectedElement(element: RenderElementProps["element"]) {
+    this.selectedElement = element;
+    for (const item of Object.values(this.pluginMap)) {
+      item.event.trigger(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, element);
+    }
+  }
+
   public eventListener() {
     //监听键盘事件
     this.event.on(REACT_EVENTS.KEY_DOWN, (event) => {
+      if (this.selectedElement?.[DIVIDER_BLOCK_KEY]) {
+        this.pluginMap[DIVIDER_BLOCK_KEY]?.event.trigger(
+          EDITOR_EVENT.KEY_DOWN,
+          event
+        );
+        return;
+      }
       for (const item of Object.values(this.pluginMap)) {
         item.event.trigger(EDITOR_EVENT.KEY_DOWN, event);
       }
     });
     //监听光标变化
     this.event.on(EDITOR_EVENT.SELECTION_CHANGE, (selection) => {
+      const element = getSelectionAboveNode(this.editor);
+      this.setSelectedElement(element);
+
       for (const item of Object.values(this.pluginMap)) {
         item.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, selection);
       }
@@ -61,14 +82,21 @@ export class PluginController {
     });
 
     //监听element mouse enter
-    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, (event) => {
+    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, ({ element }) => {
+      if (!this.isHoverMenuActive) {
+        this.setSelectedElement(element);
+      }
+
       for (const item of Object.values(this.pluginMap)) {
-        item.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, event);
+        item.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, {
+          element,
+        } as any);
       }
     });
 
     //
     this.event.on(EDITOR_EVENT.HOVER_MENU_ACTIVE, (isActive) => {
+      this.isHoverMenuActive = isActive;
       for (const item of Object.values(this.pluginMap)) {
         item.event.trigger(EDITOR_EVENT.HOVER_MENU_ACTIVE, isActive);
       }

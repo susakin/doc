@@ -95,7 +95,7 @@ export class EventBus {
       duplicate = <WithStop<EventMap[T]>>wrap;
     }
     for (const item of handler) {
-      item.listener(duplicate);
+      item.listener(payload as any);
       item.once && this.off(key, item.listener);
       if (isStopped) break;
     }

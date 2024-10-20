@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import Menu, { Item } from "../Menu";
-import MenuList from "./MeunList";
 import styles from "./index.module.less";
+import MenuList from "../BlockMenu/MeunList";
 const classNamePrefix = "empty-block-menu";
 
 const EmptyBlockMenu: React.FC = () => {

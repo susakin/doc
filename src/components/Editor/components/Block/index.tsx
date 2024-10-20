@@ -24,7 +24,7 @@ const isEmptyText = (element: RenderElementProps["element"]) => {
   );
 };
 
-function isElementFocused(
+export function isElementFocused(
   editor: BaseEditor,
   element: RenderElementProps["element"]
 ) {
@@ -40,6 +40,7 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
   const [selected, setSelected] = useState<boolean>(false);
   const mouseEnterRef = useRef<boolean>(false);
   const baseEdior = useSlate();
+  const { selection } = baseEdior;
   const isFocused = isElementFocused(baseEdior, rest.element);
   const isEmpty = isEmptyText(rest?.element as any);
   const [isBlured, setIsBlured] = useState<boolean>(false);
@@ -65,7 +66,7 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
   }, []);
 
   useEffect(() => {
-    if (mouseEnterRef.current) {
+    if (selected) {
       pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, {
         element: rest.element,
         domElement: elementRef.current as any,
@@ -89,8 +90,12 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
         element: rest.element,
         domElement: elementRef.current as any,
       });
-    }, 1000);
+    }, 800);
   };
+
+  useEffect(() => {
+    elementMouseInactive();
+  }, [selection]);
 
   return (
     <div

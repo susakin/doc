@@ -3,6 +3,8 @@ import { BlockPlugin, CommandFn, BlockContext } from "../base";
 import { Transforms } from "slate";
 import { EDITOR_EVENT } from "../../event/action";
 import { HEADING_KEY, headingPlugin } from "../heading";
+import { REACT_EVENTS, ReactEventMap } from "../../event/react";
+import { isHotkey } from "../../utils/isHotkey";
 
 export const TEXT_BLOCK_KEY = "text-block";
 
@@ -23,7 +25,16 @@ export class TextBlockPlugin extends BlockPlugin {
         textBlock,
       });
     });
+    this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
+
+  public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
+    const hotkey = "ctrl+alt+0";
+    if (isHotkey(hotkey, event.nativeEvent)) {
+      event.preventDefault();
+      this.onCommand(undefined as any);
+    }
+  };
 
   public getCurrentStatus = () => {
     const textBlock = (this.selectedElement as any)?.[this.key];

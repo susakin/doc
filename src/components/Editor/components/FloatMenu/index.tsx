@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { pluginController } from "../../plugin/base/controller";
 import { EDITOR_EVENT, ElementMouseEventPayload } from "../../event/action";
 import {

@@ -54,7 +54,7 @@ export class FontBlockPlugin extends BlockPlugin {
     };
   };
 
-  public render(context: BlockContext): JSX.Element {
+  public renderLine(context: BlockContext): JSX.Element {
     const { props } = context;
     const config = props.element[FONT_BLOCK_KEY];
     context.style = { ...context.style, color: config?.color };
@@ -62,10 +62,13 @@ export class FontBlockPlugin extends BlockPlugin {
     return (
       <>
         {context.children}
-        <div
-          className={styles[`background-mask`]}
-          style={{ backgroundColor: config?.backgroundColor }}
-        />
+        {!!config?.backgroundColor && (
+          <div
+            className={styles[`background-mask`]}
+            style={{ backgroundColor: config?.backgroundColor }}
+            contentEditable={false}
+          ></div>
+        )}
       </>
     );
   }

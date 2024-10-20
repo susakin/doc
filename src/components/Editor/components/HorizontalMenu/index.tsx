@@ -15,6 +15,7 @@ export type Item = {
   render?: () => React.ReactNode;
   text?: React.ReactNode;
   key?: string;
+  hidden?: boolean;
   submenuPopoverProps?: Pick<
     PopoverProps,
     | "placement"
@@ -47,6 +48,7 @@ const HorizontalMenu: React.FC<HorizontalMenuProps> = ({ items, onClick }) => {
       {items
         ?.filter((item) => !!item)
         .map((item) => {
+          if (item.hidden) return null;
           const _onClick = item.onClick;
           item.onClick = (e) => {
             _onClick?.(e);

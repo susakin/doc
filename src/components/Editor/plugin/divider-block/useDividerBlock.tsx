@@ -3,7 +3,9 @@ import { dividerBlockPlugin } from ".";
 import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
 
 export const useDividerBlock = () => {
-  const [dividerBlock, setDividerBlock] = useState<PluginActiveChangePayload>();
+  const [dividerBlock, setDividerBlock] = useState<PluginActiveChangePayload>(
+    dividerBlockPlugin.getCurrentStatus()
+  );
 
   useEffect(() => {
     dividerBlockPlugin.event.on(
@@ -14,5 +16,9 @@ export const useDividerBlock = () => {
     );
   }, []);
 
-  return { dividerBlock };
+  const commandDividerBlock = () => {
+    dividerBlockPlugin.onCommand(undefined as any);
+  };
+
+  return { dividerBlock, commandDividerBlock };
 };

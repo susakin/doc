@@ -79,26 +79,10 @@ export abstract class BlockPlugin extends BasePlugin {
 
   public selectedElement?: RenderElementProps["element"];
 
-  public isHoverMenuActive?: boolean = false;
-
-  public setSelectedElement(element: RenderElementProps["element"]) {
-    this.selectedElement = element;
-    this.event.trigger(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, element);
-  }
-
   constructor() {
     super();
-    this.event.on(EDITOR_EVENT.HOVER_MENU_ACTIVE, (isActive) => {
-      this.isHoverMenuActive = isActive;
-    });
-    this.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, ({ element }) => {
-      if (!this.isHoverMenuActive) {
-        this.setSelectedElement(element);
-      }
-    });
-    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const element = getSelectionAboveNode(this.editor);
-      this.setSelectedElement(element);
+    this.event.on(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, (element) => {
+      this.selectedElement = element;
     });
   }
 }

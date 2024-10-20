@@ -151,6 +151,7 @@ class Editor extends React.Component<EditorProps, EditableState> {
   constructor(props: EditorProps) {
     super(props);
     pluginController.register(
+      dividerBlockPlugin,
       highlightBlockPlugin,
       fontLeafPlugin,
       textBlockPlugin,
@@ -162,7 +163,6 @@ class Editor extends React.Component<EditorProps, EditableState> {
       lineThroughPlugin,
       indentPlugin,
       quoteBlockPlugin,
-      dividerBlockPlugin,
       hyperLinkPlugin,
       mockSelectionPlugin,
       fontBlockPlugin

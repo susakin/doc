@@ -79,6 +79,7 @@ const MenuTrigger: React.FC<MenuTriggerProps> = ({
       placement="left"
       offset={5}
       renderToBody={false}
+      hideWhenContentClick
       onOpenChange={onOpenChange}
     >
       <div className={styles[`${classNamePrefix}`]}>

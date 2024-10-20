@@ -4,6 +4,7 @@ import { Transforms } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { isHotkey } from "../../utils/isHotkey";
 import { EDITOR_EVENT } from "../../event/action";
+import { DIVIDER_BLOCK_KEY } from "../divider-block";
 
 export const INDENT_KEY = "indent";
 
@@ -75,10 +76,11 @@ export class IndentPlugin extends BlockPlugin {
 
   public renderLine(context: BlockContext): JSX.Element {
     const { props, element } = context;
-
+    const divider = element[DIVIDER_BLOCK_KEY];
     context.style = {
       ...context.style,
       textIndent: element[INDENT_KEY] ? "2em" : undefined,
+      paddingLeft: !!divider ? 25 : undefined,
     };
     return props.children;
   }

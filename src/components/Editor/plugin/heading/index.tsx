@@ -2,7 +2,6 @@ import { ReactEditor, RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
 import { Transforms } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
-import { getAttributeAtCursor, isBlockActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import styles from "./index.module.less";
 import { isHotkey } from "../../utils/isHotkey";
