@@ -66,7 +66,7 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
   }, []);
 
   useEffect(() => {
-    if (selected) {
+    if (mouseEnterRef.current) {
       pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, {
         element: rest.element,
         domElement: elementRef.current as any,

@@ -84,6 +84,10 @@ export abstract class BlockPlugin extends BasePlugin {
     this.event.on(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, (element) => {
       this.selectedElement = element;
     });
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
+      const element = getSelectionAboveNode(this.editor);
+      this.event.trigger(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, element);
+    });
   }
 }
 
