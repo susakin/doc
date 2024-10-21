@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { textBlockPlugin } from ".";
 import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
-import { getSelectionAbovePath } from "../../utils";
 
 export const useTextBlock = () => {
   const [textBlock, setTextBlock] = useState<PluginActiveChangePayload>(
@@ -14,13 +13,13 @@ export const useTextBlock = () => {
     });
   }, []);
 
-  const commandTextBlock = (at?: any) => {
-    if (!at) {
-      const editor = textBlockPlugin.editor;
-      at = getSelectionAbovePath(editor);
-    }
-    textBlockPlugin.onCommand({ at } as any);
+  const commandTextBlock = () => {
+    textBlockPlugin.onCommand(undefined as any);
   };
 
-  return { textBlock, commandTextBlock };
+  const insertNodeAfterSelectedElement = () => {
+    textBlockPlugin.insertNodeAfterSelectedElement(true);
+  };
+
+  return { textBlock, commandTextBlock, insertNodeAfterSelectedElement };
 };

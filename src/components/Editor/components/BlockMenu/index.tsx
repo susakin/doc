@@ -14,8 +14,13 @@ import { useTypography } from "../HoverToolbar/useTypography";
 import { svgProps } from "../../utils/getSideAnimateClassName";
 import { useHighlightBlock } from "../../plugin/highlight-block/useHighlightBlock";
 import { useFontBlock } from "../../plugin/font-block/useFontBlock";
+import AddBlockMenu from "../AddBlockMenu";
 
-const BlockMenu: React.FC = () => {
+type BlockMenuProps = {
+  isDivider?: boolean;
+};
+
+const BlockMenu: React.FC<BlockMenuProps> = ({ isDivider }) => {
   const typography = useTypography();
   const { highlightBlock } = useHighlightBlock();
   const { fontBlock, commandFontBlock } = useFontBlock();
@@ -26,10 +31,12 @@ const BlockMenu: React.FC = () => {
         render() {
           return <MenuList />;
         },
+        hidden: isDivider,
       },
       {
         text: "缩进和对齐",
         ...typography,
+        hidden: isDivider,
       },
       {
         text: "颜色",
@@ -45,7 +52,7 @@ const BlockMenu: React.FC = () => {
           />
         ),
         devider: true,
-        hidden: highlightBlock?.isActive,
+        hidden: highlightBlock?.isActive || isDivider,
         submenuPopoverProps: {
           renderToBody: false,
           hideWhenContentClick: true,
@@ -70,14 +77,14 @@ const BlockMenu: React.FC = () => {
       {
         text: "在下方添加",
         icon: <NewJoinMeetingOutlined {...svgProps} />,
-        submenu: <EmptyBlockMenu />,
+        submenu: <AddBlockMenu />,
         submenuPopoverProps: {
           renderToBody: false,
           hideWhenContentClick: true,
         },
       },
     ];
-  }, [typography, highlightBlock, fontBlock]);
+  }, [typography, highlightBlock, fontBlock, isDivider]);
 
   return <Menu items={items} />;
 };

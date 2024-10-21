@@ -1,5 +1,5 @@
-import { RenderElementProps, RenderLeafProps } from "slate-react";
-import { BaseEditor } from "slate";
+import { ReactEditor, RenderElementProps, RenderLeafProps } from "slate-react";
+import { BaseEditor, Editor, Transforms } from "slate";
 import { ReactEventMap } from "../../event/react";
 import { EventBus } from "../../event";
 import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
@@ -78,6 +78,25 @@ export abstract class BlockPlugin extends BasePlugin {
   public renderLine?(context: BlockContext): JSX.Element;
 
   public selectedElement?: RenderElementProps["element"];
+
+  public insertNodeAfterSelectedElement(props: any) {
+    const path = ReactEditor.findPath(
+      this.editor as any,
+      this.selectedElement as any
+    );
+    ReactEditor.focus(this.editor as any);
+    Editor.withoutNormalizing(this.editor as any, () => {
+      if (!path.length) return void 0;
+      const nextPath = path.slice(0, -1);
+      const lastPath = path[path.length - 1] + 1;
+      nextPath.push(lastPath);
+      Transforms.insertNodes(
+        this.editor as any,
+        { children: [{ text: "" }], [this.key]: props },
+        { at: nextPath, select: true }
+      );
+    });
+  }
 
   constructor() {
     super();

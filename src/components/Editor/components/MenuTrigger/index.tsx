@@ -32,6 +32,7 @@ type MenuTriggerProps = Pick<PopoverProps, "onOpenChange"> & {
 };
 
 export const isEmpeyElement = (element: RenderElementProps["element"]) => {
+  if (!element) return false;
   return (
     Object.keys(element).length === 1 &&
     (element?.children[0] as any)?.text?.length === 0
@@ -55,6 +56,7 @@ const MenuTrigger: React.FC<MenuTriggerProps> = ({
   activeElement,
 }) => {
   const isEmpty = isEmpeyElement(activeElement as any);
+  const isDivider = !!activeElement?.[DIVIDER_BLOCK_KEY];
 
   const icon = useMemo(() => {
     if (isEmpty) {
@@ -75,7 +77,9 @@ const MenuTrigger: React.FC<MenuTriggerProps> = ({
 
   return (
     <Popover
-      content={isEmpty ? <EmptyBlockMenu /> : <BlockMenu />}
+      content={
+        isEmpty ? <EmptyBlockMenu /> : <BlockMenu isDivider={isDivider} />
+      }
       placement="left"
       offset={5}
       renderToBody={false}
