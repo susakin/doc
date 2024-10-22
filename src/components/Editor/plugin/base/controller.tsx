@@ -1,4 +1,4 @@
-import { RenderElementProps, RenderLeafProps } from "slate-react";
+import { ReactEditor, RenderElementProps, RenderLeafProps } from "slate-react";
 import {
   BlockContext,
   BlockPlugin,
@@ -14,7 +14,7 @@ import Block from "../../components/Block";
 import Leaf from "../../components/Leaf";
 import React from "react";
 import Void from "../../components/Void";
-import { BaseEditor } from "slate";
+import { BaseEditor, Transforms } from "slate";
 import { getSelectionAboveNode } from "../../utils";
 import { DIVIDER_BLOCK_KEY } from "../divider-block";
 
@@ -190,6 +190,20 @@ export class PluginController {
     }
     return <Leaf {...context}>{context.children}</Leaf>;
   };
+  public deleteSlectedElement() {
+    if (this.editor && this.selectedElement) {
+      const at = ReactEditor.findPath(
+        this.editor as any,
+        this.selectedElement as any
+      );
+      ReactEditor.focus(this.editor as any);
+      Transforms.select(this.editor, at);
+      Promise.resolve().then(() => {
+        Transforms.delete(this.editor as any, { at, unit: "block" });
+        this.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_LEAVE, undefined as any);
+      });
+    }
+  }
 }
 
 export const pluginController = new PluginController();

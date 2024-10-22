@@ -15,6 +15,7 @@ import { svgProps } from "../../utils/getSideAnimateClassName";
 import { useHighlightBlock } from "../../plugin/highlight-block/useHighlightBlock";
 import { useFontBlock } from "../../plugin/font-block/useFontBlock";
 import AddBlockMenu from "../AddBlockMenu";
+import { pluginController } from "../../plugin/base/controller";
 
 type BlockMenuProps = {
   isDivider?: boolean;
@@ -73,6 +74,9 @@ const BlockMenu: React.FC<BlockMenuProps> = ({ isDivider }) => {
         icon: <DeleteTrashOutlined {...svgProps} />,
         danger: true,
         devider: true,
+        onClick() {
+          pluginController.deleteSlectedElement();
+        },
       },
       {
         text: "在下方添加",

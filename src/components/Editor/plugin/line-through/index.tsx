@@ -25,9 +25,6 @@ export class LineThroughPlugin extends LeafPlugin {
       const payload = {
         isActive,
       };
-
-      console.log();
-
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, payload);
     });
 

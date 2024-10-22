@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { headingPlugin } from ".";
+import { Heading, headingPlugin } from ".";
 import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
-import { getSelectionAbovePath } from "../../utils";
 
 export const useHeading = () => {
   const [heading, setHeading] = useState<PluginActiveChangePayload>(
@@ -18,5 +17,11 @@ export const useHeading = () => {
     headingPlugin.onCommand({ heading });
   };
 
-  return { heading, commandHeading };
+  const insertNodeAfterSelectedElement = (heading: Heading) => {
+    headingPlugin.insertNodeAfterSelectedElement(heading, {
+      placeholder: heading,
+    });
+  };
+
+  return { heading, commandHeading, insertNodeAfterSelectedElement };
 };

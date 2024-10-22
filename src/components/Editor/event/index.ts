@@ -1,11 +1,9 @@
-import { isObject } from "../utils";
 import type {
   EventMap,
   EventType,
   Handler,
   Listener,
   Listeners,
-  WithStop,
 } from "./action";
 
 const DEFAULT_PRIORITY = 100;
@@ -80,22 +78,8 @@ export class EventBus {
     if (!handler) return false;
     let isStopped = false;
     let isPrevented = false;
-    let duplicate = <WithStop<EventMap[T]>>payload;
-    // COMPAT: 兼容`Nil/Plain`的情况 仅传递对象时才有效
-    if (isObject(payload)) {
-      const wrap = <WithStop<EventMap[T]>>Object.create(payload);
-      wrap._key = key;
-      wrap._raw = payload;
-      wrap.stop = () => {
-        isStopped = true;
-      };
-      wrap.prevent = () => {
-        isPrevented = true;
-      };
-      duplicate = <WithStop<EventMap[T]>>wrap;
-    }
     for (const item of handler) {
-      item.listener(payload as any);
+      item.listener(payload);
       item.once && this.off(key, item.listener);
       if (isStopped) break;
     }

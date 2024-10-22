@@ -62,6 +62,7 @@ export class ItalicPlugin extends LeafPlugin {
       } else {
         Editor.addMark(this.editor, italic, true);
       }
+
       setTimeout(() => {
         this.event.trigger(
           EDITOR_EVENT.SELECTION_CHANGE,

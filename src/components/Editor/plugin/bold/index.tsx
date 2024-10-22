@@ -61,6 +61,7 @@ export class BoldPlugin extends LeafPlugin {
       } else {
         Editor.addMark(this.editor, bold, true);
       }
+
       setTimeout(() => {
         this.event.trigger(
           EDITOR_EVENT.SELECTION_CHANGE,

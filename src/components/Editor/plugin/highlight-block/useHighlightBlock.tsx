@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { highlightBlockPlugin } from ".";
 import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
+import { defaultColorSetting } from "../../components/ColorPicker";
 
 export const useHighlightBlock = () => {
   const [highlightBlock, setHighlightBlock] =
@@ -23,5 +24,13 @@ export const useHighlightBlock = () => {
     });
   };
 
-  return { highlightBlock, commandHighlightBlock };
+  const insertNodeAfterSelectedElement = () => {
+    highlightBlockPlugin.insertNodeAfterSelectedElement(defaultColorSetting);
+  };
+
+  return {
+    highlightBlock,
+    commandHighlightBlock,
+    insertNodeAfterSelectedElement,
+  };
 };

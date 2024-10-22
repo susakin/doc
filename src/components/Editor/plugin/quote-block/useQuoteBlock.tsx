@@ -17,5 +17,9 @@ export const useQuoteBlock = () => {
     quoteBlockPlugin.onCommand(undefined as any);
   };
 
-  return { quoteBlock, commandQuoteBlock };
+  const insertNodeAfterSelectedElement = () => {
+    quoteBlockPlugin.insertNodeAfterSelectedElement(true);
+  };
+
+  return { quoteBlock, commandQuoteBlock, insertNodeAfterSelectedElement };
 };

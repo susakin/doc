@@ -79,7 +79,10 @@ export abstract class BlockPlugin extends BasePlugin {
 
   public selectedElement?: RenderElementProps["element"];
 
-  public insertNodeAfterSelectedElement(props: any) {
+  public insertNodeAfterSelectedElement(
+    props: any,
+    extra?: Record<string, any>
+  ) {
     const path = ReactEditor.findPath(
       this.editor as any,
       this.selectedElement as any
@@ -92,7 +95,7 @@ export abstract class BlockPlugin extends BasePlugin {
       nextPath.push(lastPath);
       Transforms.insertNodes(
         this.editor as any,
-        { children: [{ text: "" }], [this.key]: props },
+        { children: [{ text: "" }], [this.key]: props, ...extra },
         { at: nextPath, select: true }
       );
     });

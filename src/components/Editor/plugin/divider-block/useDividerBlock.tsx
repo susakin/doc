@@ -20,5 +20,9 @@ export const useDividerBlock = () => {
     dividerBlockPlugin.onCommand(undefined as any);
   };
 
-  return { dividerBlock, commandDividerBlock };
+  const insertNodeAfterSelectedElement = () => {
+    dividerBlockPlugin.insertNodeAfterSelectedElement(true);
+  };
+
+  return { dividerBlock, commandDividerBlock, insertNodeAfterSelectedElement };
 };
