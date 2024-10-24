@@ -59,3 +59,5 @@ export { default as TitleViewOutlined } from "./TitleViewOutlined";
 
 export { default as DragOutlined } from "./DragOutlined";
 export { default as AddOutlined } from "./AddOutlined";
+
+export { default as CodeOutlined } from "./CodeOutlined";

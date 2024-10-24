@@ -12,7 +12,6 @@ import {
   useDismiss,
   useRole,
   hide,
-  inline,
 } from "@floating-ui/react";
 import styles from "./index.module.less";
 import MenuTrigger from "../MenuTrigger";
@@ -33,7 +32,7 @@ const FloatMenu: React.FC = () => {
     open,
     transform: false,
     whileElementsMounted: autoUpdate,
-    middleware: [inline(), shift(), offset(5), flip(), hide()],
+    middleware: [shift(), offset(5), flip(), hide()],
   });
 
   const role = useRole(context);

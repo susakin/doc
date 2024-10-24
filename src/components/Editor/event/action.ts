@@ -1,4 +1,4 @@
-import { BaseEditor, BaseSelection } from "slate";
+import { BaseEditor, BaseSelection, Path } from "slate";
 import type { ReactEventMap } from "./react";
 import { REACT_EVENTS } from "./react";
 import { RenderElementProps } from "slate-react";
@@ -23,6 +23,7 @@ export const EDITOR_EVENT = {
   SELECTED_ELEMENT_CHANGE: "SELECTED_ELEMENT_CHANGE",
   FLOAT_MENU_MOUSE_ENTER: "FLOAT_MENU_MOUSE_ENTER",
   FLOAT_MENU_MOUSE_LEAVE: "FLOAT_MENU_MOUSE_LEAVE",
+  ADD_LINK: "ADD_LINK",
   ...REACT_EVENTS,
 } as const;
 
@@ -48,6 +49,7 @@ type EditorEventMap = {
   [EDITOR_EVENT.FLOAT_MENU_MOUSE_LEAVE]: undefined;
   [EDITOR_EVENT.HOVER_MENU_ACTIVE]: boolean;
   [EDITOR_EVENT.SELECTED_ELEMENT_CHANGE]: RenderElementProps["element"];
+  [EDITOR_EVENT.ADD_LINK]: Path;
 };
 
 export type EventMap = EditorEventMap & ReactEventMap;

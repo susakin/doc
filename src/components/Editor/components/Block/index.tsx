@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./index.module.less";
 import { BlockContext } from "../../plugin/base";
 import mergeRefs from "merge-refs";
@@ -36,7 +36,7 @@ export function isElementFocused(
 }
 
 const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
-  const elementRef = useRef<HTMLDivElement>(null);
+  const elementDivRef = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<boolean>(false);
   const mouseEnterRef = useRef<boolean>(false);
   const baseEdior = useSlate();
@@ -49,7 +49,7 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
     pluginController.event.on(
       EDITOR_EVENT.FLOAT_MENU_MOUSE_ENTER,
       (payload) => {
-        setSelected(payload.domElement === elementRef.current);
+        setSelected(payload.domElement === elementDivRef.current);
       }
     );
     pluginController.event.on(EDITOR_EVENT.FLOAT_MENU_MOUSE_LEAVE, () => {
@@ -69,7 +69,7 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
     if (mouseEnterRef.current || selected) {
       pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, {
         element: rest.element,
-        domElement: elementRef.current as any,
+        domElement: elementDivRef.current as any,
       });
     }
   }, [rest.element]);
@@ -79,7 +79,7 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
     mouseEnterRef.current = true;
     pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, {
       element: rest.element,
-      domElement: elementRef.current as any,
+      domElement: elementDivRef.current as any,
     });
   };
 
@@ -88,7 +88,7 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
       mouseEnterRef.current = false;
       pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_LEAVE, {
         element: rest.element,
-        domElement: elementRef.current as any,
+        domElement: elementDivRef.current as any,
       });
     }, 800);
   };
@@ -105,7 +105,7 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
       onMouseEnter={elementMouseActive}
       onMouseMove={elementMouseActive}
       onMouseLeave={elementMouseInactive}
-      ref={mergeRefs(elementRef, rest.props.attributes?.ref)}
+      ref={mergeRefs(elementDivRef, rest.props.attributes?.ref)}
       data-placeholder={
         isEmpty && isFocused && !isBlured
           ? rest.element?.placeholder

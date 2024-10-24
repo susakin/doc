@@ -204,6 +204,18 @@ export class PluginController {
       });
     }
   }
+  public getNextPathAtSelectedElement() {
+    if (this.editor && this.selectedElement) {
+      const path = ReactEditor.findPath(
+        this.editor as any,
+        this.selectedElement as any
+      );
+      const nextPath = path.slice(0, -1);
+      const lastPath = path[path.length - 1] + 1;
+      nextPath.push(lastPath);
+    }
+    return [];
+  }
 }
 
 export const pluginController = new PluginController();

@@ -1,5 +1,10 @@
 import React, { useMemo } from "react";
-import { GlobalLinkOutlined, ItalicOutlined, UnderlineOutlined } from "../Icon";
+import {
+  CodeOutlined,
+  GlobalLinkOutlined,
+  ItalicOutlined,
+  UnderlineOutlined,
+} from "../Icon";
 import { svgProps } from "../../utils/getSideAnimateClassName";
 import { BoldOutlined, HorizontalLineOutlined } from "../Icon";
 import { useColorPicker } from "./useColorPicker";
@@ -12,6 +17,8 @@ import { useUnderLine } from "../../plugin/under-line/useUnderLine";
 import { useLineThrough } from "../../plugin/line-through/useLineThrough";
 import { HYPER_LINK_KEY } from "../../plugin/hyper-link";
 import { useHyperLink } from "../../plugin/hyper-link/useHyperLink";
+import { INLINE_CODE_KEY } from "../../plugin/inline-code";
+import { useInlineCode } from "../../plugin/inline-code/useInlineCode";
 
 type MenuProps = Pick<HorizontalMenuProps, "onClick">;
 
@@ -25,6 +32,7 @@ const Menu: React.FC<MenuProps> = ({ onClick }) => {
   const { underLine, commandUnderLine } = useUnderLine();
   const { lineThrough, commandLineThrough } = useLineThrough();
   const { commandHyperLink, hyperLink } = useHyperLink();
+  const { inlineCode, commandInlineCode } = useInlineCode();
 
   const items = useMemo<(Item | undefined)[]>(() => {
     return [
@@ -71,6 +79,15 @@ const Menu: React.FC<MenuProps> = ({ onClick }) => {
           commandHyperLink();
         },
       },
+      {
+        icon: <CodeOutlined {...svgProps} />,
+        tooltip: "代码 (Ctrl + Shift + C)",
+        key: INLINE_CODE_KEY,
+        active: inlineCode?.isActive,
+        onClick() {
+          commandInlineCode();
+        },
+      },
       colorPicker,
     ];
   }, [
@@ -82,6 +99,7 @@ const Menu: React.FC<MenuProps> = ({ onClick }) => {
     lineThrough,
     hyperLink,
     inlineMenu,
+    inlineCode,
   ]);
 
   return <HorizontalMenu items={items} onClick={onClick} />;

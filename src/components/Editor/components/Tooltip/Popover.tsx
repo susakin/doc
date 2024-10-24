@@ -42,6 +42,7 @@ export type PopoverProps = {
   hasMaxHeight?: boolean;
   hasMaxWidth?: boolean;
   hasSafePolygon?: boolean;
+  referenceElement?: HTMLElement;
 } & Pick<UseFloatingOptions, "placement">;
 
 const Popover: React.FC<PopoverProps> = ({
@@ -54,6 +55,7 @@ const Popover: React.FC<PopoverProps> = ({
   hasMaxWidth,
   hasMaxHeight,
   hasSafePolygon = true,
+  referenceElement,
   ...rest
 }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -136,8 +138,12 @@ const Popover: React.FC<PopoverProps> = ({
   ]);
 
   useEffect(() => {
-    refs.setReference(wrapperRef?.current?.element as any);
-  }, []);
+    refs.setReference(
+      !referenceElement
+        ? (wrapperRef?.current?.element as any)
+        : referenceElement
+    );
+  }, [referenceElement]);
 
   const Container: any = renderToBody ? FloatingPortal : React.Fragment;
   const children =
@@ -145,9 +151,11 @@ const Popover: React.FC<PopoverProps> = ({
 
   return (
     <>
-      <Wrapper ref={wrapperRef} {...getReferenceProps()}>
-        {children}
-      </Wrapper>
+      {!referenceElement && (
+        <Wrapper ref={wrapperRef} {...getReferenceProps()}>
+          {children}
+        </Wrapper>
+      )}
       {open && (
         <Container>
           <div

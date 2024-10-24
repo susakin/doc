@@ -33,6 +33,7 @@ import HoverToolbar from "./components/HoverToolbar";
 import { mockSelectionPlugin } from "./plugin/mock-selection";
 import FloatMenu from "./components/FloatMenu";
 import { fontBlockPlugin } from "./plugin/font-block";
+import { inlineCodePlugin } from "./plugin/inline-code";
 
 const classNamePrefix = "editor";
 const INIT_NODE = [
@@ -137,8 +138,12 @@ const Editable: React.FC<EditableProps> = ({ placeholder, readOnly }) => {
         onBlur={onBlur}
         onFocus={onFocus}
       />
-      <HoverToolbar editorMouseDown={mouseDown} />
-      <FloatMenu />
+      {!readOnly && (
+        <>
+          <HoverToolbar editorMouseDown={mouseDown} />
+          <FloatMenu />
+        </>
+      )}
     </>
   );
 };
@@ -165,7 +170,8 @@ class Editor extends React.Component<EditorProps, EditableState> {
       quoteBlockPlugin,
       hyperLinkPlugin,
       mockSelectionPlugin,
-      fontBlockPlugin
+      fontBlockPlugin,
+      inlineCodePlugin
     );
     pluginController.apply();
     this.state = {
