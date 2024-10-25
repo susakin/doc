@@ -33,10 +33,10 @@ type MenuTriggerProps = Pick<PopoverProps, "onOpenChange"> & {
 
 export const isEmpeyElement = (element: RenderElementProps["element"]) => {
   if (!element) return false;
-  return (
-    Object.keys(element).length === 1 &&
-    (element?.children[0] as any)?.text?.length === 0
+  const keys = Object.keys(element)?.filter(
+    (key) => (element as any)[key] !== undefined
   );
+  return keys.length === 1 && (element?.children[0] as any)?.text?.length === 0;
 };
 
 const headingIconMap: Record<string, React.ReactElement> = {

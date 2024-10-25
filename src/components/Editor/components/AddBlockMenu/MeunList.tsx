@@ -19,6 +19,8 @@ import { useHighlightBlock } from "../../plugin/highlight-block/useHighlightBloc
 import { useQuoteBlock } from "../../plugin/quote-block/useQuoteBlock";
 import { useDividerBlock } from "../../plugin/divider-block/useDividerBlock";
 import FlattenMenu from "../BlockMenu/FlattenMenu";
+import { pluginController } from "../../plugin/base/controller";
+import { EDITOR_EVENT } from "../../event/action";
 
 type MenuListProps = {};
 
@@ -36,7 +38,7 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
         icon: <TextOutlined {...svgProps} />,
         tooltip: "正文(Ctrl + Alt + 0)",
         onClick() {
-          insertText();
+          insertText(true);
         },
       },
       {
@@ -92,6 +94,13 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
       {
         icon: <GlobalLinkOutlined {...svgProps} />,
         tooltip: "链接 (Ctrl + K)",
+        onClick() {
+          insertText(undefined);
+          const nextPath = pluginController.getNextPathAtSelectedElement();
+          setTimeout(() => {
+            pluginController.event.trigger(EDITOR_EVENT.ADD_LINK, nextPath);
+          });
+        },
       },
     ];
   }, []);

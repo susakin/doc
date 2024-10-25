@@ -8,6 +8,7 @@ import { isHotkey } from "../../utils/isHotkey";
 
 export const DIVIDER_BLOCK_KEY = "divider-block";
 
+const hotkey = "ctrl+alt+s";
 export class DividerBlockPlugin extends BlockPlugin {
   public readonly key: string = DIVIDER_BLOCK_KEY;
   constructor() {
@@ -27,7 +28,6 @@ export class DividerBlockPlugin extends BlockPlugin {
   }
 
   public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
-    const hotkey = "Ctrl+Alt+S";
     if (isHotkey(hotkey, event.nativeEvent)) {
       event.preventDefault();
       this.onCommand(undefined as any);

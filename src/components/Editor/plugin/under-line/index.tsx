@@ -1,75 +1,23 @@
 import { RenderLeafProps } from "slate-react";
-import { LeafPlugin, CommandFn, LeafContext } from "../base";
-import { Editor } from "slate";
-import { REACT_EVENTS, ReactEventMap } from "../../event/react";
-import { isMarkActive } from "../../utils";
-import { EDITOR_EVENT } from "../../event/action";
-import { isHotkey } from "../../utils/isHotkey";
+import { LeafContext, SampleLeafPlugin } from "../base";
 
 export const UNDERLINE_KEY = "under-line";
 
-const HOTKEYS: Record<string, string> = {
-  "ctrl+u": UNDERLINE_KEY,
-};
+const hotkey = "ctrl+u";
 
-export class UnderLinePlugin extends LeafPlugin {
+export class UnderLinePlugin extends SampleLeafPlugin {
   public readonly key: string = UNDERLINE_KEY;
+  public readonly hotkey: string = hotkey;
+
   constructor() {
     super();
-    this.init();
   }
-
-  private init() {
-    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const isActive = isMarkActive(this.editor as any, this.key);
-      const payload = {
-        isActive,
-      };
-
-      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, payload);
-    });
-    this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
-  }
-
-  public getCurrentStatus = () => {
-    const isActive = isMarkActive(this.editor as any, this.key);
-    return {
-      isActive,
-    };
-  };
 
   public match(props: RenderLeafProps): boolean {
     return !!props.leaf[UNDERLINE_KEY];
   }
 
   public destroy?: (() => void) | undefined;
-
-  public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
-    for (const hotkey in HOTKEYS) {
-      if (isHotkey(hotkey, event.nativeEvent)) {
-        event.preventDefault();
-        const underLine = HOTKEYS[hotkey];
-        this.onCommand({ underLine });
-      }
-    }
-  };
-
-  public onCommand: CommandFn = ({ underLine }) => {
-    if (this.editor) {
-      const isActive = isMarkActive(this.editor, underLine);
-      if (isActive) {
-        Editor.removeMark(this.editor, underLine);
-      } else {
-        Editor.addMark(this.editor, underLine, true);
-      }
-      setTimeout(() => {
-        this.event.trigger(
-          EDITOR_EVENT.SELECTION_CHANGE,
-          this.editor?.selection as any
-        );
-      });
-    }
-  };
 
   public render(context: LeafContext): JSX.Element {
     const { children } = context;

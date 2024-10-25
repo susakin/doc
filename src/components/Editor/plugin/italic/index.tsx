@@ -1,76 +1,22 @@
 import { RenderLeafProps } from "slate-react";
-import { LeafPlugin, CommandFn, LeafContext } from "../base";
-import { Editor } from "slate";
-import { REACT_EVENTS, ReactEventMap } from "../../event/react";
-import { isMarkActive } from "../../utils";
-import { EDITOR_EVENT } from "../../event/action";
-import { isHotkey } from "../../utils/isHotkey";
+import { LeafContext, SampleLeafPlugin } from "../base";
 
 export const ITALIC_KEY = "italic";
 
-const HOTKEYS: Record<string, string> = {
-  "ctrl+i": ITALIC_KEY,
-};
-
-export class ItalicPlugin extends LeafPlugin {
+const hotkey = "ctrl+i";
+export class ItalicPlugin extends SampleLeafPlugin {
   public readonly key: string = ITALIC_KEY;
+  public readonly hotkey: string = hotkey;
+
   constructor() {
     super();
-    this.init();
-  }
-
-  private init() {
-    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const isActive = isMarkActive(this.editor as any, ITALIC_KEY);
-      const payload = {
-        isActive,
-      };
-
-      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, payload);
-    });
-    this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
 
   public match(props: RenderLeafProps): boolean {
     return !!props.leaf[ITALIC_KEY];
   }
 
-  public getCurrentStatus = () => {
-    const isActive = isMarkActive(this.editor as any, this.key);
-    return {
-      isActive,
-    };
-  };
-
   public destroy?: (() => void) | undefined;
-
-  public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
-    for (const hotkey in HOTKEYS) {
-      if (isHotkey(hotkey, event.nativeEvent)) {
-        event.preventDefault();
-        const italic = HOTKEYS[hotkey];
-        this.onCommand({ italic });
-      }
-    }
-  };
-
-  public onCommand: CommandFn = ({ italic }) => {
-    if (this.editor) {
-      const isActive = isMarkActive(this.editor, italic);
-      if (isActive) {
-        Editor.removeMark(this.editor, italic);
-      } else {
-        Editor.addMark(this.editor, italic, true);
-      }
-
-      setTimeout(() => {
-        this.event.trigger(
-          EDITOR_EVENT.SELECTION_CHANGE,
-          this.editor?.selection as any
-        );
-      });
-    }
-  };
 
   public render(context: LeafContext): JSX.Element {
     const { children } = context;

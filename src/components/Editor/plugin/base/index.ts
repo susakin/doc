@@ -1,9 +1,10 @@
 import { ReactEditor, RenderElementProps, RenderLeafProps } from "slate-react";
 import { BaseEditor, Editor, Transforms } from "slate";
-import { ReactEventMap } from "../../event/react";
+import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { EventBus } from "../../event";
 import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
-import { getSelectionAboveNode } from "../../utils";
+import { getSelectionAboveNode, isMarkActive } from "../../utils";
+import { isHotkey } from "../../utils/isHotkey";
 
 export const PLUGIN_TYPE = {
   BLOCK: "BLOCK" as const,
@@ -122,4 +123,57 @@ export abstract class LeafPlugin extends BasePlugin {
   public render?(props: LeafContext): JSX.Element;
 }
 
-export type EditorPlugin = BlockPlugin | LeafPlugin;
+export abstract class SampleLeafPlugin extends LeafPlugin {
+  public abstract readonly hotkey: string;
+
+  constructor() {
+    super();
+    this.init();
+  }
+
+  private init() {
+    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
+      const isActive = isMarkActive(this.editor as any, this.key);
+      const payload = {
+        isActive,
+      };
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, payload);
+    });
+    this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
+  }
+
+  public getCurrentStatus = () => {
+    const bold = isMarkActive(this.editor as any, this.key);
+    return {
+      isActive: !!bold,
+    };
+  };
+
+  public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
+    if (isHotkey(this.hotkey, event.nativeEvent)) {
+      event.preventDefault();
+      this.onCommand(undefined as any);
+    }
+  };
+
+  public onCommand: CommandFn = () => {
+    const key = this.key;
+    if (this.editor) {
+      const isActive = isMarkActive(this.editor, key);
+      if (isActive) {
+        Editor.removeMark(this.editor, key);
+      } else {
+        Editor.addMark(this.editor, key, true);
+      }
+
+      setTimeout(() => {
+        this.event.trigger(
+          EDITOR_EVENT.SELECTION_CHANGE,
+          this.editor?.selection as any
+        );
+      });
+    }
+  };
+}
+
+export type EditorPlugin = BlockPlugin | LeafPlugin | SampleLeafPlugin;

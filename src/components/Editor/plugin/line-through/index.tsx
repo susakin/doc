@@ -1,74 +1,22 @@
 import { RenderLeafProps } from "slate-react";
-import { LeafPlugin, CommandFn, LeafContext } from "../base";
-import { Editor } from "slate";
-import { REACT_EVENTS, ReactEventMap } from "../../event/react";
-import { isMarkActive } from "../../utils";
-import { EDITOR_EVENT } from "../../event/action";
-import { isHotkey } from "../../utils/isHotkey";
+import { LeafContext, SampleLeafPlugin } from "../base";
 
 export const LINETHROUGH_KEY = "line-through";
 
-const HOTKEYS: Record<string, string> = {
-  "ctrl+shift+X": LINETHROUGH_KEY,
-};
+const hotkey = "ctrl+shift+x";
 
-export class LineThroughPlugin extends LeafPlugin {
+export class LineThroughPlugin extends SampleLeafPlugin {
   public readonly key: string = LINETHROUGH_KEY;
+  public readonly hotkey: string = hotkey;
   constructor() {
     super();
-    this.init();
-  }
-
-  private init() {
-    this.event.on(EDITOR_EVENT.SELECTION_CHANGE, () => {
-      const isActive = isMarkActive(this.editor as any, this.key);
-      const payload = {
-        isActive,
-      };
-      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, payload);
-    });
-
-    this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
 
   public match(props: RenderLeafProps): boolean {
     return !!props.leaf[LINETHROUGH_KEY];
   }
-  public getCurrentStatus = () => {
-    const isActive = isMarkActive(this.editor as any, this.key);
-    return {
-      isActive,
-    };
-  };
 
   public destroy?: (() => void) | undefined;
-
-  public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
-    for (const hotkey in HOTKEYS) {
-      if (isHotkey(hotkey, event.nativeEvent)) {
-        event.preventDefault();
-        const lineThrough = HOTKEYS[hotkey];
-        this.onCommand({ lineThrough });
-      }
-    }
-  };
-
-  public onCommand: CommandFn = ({ lineThrough }) => {
-    if (this.editor) {
-      const isActive = isMarkActive(this.editor, lineThrough);
-      if (isActive) {
-        Editor.removeMark(this.editor, lineThrough);
-      } else {
-        Editor.addMark(this.editor, lineThrough, true);
-      }
-      setTimeout(() => {
-        this.event.trigger(
-          EDITOR_EVENT.SELECTION_CHANGE,
-          this.editor?.selection as any
-        );
-      });
-    }
-  };
 
   public render(context: LeafContext): JSX.Element {
     const { children } = context;

@@ -8,6 +8,9 @@ import SelectedMask from "../SelectedMask";
 import cs from "classnames";
 import { RenderElementProps, useSlate, ReactEditor } from "slate-react";
 import { BaseEditor, Editor, Path } from "slate";
+import renderToContainer from "../../utils/renderToContainer";
+import Popover from "../Tooltip/Popover";
+import LinkEditPanel from "../Link/LinkEditPanel";
 
 const classNamePrefix = "block";
 
@@ -37,6 +40,7 @@ export function isElementFocused(
 
 const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
   const elementDivRef = useRef<HTMLDivElement>(null);
+  const elementRef = useRef<RenderElementProps["element"]>();
   const [selected, setSelected] = useState<boolean>(false);
   const mouseEnterRef = useRef<boolean>(false);
   const baseEdior = useSlate();
@@ -63,9 +67,43 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
     pluginController.event.on(EDITOR_EVENT.FOCUS, () => {
       setIsBlured(false);
     });
+
+    const addLinkEvent = (path: number[]) => {
+      const currentPath = ReactEditor.findPath(
+        pluginController.editor as any,
+        elementRef.current as any
+      );
+      if (Path.equals(currentPath, path)) {
+        const unmount = renderToContainer(
+          <Popover
+            renderToBody
+            referenceElement={elementDivRef.current as any}
+            offset={5}
+            placement="bottom-start"
+            trigger="click"
+            open={true}
+            content={
+              <LinkEditPanel
+                hasText
+                onOk={({ url }) => {
+                  unmount();
+                }}
+              />
+            }
+          />
+        );
+      }
+    };
+
+    pluginController.event.on(EDITOR_EVENT.ADD_LINK, addLinkEvent);
+
+    return () => {
+      pluginController.event.off(EDITOR_EVENT.ADD_LINK, addLinkEvent);
+    };
   }, []);
 
   useEffect(() => {
+    elementRef.current = rest.element;
     if (mouseEnterRef.current || selected) {
       pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, {
         element: rest.element,

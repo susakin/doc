@@ -22,6 +22,8 @@ import { useQuoteBlock } from "../../plugin/quote-block/useQuoteBlock";
 import { textBlockPlugin } from "../../plugin/text-block";
 import { isEmpeyElement } from "../MenuTrigger";
 import { useDividerBlock } from "../../plugin/divider-block/useDividerBlock";
+import { pluginController } from "../../plugin/base/controller";
+import { EDITOR_EVENT } from "../../event/action";
 
 type MenuListProps = {};
 
@@ -108,6 +110,12 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
         icon: <GlobalLinkOutlined {...svgProps} />,
         tooltip: "链接 (Ctrl + K)",
         hidden: !isEmpty,
+        onClick() {
+          pluginController.event.trigger(
+            EDITOR_EVENT.ADD_LINK,
+            pluginController.getSelectedElementPath()
+          );
+        },
       },
     ];
   }, [textBlock, highlightBlock, heading?.heading, quoteBlock, isEmpty]);

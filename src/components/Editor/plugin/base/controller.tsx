@@ -190,12 +190,20 @@ export class PluginController {
     }
     return <Leaf {...context}>{context.children}</Leaf>;
   };
-  public deleteSlectedElement() {
+
+  public getSelectedElementPath() {
     if (this.editor && this.selectedElement) {
-      const at = ReactEditor.findPath(
+      return ReactEditor.findPath(
         this.editor as any,
         this.selectedElement as any
       );
+    }
+    return [];
+  }
+
+  public deleteSlectedElement() {
+    if (this.editor && this.selectedElement) {
+      const at = this.getSelectedElementPath();
       ReactEditor.focus(this.editor as any);
       Transforms.select(this.editor, at);
       Promise.resolve().then(() => {
@@ -206,13 +214,11 @@ export class PluginController {
   }
   public getNextPathAtSelectedElement() {
     if (this.editor && this.selectedElement) {
-      const path = ReactEditor.findPath(
-        this.editor as any,
-        this.selectedElement as any
-      );
+      const path = this.getSelectedElementPath();
       const nextPath = path.slice(0, -1);
       const lastPath = path[path.length - 1] + 1;
       nextPath.push(lastPath);
+      return nextPath;
     }
     return [];
   }

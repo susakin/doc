@@ -17,8 +17,8 @@ export const useTextBlock = () => {
     textBlockPlugin.onCommand(undefined as any);
   };
 
-  const insertNodeAfterSelectedElement = () => {
-    textBlockPlugin.insertNodeAfterSelectedElement(true);
+  const insertNodeAfterSelectedElement = (textBlock: boolean | undefined) => {
+    textBlockPlugin.insertNodeAfterSelectedElement(textBlock);
   };
 
   return { textBlock, commandTextBlock, insertNodeAfterSelectedElement };
