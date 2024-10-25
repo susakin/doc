@@ -3,7 +3,7 @@ import styles from "./index.module.less";
 import { BlockContext } from "../../plugin/base";
 import mergeRefs from "merge-refs";
 import { pluginController } from "../../plugin/base/controller";
-import { EDITOR_EVENT } from "../../event/action";
+import { EDITOR_EVENT, ElementMouseEventPayload } from "../../event/action";
 import SelectedMask from "../SelectedMask";
 import cs from "classnames";
 import { RenderElementProps, useSlate, ReactEditor } from "slate-react";
@@ -50,23 +50,28 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
   const [isBlured, setIsBlured] = useState<boolean>(false);
 
   useEffect(() => {
+    const onMouseEnter = (payload: ElementMouseEventPayload) => {
+      setSelected(payload.domElement === elementDivRef.current);
+    };
+    const onMouseLeave = () => {
+      setSelected(false);
+    };
+    const onBlur = () => {
+      setIsBlured(true);
+    };
+    const onFocus = () => {
+      setIsBlured(false);
+    };
     pluginController.event.on(
       EDITOR_EVENT.FLOAT_MENU_MOUSE_ENTER,
-      (payload) => {
-        setSelected(payload.domElement === elementDivRef.current);
-      }
+      onMouseEnter
     );
-    pluginController.event.on(EDITOR_EVENT.FLOAT_MENU_MOUSE_LEAVE, () => {
-      setSelected(false);
-    });
-
-    pluginController.event.on(EDITOR_EVENT.BLUR, () => {
-      setIsBlured(true);
-    });
-
-    pluginController.event.on(EDITOR_EVENT.FOCUS, () => {
-      setIsBlured(false);
-    });
+    pluginController.event.on(
+      EDITOR_EVENT.FLOAT_MENU_MOUSE_LEAVE,
+      onMouseLeave
+    );
+    pluginController.event.on(EDITOR_EVENT.BLUR, onBlur);
+    pluginController.event.on(EDITOR_EVENT.FOCUS, onFocus);
 
     const addLinkEvent = (path: number[]) => {
       const currentPath = ReactEditor.findPath(
@@ -99,6 +104,16 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
 
     return () => {
       pluginController.event.off(EDITOR_EVENT.ADD_LINK, addLinkEvent);
+      pluginController.event.off(
+        EDITOR_EVENT.FLOAT_MENU_MOUSE_ENTER,
+        onMouseEnter
+      );
+      pluginController.event.off(
+        EDITOR_EVENT.FLOAT_MENU_MOUSE_LEAVE,
+        onMouseLeave
+      );
+      pluginController.event.off(EDITOR_EVENT.BLUR, onBlur);
+      pluginController.event.off(EDITOR_EVENT.FOCUS, onFocus);
     };
   }, []);
 
