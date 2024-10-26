@@ -7,10 +7,20 @@ import { EDITOR_EVENT, ElementMouseEventPayload } from "../../event/action";
 import SelectedMask from "../SelectedMask";
 import cs from "classnames";
 import { RenderElementProps, useSlate, ReactEditor } from "slate-react";
-import { BaseEditor, Editor, Path } from "slate";
+import {
+  BaseEditor,
+  Editor,
+  insertNodes,
+  Path,
+  removeNodes,
+  withoutNormalizing,
+} from "slate";
 import renderToContainer from "../../utils/renderToContainer";
-import Popover from "../Tooltip/Popover";
-import LinkEditPanel from "../Link/LinkEditPanel";
+import AddLink from "./AddLink";
+import { HYPER_LINK_KEY } from "../../plugin/hyper-link";
+import { TEXT_BLOCK_KEY } from "../../plugin/text-block";
+import { HEADER_TITLE_KEY } from "../../plugin/header-title-block";
+import { ALIGN_KEY } from "../../plugin/align";
 
 const classNamePrefix = "block";
 
@@ -20,7 +30,7 @@ type BlockProps = {
 
 let timer: any;
 
-const isEmptyText = (element: RenderElementProps["element"]) => {
+export const isEmptyText = (element: RenderElementProps["element"]) => {
   return (
     element?.children?.length === 1 &&
     (element.children[0] as any)?.text?.length === 0
@@ -80,21 +90,34 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
       );
       if (Path.equals(currentPath, path)) {
         const unmount = renderToContainer(
-          <Popover
-            renderToBody
+          <AddLink
             referenceElement={elementDivRef.current as any}
-            offset={5}
-            placement="bottom-start"
-            trigger="click"
-            open={true}
-            content={
-              <LinkEditPanel
-                hasText
-                onOk={({ url }) => {
-                  unmount();
-                }}
-              />
-            }
+            onAddLink={({ url, text = "" }) => {
+              withoutNormalizing(pluginController.editor as any, () => {
+                removeNodes(pluginController.editor as any, {
+                  at: currentPath,
+                });
+                insertNodes(
+                  pluginController.editor as any,
+                  {
+                    [TEXT_BLOCK_KEY]: true,
+                    children: [
+                      {
+                        text,
+                        [HYPER_LINK_KEY]: {
+                          displayMode: "title",
+                          url,
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    at: currentPath,
+                  }
+                );
+                unmount();
+              });
+            }}
           />
         );
       }
@@ -128,6 +151,10 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
   }, [rest.element]);
 
   const elementMouseActive = () => {
+    if (rest.element?.[HEADER_TITLE_KEY]) {
+      return;
+    }
+
     clearTimeout(timer);
     mouseEnterRef.current = true;
     pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, {
@@ -150,20 +177,31 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
     elementMouseInactive();
   }, [selection]);
 
+  const hasPlaceholder = rest.element?.holdingPlaceholder
+    ? isEmpty
+    : isEmpty && isFocused && !isBlured;
+
   return (
     <div
       style={style}
-      className={cs(styles[`${classNamePrefix}`], rest.classNameList)}
+      className={cs(
+        styles[`${classNamePrefix}`],
+        styles[
+          `${classNamePrefix}-${
+            ["left", undefined].includes(rest.element?.[ALIGN_KEY]) &&
+            hasPlaceholder
+              ? "has-placeholder"
+              : ""
+          }`
+        ],
+        rest.classNameList
+      )}
       {...rest.props.attributes}
       onMouseEnter={elementMouseActive}
       onMouseMove={elementMouseActive}
       onMouseLeave={elementMouseInactive}
       ref={mergeRefs(elementDivRef, rest.props.attributes?.ref)}
-      data-placeholder={
-        isEmpty && isFocused && !isBlured
-          ? rest.element?.placeholder
-          : undefined
-      }
+      data-placeholder={hasPlaceholder ? rest.element?.placeholder : undefined}
     >
       {children}
       {selected && <SelectedMask />}

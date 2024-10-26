@@ -17,6 +17,8 @@ import Void from "../../components/Void";
 import { BaseEditor, Transforms } from "slate";
 import { getSelectionAboveNode } from "../../utils";
 import { DIVIDER_BLOCK_KEY } from "../divider-block";
+import { HEADER_TITLE_KEY } from "../header-title-block";
+import { ALIGN_KEY } from "../align";
 
 const DEFAULT_PRIORITY = 100;
 
@@ -53,6 +55,13 @@ export class PluginController {
         );
         return;
       }
+
+      //标题只有align
+      if (this.selectedElement?.[HEADER_TITLE_KEY]) {
+        this.pluginMap[ALIGN_KEY]?.event.trigger(EDITOR_EVENT.KEY_DOWN, event);
+        return;
+      }
+
       for (const item of Object.values(this.pluginMap)) {
         item.event.trigger(EDITOR_EVENT.KEY_DOWN, event);
       }

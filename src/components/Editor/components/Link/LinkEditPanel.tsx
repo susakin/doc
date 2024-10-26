@@ -6,7 +6,7 @@ import { HyperLinkConfig } from "../../plugin/hyper-link";
 import { useKeyPress } from "ahooks";
 const classNamePrefix = "link-edit-panel";
 
-type Link = Omit<HyperLinkConfig, "displayMode">;
+export type Link = Omit<HyperLinkConfig, "displayMode">;
 
 type LinkEditPanelProps = {
   hasText?: boolean;
@@ -26,7 +26,7 @@ const LinkEditPanel: React.FC<LinkEditPanelProps> = ({
   const [linkButtonDisabled, setLinkeButtonDisabled] = useState<boolean>(false);
 
   useEffect(() => {
-    linkInputRef.current?.focus();
+    hasText ? textInputRef?.current?.focus() : linkInputRef.current?.focus();
     setLinkeButtonDisabled(!linkify.test((url as string) || "", "url") || !url);
     linkRef.current = {
       url,

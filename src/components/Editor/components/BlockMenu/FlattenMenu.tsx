@@ -12,11 +12,13 @@ type FlattenMenuProps = {
 const FlattenMenu: React.FC<FlattenMenuProps> = ({ items }) => {
   return (
     <div className={styles[`${classNamePrefix}`]}>
-      {items?.map((item) => {
+      {items?.map((item, index) => {
         if (!item || item.hidden) return null;
         const renderItem = getRenderItem(item);
         return (
-          <div className={styles[`${classNamePrefix}-item`]}>{renderItem}</div>
+          <div className={styles[`${classNamePrefix}-item`]} key={index}>
+            {renderItem}
+          </div>
         );
       })}
     </div>

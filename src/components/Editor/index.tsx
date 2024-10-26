@@ -34,42 +34,23 @@ import { mockSelectionPlugin } from "./plugin/mock-selection";
 import FloatMenu from "./components/FloatMenu";
 import { fontBlockPlugin } from "./plugin/font-block";
 import { inlineCodePlugin } from "./plugin/inline-code";
+import {
+  HEADER_TITLE_KEY,
+  headerTitleBlockPlugin,
+} from "./plugin/header-title-block";
+import { withLayout } from "./plugin/base/withLayout";
 
 const classNamePrefix = "editor";
 const INIT_NODE = [
   {
-    children: [{ text: "1111111111111111111111111" }],
-    // "text-block": true,
-    // "highlight-block": {
-    //   color: "rgb(31, 35, 41)",
-    //   borderColor: "rgb(255, 165, 61)",
-    //   fillColor: "rgb(254, 234, 210)",
-    // },
-
-    //"divider-block": true,
+    [HEADER_TITLE_KEY]: true,
+    children: [{ text: "" }],
   },
-  // {
-  //   children: [
-  //     {
-  //       text: "3啛啛喳喳错错错错错错错错错错错错错错错错错错错错错错错错错错错错程序法",
-  //     },
-  //   ],
-  //   "text-block": true,
-  //   "highlight-block": {
-  //     color: "rgb(31, 35, 41)",
-  //     borderColor: "rgb(255, 165, 61)",
-  //     fillColor: "rgb(254, 234, 210)",
-  //   },
-  // },
-  // {
-  //   children: [{ text: "2" }],
-  //   "text-block": true,
-  //   "highlight-block": {
-  //     color: "rgb(31, 35, 41)",
-  //     borderColor: "rgb(255, 165, 61)",
-  //     fillColor: "rgb(254, 234, 210)",
-  //   },
-  // },
+  {
+    children: [{ text: "" }],
+    placeholder: "请输入",
+    holdingPlaceholder: true,
+  },
 ];
 
 type EditorProps = {
@@ -156,6 +137,7 @@ class Editor extends React.Component<EditorProps, EditableState> {
   constructor(props: EditorProps) {
     super(props);
     pluginController.register(
+      headerTitleBlockPlugin,
       dividerBlockPlugin,
       highlightBlockPlugin,
       fontLeafPlugin,
@@ -175,7 +157,9 @@ class Editor extends React.Component<EditorProps, EditableState> {
     );
     pluginController.apply();
     this.state = {
-      editor: withSchema(withHistory(withReact(createEditor()))) as any,
+      editor: withSchema(
+        withLayout(withHistory(withReact(createEditor())))
+      ) as any,
     };
   }
   componentWillUnmount(): void {

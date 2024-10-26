@@ -7,6 +7,8 @@ import InlinePopover from "../Tooltip/InlinePopover";
 import { HYPER_LINK_KEY, hyperLinkPlugin } from "../../plugin/hyper-link";
 import { EDITOR_EVENT } from "../../event/action";
 import { pluginController } from "../../plugin/base/controller";
+import { HEADER_TITLE_KEY } from "../../plugin/header-title-block";
+import HeaderTitleMenu from "../HeaderTitleMenu";
 
 export const useHasSelection = () => {
   const editor = useSlate();
@@ -28,16 +30,21 @@ type HoverToolbarProps = {
 const HoverToolbar: React.FC<HoverToolbarProps> = ({ editorMouseDown }) => {
   const hasSection = useHasSelection();
   const active = !hasSection || editorMouseDown;
-
+  const inHeaderTitle = pluginController.selectedElement?.[HEADER_TITLE_KEY];
   if (active) {
     pluginController.event.trigger(EDITOR_EVENT.HOVER_MENU_ACTIVE, false);
     return null;
   }
 
   useEffect(() => {
-    hyperLinkPlugin.event.on(EDITOR_EVENT.PLUGIN_COMMANT, () => {
+    const onCommant = () => {
       setOpen(false);
-    });
+    };
+    hyperLinkPlugin.event.on(EDITOR_EVENT.PLUGIN_COMMANT, onCommant);
+
+    return () => {
+      hyperLinkPlugin.event.off(EDITOR_EVENT.PLUGIN_COMMANT, onCommant);
+    };
   }, []);
 
   const [open, setOpen] = useState<boolean | undefined>(undefined);
@@ -58,13 +65,17 @@ const HoverToolbar: React.FC<HoverToolbarProps> = ({ editorMouseDown }) => {
       placement="top"
       content={({ side }) => (
         <AnimationWrapper side={side}>
-          <Menu
-            onClick={(e, item) => {
-              if (item.key === HYPER_LINK_KEY) {
-                setOpen(false);
-              }
-            }}
-          />
+          {inHeaderTitle ? (
+            <HeaderTitleMenu />
+          ) : (
+            <Menu
+              onClick={(e, item) => {
+                if (item.key === HYPER_LINK_KEY) {
+                  setOpen(false);
+                }
+              }}
+            />
+          )}
         </AnimationWrapper>
       )}
     />

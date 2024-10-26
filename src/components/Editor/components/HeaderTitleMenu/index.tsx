@@ -6,28 +6,39 @@ import {
   LeftAlignmentOutlined,
   RightAlignmentOutlined,
 } from "../Icon";
+import { useAlign } from "../../plugin/align/useAlign";
 
 const HeaderTitleMenu = () => {
+  const { align, commandAlign } = useAlign();
+
   const items = useMemo<(Item | undefined)[]>(() => {
     return [
       {
         icon: <LeftAlignmentOutlined {...svgProps} />,
-        text: "左对齐",
-        active: true,
         tooltip: "Ctrl + Shift + L",
+        active: align?.align === "left" || align?.align === undefined,
+        onClick() {
+          commandAlign({ align: "left" });
+        },
       },
       {
         icon: <CenterAlignmentOutlined {...svgProps} />,
-        text: "居中对齐",
         tooltip: "Ctrl + Shift + E",
+        active: align?.align === "center",
+        onClick() {
+          commandAlign({ align: "center" });
+        },
       },
       {
         icon: <RightAlignmentOutlined {...svgProps} />,
-        text: "右对齐",
         tooltip: "Ctrl + Shift + R",
+        active: align?.align === "right",
+        onClick() {
+          commandAlign({ align: "right" });
+        },
       },
     ];
-  }, []);
+  }, [align]);
 
   return <HorizontalMenu items={items} />;
 };
