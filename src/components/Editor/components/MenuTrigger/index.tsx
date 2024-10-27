@@ -19,11 +19,14 @@ import {
 } from "../Icon";
 import BlockMenu from "../BlockMenu";
 import Popover, { PopoverProps } from "../Tooltip/Popover";
-import { RenderElementProps } from "slate-react";
+import { ReactEditor, RenderElementProps } from "slate-react";
 import EmptyBlockMenu from "../EmptyBlockMenu";
 import { DIVIDER_BLOCK_KEY } from "../../plugin/divider-block";
 import { HIGHLIGHT_BLOCK_KEY } from "../../plugin/highlight-block";
 import { HEADING_KEY } from "../../plugin/heading";
+import { TEXT_BLOCK_KEY } from "../../plugin/text-block";
+import { Editor } from "slate";
+import { pluginController } from "../../plugin/base/controller";
 
 const classNamePrefix = "menu-trigger";
 
@@ -31,12 +34,26 @@ type MenuTriggerProps = Pick<PopoverProps, "onOpenChange"> & {
   activeElement?: RenderElementProps["element"];
 };
 
-export const isEmpeyElement = (element: RenderElementProps["element"]) => {
+const isTextBlock = (element: RenderElementProps["element"]) => {
   if (!element) return false;
-  const keys = Object.keys(element)?.filter(
-    (key) => (element as any)[key] !== undefined
+  if (element?.[HEADING_KEY] !== undefined) return false;
+  const text = Editor.string(
+    pluginController.editor as any,
+    ReactEditor.findPath(pluginController.editor as any, element as any)
   );
-  return keys.length === 1 && (element?.children[0] as any)?.text?.length === 0;
+  if (element?.[TEXT_BLOCK_KEY] && text?.length !== 0) return true;
+
+  if (text?.length !== 0) return true;
+  return false;
+};
+
+export const isEmptyElement = (element: RenderElementProps["element"]) => {
+  return !(
+    isTextBlock(element as any) ||
+    !!element?.[DIVIDER_BLOCK_KEY] ||
+    !!element?.[HIGHLIGHT_BLOCK_KEY] ||
+    !!element?.[HEADING_KEY]
+  );
 };
 
 const headingIconMap: Record<string, React.ReactElement> = {
@@ -55,12 +72,11 @@ const MenuTrigger: React.FC<MenuTriggerProps> = ({
   onOpenChange,
   activeElement,
 }) => {
-  const isEmpty = isEmpeyElement(activeElement as any);
   const isDivider = !!activeElement?.[DIVIDER_BLOCK_KEY];
 
   const icon = useMemo(() => {
-    if (isEmpty) {
-      return <AddOutlined {...svgProps} />;
+    if (isTextBlock(activeElement as any)) {
+      return <TextOutlined {...svgProps} style={{ color: "#336df4" }} />;
     }
     if (activeElement?.[DIVIDER_BLOCK_KEY]) {
       return <DividerOutlined {...svgProps} style={{ color: "#ff811a" }} />;
@@ -72,8 +88,10 @@ const MenuTrigger: React.FC<MenuTriggerProps> = ({
     if (heading) {
       return headingIconMap[heading];
     }
-    return <TextOutlined {...svgProps} style={{ color: "#336df4" }} />;
-  }, [isEmpty, activeElement]);
+    return <AddOutlined {...svgProps} />;
+  }, [activeElement]);
+
+  const isEmpty = isEmptyElement(activeElement as any);
 
   return (
     <Popover

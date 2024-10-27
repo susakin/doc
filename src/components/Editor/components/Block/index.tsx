@@ -20,7 +20,6 @@ import AddLink from "./AddLink";
 import { HYPER_LINK_KEY } from "../../plugin/hyper-link";
 import { TEXT_BLOCK_KEY } from "../../plugin/text-block";
 import { HEADER_TITLE_KEY } from "../../plugin/header-title-block";
-import { ALIGN_KEY } from "../../plugin/align";
 
 const classNamePrefix = "block";
 
@@ -31,10 +30,17 @@ type BlockProps = {
 let timer: any;
 
 export const isEmptyText = (element: RenderElementProps["element"]) => {
-  return (
-    element?.children?.length === 1 &&
-    (element.children[0] as any)?.text?.length === 0
-  );
+  if (!element) return true;
+  try {
+    const text = Editor.string(
+      pluginController.editor as any,
+      ReactEditor.findPath(pluginController.editor as any, element as any)
+    );
+
+    return text?.length === 0;
+  } catch (e) {
+    return true;
+  }
 };
 
 export function isElementFocused(
@@ -55,9 +61,6 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
   const mouseEnterRef = useRef<boolean>(false);
   const baseEdior = useSlate();
   const { selection } = baseEdior;
-  const isFocused = isElementFocused(baseEdior, rest.element);
-  const isEmpty = isEmptyText(rest?.element as any);
-  const [isBlured, setIsBlured] = useState<boolean>(false);
 
   useEffect(() => {
     const onMouseEnter = (payload: ElementMouseEventPayload) => {
@@ -66,12 +69,7 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
     const onMouseLeave = () => {
       setSelected(false);
     };
-    const onBlur = () => {
-      setIsBlured(true);
-    };
-    const onFocus = () => {
-      setIsBlured(false);
-    };
+
     pluginController.event.on(
       EDITOR_EVENT.FLOAT_MENU_MOUSE_ENTER,
       onMouseEnter
@@ -80,8 +78,6 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
       EDITOR_EVENT.FLOAT_MENU_MOUSE_LEAVE,
       onMouseLeave
     );
-    pluginController.event.on(EDITOR_EVENT.BLUR, onBlur);
-    pluginController.event.on(EDITOR_EVENT.FOCUS, onFocus);
 
     const addLinkEvent = (path: number[]) => {
       const currentPath = ReactEditor.findPath(
@@ -135,8 +131,6 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
         EDITOR_EVENT.FLOAT_MENU_MOUSE_LEAVE,
         onMouseLeave
       );
-      pluginController.event.off(EDITOR_EVENT.BLUR, onBlur);
-      pluginController.event.off(EDITOR_EVENT.FOCUS, onFocus);
     };
   }, []);
 
@@ -177,31 +171,15 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
     elementMouseInactive();
   }, [selection]);
 
-  const hasPlaceholder = rest.element?.holdingPlaceholder
-    ? isEmpty
-    : isEmpty && isFocused && !isBlured;
-
   return (
     <div
       style={style}
-      className={cs(
-        styles[`${classNamePrefix}`],
-        styles[
-          `${classNamePrefix}-${
-            ["left", undefined].includes(rest.element?.[ALIGN_KEY]) &&
-            hasPlaceholder
-              ? "has-placeholder"
-              : ""
-          }`
-        ],
-        rest.classNameList
-      )}
+      className={cs(styles[`${classNamePrefix}`], rest.classNameList)}
       {...rest.props.attributes}
       onMouseEnter={elementMouseActive}
       onMouseMove={elementMouseActive}
       onMouseLeave={elementMouseInactive}
       ref={mergeRefs(elementDivRef, rest.props.attributes?.ref)}
-      data-placeholder={hasPlaceholder ? rest.element?.placeholder : undefined}
     >
       {children}
       {selected && <SelectedMask />}

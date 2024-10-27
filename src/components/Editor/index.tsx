@@ -22,7 +22,7 @@ import {
 import { italicPlugin } from "./plugin/italic";
 import { underLinePlugin } from "./plugin/under-line";
 import { lineThroughPlugin } from "./plugin/line-through";
-import { textBlockPlugin } from "./plugin/text-block";
+import { TEXT_BLOCK_KEY, textBlockPlugin } from "./plugin/text-block";
 import { indentPlugin } from "./plugin/indent";
 import { quoteBlockPlugin } from "./plugin/quote-block";
 import { highlightBlockPlugin } from "./plugin/highlight-block";
@@ -50,6 +50,7 @@ const INIT_NODE = [
     children: [{ text: "" }],
     placeholder: "请输入",
     holdingPlaceholder: true,
+    [TEXT_BLOCK_KEY]: true,
   },
 ];
 
@@ -137,9 +138,10 @@ class Editor extends React.Component<EditorProps, EditableState> {
   constructor(props: EditorProps) {
     super(props);
     pluginController.register(
+      highlightBlockPlugin,
+      quoteBlockPlugin,
       headerTitleBlockPlugin,
       dividerBlockPlugin,
-      highlightBlockPlugin,
       fontLeafPlugin,
       textBlockPlugin,
       alignPlugin,
@@ -149,7 +151,6 @@ class Editor extends React.Component<EditorProps, EditableState> {
       underLinePlugin,
       lineThroughPlugin,
       indentPlugin,
-      quoteBlockPlugin,
       hyperLinkPlugin,
       mockSelectionPlugin,
       fontBlockPlugin,

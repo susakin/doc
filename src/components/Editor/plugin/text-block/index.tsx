@@ -5,6 +5,7 @@ import { EDITOR_EVENT } from "../../event/action";
 import { HEADING_KEY, headingPlugin } from "../heading";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { isHotkey } from "../../utils/isHotkey";
+import BlockPlaceholder from "../../components/Block/BlockPlaceholder";
 
 export const TEXT_BLOCK_KEY = "text-block";
 
@@ -83,7 +84,11 @@ export class TextBlockPlugin extends BlockPlugin {
   };
 
   public renderLine(context: BlockContext): JSX.Element {
-    return context.children;
+    return (
+      <BlockPlaceholder element={context.element}>
+        {context.children}
+      </BlockPlaceholder>
+    );
   }
 }
 

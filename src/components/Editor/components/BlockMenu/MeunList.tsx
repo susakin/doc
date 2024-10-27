@@ -20,7 +20,7 @@ import { useHighlightBlock } from "../../plugin/highlight-block/useHighlightBloc
 import { defaultColorSetting } from "../ColorPicker";
 import { useQuoteBlock } from "../../plugin/quote-block/useQuoteBlock";
 import { textBlockPlugin } from "../../plugin/text-block";
-import { isEmpeyElement } from "../MenuTrigger";
+import { isEmptyElement } from "../MenuTrigger";
 import { useDividerBlock } from "../../plugin/divider-block/useDividerBlock";
 import { pluginController } from "../../plugin/base/controller";
 import { EDITOR_EVENT } from "../../event/action";
@@ -32,7 +32,7 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
   const { heading, commandHeading } = useHeading();
   const { highlightBlock, commandHighlightBlock } = useHighlightBlock();
   const { quoteBlock, commandQuoteBlock } = useQuoteBlock();
-  const isEmpty = isEmpeyElement(textBlockPlugin.selectedElement as any);
+  const isEmpty = isEmptyElement(textBlockPlugin.selectedElement as any);
   const { commandDividerBlock } = useDividerBlock();
 
   const items = useMemo<Item[]>(() => {

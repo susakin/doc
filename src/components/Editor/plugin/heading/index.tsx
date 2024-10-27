@@ -6,6 +6,7 @@ import { EDITOR_EVENT } from "../../event/action";
 import styles from "./index.module.less";
 import { isHotkey } from "../../utils/isHotkey";
 import { TEXT_BLOCK_KEY, textBlockPlugin } from "../text-block";
+import BlockPlaceholder from "../../components/Block/BlockPlaceholder";
 
 const classNamePrefix = "heading";
 
@@ -121,7 +122,7 @@ export class HeadingPlugin extends BlockPlugin {
       };
       context.classNameList?.push(headingStyles[heading as any]);
     }
-    return children;
+    return <BlockPlaceholder element={element}>{children}</BlockPlaceholder>;
   }
 }
 

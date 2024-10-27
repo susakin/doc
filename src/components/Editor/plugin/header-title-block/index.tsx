@@ -29,9 +29,13 @@ export class HeaderTitleBlockPlugin extends BlockPlugin {
 
     return (
       <div
-        className={cs(styles[`${classNamePrefix}`], {
-          [styles[`${classNamePrefix}-empty`]]: isEmpty,
-        })}
+        className={cs(
+          styles[`${classNamePrefix}`],
+          {
+            [styles[`${classNamePrefix}-empty`]]: isEmpty,
+          },
+          styles[`${classNamePrefix}-align-${element?.[ALIGN_KEY]}`]
+        )}
         data-placeholder={isEmpty ? "请输入标题" : undefined}
       >
         {children}
