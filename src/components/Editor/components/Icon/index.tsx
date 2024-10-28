@@ -61,3 +61,5 @@ export { default as DragOutlined } from "./DragOutlined";
 export { default as AddOutlined } from "./AddOutlined";
 
 export { default as CodeOutlined } from "./CodeOutlined";
+
+export { default as TodoOutlined } from "./TodoOutlined";

@@ -39,6 +39,7 @@ import {
   headerTitleBlockPlugin,
 } from "./plugin/header-title-block";
 import { withLayout } from "./plugin/base/withLayout";
+import { todoBlockPlugin } from "./plugin/todo-block";
 
 const classNamePrefix = "editor";
 const INIT_NODE = [
@@ -142,8 +143,10 @@ class Editor extends React.Component<EditorProps, EditableState> {
       quoteBlockPlugin,
       headerTitleBlockPlugin,
       dividerBlockPlugin,
-      fontLeafPlugin,
+      fontBlockPlugin,
+      todoBlockPlugin,
       textBlockPlugin,
+      fontLeafPlugin,
       alignPlugin,
       headingPlugin,
       boldPlugin,
@@ -153,7 +156,6 @@ class Editor extends React.Component<EditorProps, EditableState> {
       indentPlugin,
       hyperLinkPlugin,
       mockSelectionPlugin,
-      fontBlockPlugin,
       inlineCodePlugin
     );
     pluginController.apply();

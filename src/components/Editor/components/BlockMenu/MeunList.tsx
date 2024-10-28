@@ -10,6 +10,7 @@ import {
   OrderListOutlined,
   ReferenceOutlined,
   TextOutlined,
+  TodoOutlined,
 } from "../Icon";
 import { Item } from "../HorizontalMenu";
 import FlattenMenu from "./FlattenMenu";
@@ -23,6 +24,7 @@ import { textBlockPlugin } from "../../plugin/text-block";
 import { isEmptyElement } from "../MenuTrigger";
 import { useDividerBlock } from "../../plugin/divider-block/useDividerBlock";
 import { pluginController } from "../../plugin/base/controller";
+import { useTodoBlock } from "../../plugin/todo-block/useTodoBlock";
 import { EDITOR_EVENT } from "../../event/action";
 
 type MenuListProps = {};
@@ -32,6 +34,7 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
   const { heading, commandHeading } = useHeading();
   const { highlightBlock, commandHighlightBlock } = useHighlightBlock();
   const { quoteBlock, commandQuoteBlock } = useQuoteBlock();
+  const { todoBlock, commandTodoBlock } = useTodoBlock();
   const isEmpty = isEmptyElement(textBlockPlugin.selectedElement as any);
   const { commandDividerBlock } = useDividerBlock();
 
@@ -79,6 +82,14 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
         tooltip: "无序列表(Ctrl + Shift + 8)",
       },
       {
+        icon: <TodoOutlined {...svgProps} />,
+        tooltip: "任务列表(Ctrl + Alt + T)",
+        active: todoBlock.isActive,
+        onClick() {
+          commandTodoBlock();
+        },
+      },
+      {
         icon: <ReferenceOutlined {...svgProps} />,
         tooltip: "引用(Ctrl + Shift + >)",
         active: quoteBlock.isActive,
@@ -118,7 +129,14 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
         },
       },
     ];
-  }, [textBlock, highlightBlock, heading?.heading, quoteBlock, isEmpty]);
+  }, [
+    textBlock,
+    highlightBlock,
+    heading?.heading,
+    quoteBlock,
+    isEmpty,
+    todoBlock,
+  ]);
   return <FlattenMenu items={items} />;
 };
 

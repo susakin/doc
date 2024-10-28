@@ -41,10 +41,13 @@ const Menu: React.FC<MenuProps> = ({ items, onClick }) => {
         {items
           ?.filter((item) => !!item)
           ?.map((item, index) => {
-            const { devider } = item;
+            const { devider, submenuPopoverProps } = item;
             if (item.hidden) return null;
             const _onClick = item.onClick;
             item.onClick = (e) => {
+              if (submenuPopoverProps?.hideWhenContentClick) {
+                e.stopPropagation();
+              }
               _onClick?.(e);
               onClick?.(e, item);
             };
