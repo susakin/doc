@@ -2,7 +2,6 @@ import { ReactEditor, RenderElementProps } from "slate-react";
 import { BlockPlugin, CommandFn, BlockContext } from "../base";
 import { Transforms } from "slate";
 import { EDITOR_EVENT } from "../../event/action";
-import { HEADING_KEY, headingPlugin } from "../heading";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { isHotkey } from "../../utils/isHotkey";
 import BlockPlaceholder from "../../components/Block/BlockPlaceholder";
@@ -19,11 +18,9 @@ export class TextBlockPlugin extends BlockPlugin {
   private init() {
     this.event.on(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, (element) => {
       const textBlock = (element as any)?.[this.key];
-      const heading = (element as any)?.[HEADING_KEY];
 
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
-        isActive: !!textBlock || !heading,
-        textBlock,
+        isActive: !!textBlock,
       });
     });
     this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
@@ -39,9 +36,8 @@ export class TextBlockPlugin extends BlockPlugin {
 
   public getCurrentStatus = () => {
     const textBlock = (this.selectedElement as any)?.[this.key];
-    const heading = (this.selectedElement as any)?.[HEADING_KEY];
     return {
-      isActive: !!textBlock || !heading,
+      isActive: !!textBlock,
       textBlock,
     };
   };
@@ -62,21 +58,14 @@ export class TextBlockPlugin extends BlockPlugin {
 
       Transforms.setNodes(
         this.editor,
-        Object.assign(
-          {
-            [this.key]: isActive ? undefined : true,
-          },
-          !isActive ? { [HEADING_KEY]: undefined, placeholder: undefined } : {}
-        ),
+        Object.assign({
+          [this.key]: isActive ? undefined : true,
+        }),
         {
           at,
         }
       );
       this.event.trigger(
-        EDITOR_EVENT.SELECTION_CHANGE,
-        this.editor?.selection as any
-      );
-      headingPlugin.event.trigger(
         EDITOR_EVENT.SELECTION_CHANGE,
         this.editor?.selection as any
       );

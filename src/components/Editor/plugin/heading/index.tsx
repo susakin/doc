@@ -5,7 +5,7 @@ import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { EDITOR_EVENT } from "../../event/action";
 import styles from "./index.module.less";
 import { isHotkey } from "../../utils/isHotkey";
-import { TEXT_BLOCK_KEY, textBlockPlugin } from "../text-block";
+import { textBlockPlugin } from "../text-block";
 import BlockPlaceholder from "../../components/Block/BlockPlaceholder";
 
 const classNamePrefix = "heading";
@@ -86,22 +86,19 @@ export class HeadingPlugin extends BlockPlugin {
       );
       Transforms.setNodes(
         this.editor,
-        Object.assign(
-          {
-            heading: isActive ? undefined : heading,
-            placeholder: isActive ? undefined : heading,
-          },
-          !isActive ? { [TEXT_BLOCK_KEY]: undefined } : {}
-        ),
+        {
+          heading: isActive ? undefined : heading,
+          placeholder: isActive ? undefined : heading,
+        },
         { at }
       );
 
       this.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, this.editor.selection);
 
-      textBlockPlugin.event.trigger(
-        EDITOR_EVENT.SELECTION_CHANGE,
-        this.editor.selection
-      );
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
+        isActive: !!heading,
+        heading,
+      });
     }
   };
 
