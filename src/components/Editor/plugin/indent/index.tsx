@@ -71,6 +71,7 @@ export class IndentPlugin extends BlockPlugin {
         { at }
       );
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, { indent });
+      this.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, this.editor.selection);
     }
   };
 

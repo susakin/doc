@@ -1,19 +1,16 @@
 import { ReactEditor, RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
-import { Editor, Transforms } from "slate";
+import { Transforms } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { isHotkey } from "../../utils/isHotkey";
 import { EDITOR_EVENT } from "../../event/action";
-import cs from "classnames";
-import styles from "./index.module.less";
+import TodoBlock from "./TodoBlock";
 
 export const TODO_BLCOK_KEY = "todo-block";
 
 const HOTKEYS: Record<string, boolean> = {
   "ctrl+alt+t": true,
 };
-
-const classNamePrefix = "todo-block";
 
 export class TodoBlockPlugin extends BlockPlugin {
   public readonly key: string = TODO_BLCOK_KEY;
@@ -76,40 +73,12 @@ export class TodoBlockPlugin extends BlockPlugin {
   };
 
   public renderLine(context: BlockContext): JSX.Element {
-    const { children } = context;
-    const done = (context.element as any)?.[this.key]?.done;
+    const { children, element } = context;
+
     return (
-      <div className={styles[`${classNamePrefix}`]}>
-        <div contentEditable={false}>
-          <div
-            className={cs(styles[`${classNamePrefix}-checkbox`], {
-              [styles[`${classNamePrefix}-checkbox-checked`]]: done,
-            })}
-            onClick={() => {
-              Editor.withoutNormalizing(this.editor as any, () => {
-                const at = ReactEditor.findPath(
-                  this.editor as any,
-                  this.selectedElement as any
-                );
-                Transforms.setNodes(
-                  this.editor as any,
-                  {
-                    [this.key]: { done: !done },
-                  },
-                  { at }
-                );
-              });
-            }}
-          />
-        </div>
-        <span
-          className={cs({
-            [styles[`${classNamePrefix}-done`]]: done,
-          })}
-        >
-          {children}
-        </span>
-      </div>
+      <TodoBlock editor={this.editor} element={element}>
+        {children}
+      </TodoBlock>
     );
   }
 }

@@ -56,6 +56,7 @@ export class HighlightBlockPlugin extends BlockPlugin {
         isActive: !!highlightBlock,
         highlightBlock,
       });
+      this.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, this.editor.selection);
     }
   };
 

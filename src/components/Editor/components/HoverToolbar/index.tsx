@@ -31,6 +31,7 @@ const HoverToolbar: React.FC<HoverToolbarProps> = ({ editorMouseDown }) => {
   const hasSection = useHasSelection();
   const active = !hasSection || editorMouseDown;
   const inHeaderTitle = pluginController.selectedElement?.[HEADER_TITLE_KEY];
+
   if (active) {
     pluginController.event.trigger(EDITOR_EVENT.HOVER_MENU_ACTIVE, false);
     return null;
