@@ -1,72 +1,18 @@
-import {
-  BaseEditor,
-  BaseRange,
-  Editor,
-  Element as SlateElement,
-  Range,
-  Text,
-} from "slate";
+import { Placement, Side } from "@floating-ui/react";
 
-export const getAttributeAtCursor = (
-  editor: BaseEditor | undefined,
-  attribute: string
-) => {
-  if (!editor) return null;
-  const { selection } = editor;
-  if (!selection) return null;
+export function getSideAnimateClassName(placement: Placement): string {
+  const [side] = placement?.split("-") as [Side];
+  const position = {
+    left: "slide-right-in",
+    right: "slide-left-in",
+    top: "slide-bottom-in",
+    bottom: "slide-up-in",
+    display: "inline-flex",
+  };
+  return position[side];
+}
 
-  const [match] = Array.from(
-    Editor.nodes(editor, {
-      at: Editor.unhangRange(editor, selection),
-      match: (n) =>
-        !Editor.isEditor(n) &&
-        SlateElement.isElement(n) &&
-        !!(n as any)[attribute],
-    })
-  );
-
-  return ((match?.[0] || {}) as any)[attribute];
-};
-
-export const isBlockActive = (
-  editor: BaseEditor,
-  attribute: string,
-  value: any
-) => {
-  if (!editor) return false;
-  const { selection } = editor;
-  if (!selection) return false;
-
-  const [match] = Array.from(
-    Editor.nodes(editor, {
-      at: Editor.unhangRange(editor, selection),
-      match: (n) =>
-        !Editor.isEditor(n) &&
-        SlateElement.isElement(n) &&
-        (n as any)[attribute] === value,
-    })
-  );
-
-  return !!match;
-};
-
-export const isMarkActive = (editor: BaseEditor, format: string) => {
-  try {
-    const marks = Editor.marks(editor);
-    return marks ? (marks as any)[format] === true : false;
-  } catch (e) {
-    return false;
-  }
-};
-
-export const getMarkByFormat = (editor: BaseEditor, format: string) => {
-  try {
-    const marks = Editor.marks(editor);
-    return (marks as any)?.[format];
-  } catch (e) {
-    return null;
-  }
-};
+export const svgProps = { width: "1em", height: "1em", viewBox: "0 0 24 24" };
 
 export const isObject = (value: unknown): value is Record<any, any> =>
   value !== null && typeof value === "object";
@@ -81,50 +27,3 @@ export const isNumber = (value: unknown): value is number =>
   typeof value === "number";
 export const isUndef = (value: unknown): value is undefined =>
   typeof value === "undefined";
-
-export const isCollapsed = (
-  editor: BaseEditor,
-  at = editor.selection
-): at is BaseRange => {
-  return !at || Range.isCollapsed(at);
-};
-
-export const isText = ((node: Node) => Text.isText(node)) as any;
-
-export const getSelectionAbovePath = (editor: BaseEditor | undefined) => {
-  let at: any;
-  if (editor) {
-    const selection = editor.selection;
-    if (selection) {
-      const match = Editor.above(editor, {
-        at: selection,
-        match: (n) => Editor.isBlock(editor, n as any),
-      });
-
-      if (match) {
-        // 找到了第一个父级 block 节点的路径
-        at = match[1];
-      }
-    }
-  }
-  return at;
-};
-
-export const getSelectionAboveNode = (editor: BaseEditor | undefined) => {
-  let node: any;
-  if (editor) {
-    const selection = editor.selection;
-    if (selection) {
-      const match = Editor.above(editor, {
-        at: selection,
-        match: (n) => Editor.isBlock(editor, n as any),
-      });
-
-      if (match) {
-        // 找到了第一个父级 block 节点的路径
-        node = match[0];
-      }
-    }
-  }
-  return node;
-};

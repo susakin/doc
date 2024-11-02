@@ -12,7 +12,6 @@ import {
   TextOutlined,
 } from "../Icon";
 import { Item } from "../HorizontalMenu";
-import { svgProps } from "../../utils/getSideAnimateClassName";
 import { useTextBlock } from "../../plugin/text-block/useTextBlock";
 import { useHeading } from "../../plugin/heading/useHeading";
 import { useHighlightBlock } from "../../plugin/highlight-block/useHighlightBlock";
@@ -21,6 +20,7 @@ import { useDividerBlock } from "../../plugin/divider-block/useDividerBlock";
 import FlattenMenu from "../BlockMenu/FlattenMenu";
 import { pluginController } from "../../plugin/base/controller";
 import { EDITOR_EVENT } from "../../event/action";
+import { svgProps } from "../../utils";
 
 type MenuListProps = {};
 
@@ -98,7 +98,10 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
           insertText(undefined);
           const nextPath = pluginController.getNextPathAtSelectedElement();
           setTimeout(() => {
-            pluginController.event.trigger(EDITOR_EVENT.ADD_LINK, nextPath);
+            pluginController.event.trigger(EDITOR_EVENT.ADD_LINK, {
+              path: nextPath,
+              type: "add",
+            });
           });
         },
       },

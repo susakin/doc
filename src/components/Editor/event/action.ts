@@ -37,6 +37,8 @@ export type ElementMouseEventPayload = {
   domElement: HTMLElement;
 };
 
+export type AddLinkPayload = { path: Path; type: "add" | "set" };
+
 type EditorEventMap = {
   [EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE]: PluginActiveChangePayload;
   [EDITOR_EVENT.SELECTION_CHANGE]: BaseSelection;
@@ -49,7 +51,7 @@ type EditorEventMap = {
   [EDITOR_EVENT.FLOAT_MENU_MOUSE_LEAVE]: undefined;
   [EDITOR_EVENT.HOVER_MENU_ACTIVE]: boolean;
   [EDITOR_EVENT.SELECTED_ELEMENT_CHANGE]: RenderElementProps["element"];
-  [EDITOR_EVENT.ADD_LINK]: Path;
+  [EDITOR_EVENT.ADD_LINK]: AddLinkPayload;
 };
 
 export type EventMap = EditorEventMap & ReactEventMap;
@@ -60,5 +62,7 @@ export type Handler<T extends EventType> = {
   priority: number;
   listener: Listener<T>;
 };
-export type Listener<T extends EventType> = (value: EventMap[T]) => void;
+export type Listener<T extends EventType> = (
+  value: EventMap[T]
+) => void | boolean;
 export type Listeners = { [T in EventType]?: Handler<T>[] };

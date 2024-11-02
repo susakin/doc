@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import styles from "./index.module.less";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 import {
   DragOutlined,
   AddOutlined,
@@ -16,6 +16,7 @@ import {
   H9Outlined,
   H4Outlined,
   TextOutlined,
+  TodoOutlined,
 } from "../Icon";
 import BlockMenu from "../BlockMenu";
 import Popover, { PopoverProps } from "../Tooltip/Popover";
@@ -27,6 +28,7 @@ import { HEADING_KEY } from "../../plugin/heading";
 import { TEXT_BLOCK_KEY } from "../../plugin/text-block";
 import { Editor } from "slate";
 import { pluginController } from "../../plugin/base/controller";
+import { TODO_BLCOK_KEY } from "../../plugin/todo-block";
 
 const classNamePrefix = "menu-trigger";
 
@@ -36,7 +38,8 @@ type MenuTriggerProps = Pick<PopoverProps, "onOpenChange"> & {
 
 const isTextBlock = (element: RenderElementProps["element"]) => {
   if (!element) return false;
-  if (element?.[HEADING_KEY] !== undefined) return false;
+  if (element?.[HEADING_KEY] !== undefined || element?.[TODO_BLCOK_KEY])
+    return false;
   const text = Editor.string(
     pluginController.editor as any,
     ReactEditor.findPath(pluginController.editor as any, element as any)
@@ -52,7 +55,8 @@ export const isEmptyElement = (element: RenderElementProps["element"]) => {
     isTextBlock(element as any) ||
     !!element?.[DIVIDER_BLOCK_KEY] ||
     !!element?.[HIGHLIGHT_BLOCK_KEY] ||
-    !!element?.[HEADING_KEY]
+    !!element?.[HEADING_KEY] ||
+    !!element?.[TODO_BLCOK_KEY]
   );
 };
 
@@ -78,8 +82,11 @@ const MenuTrigger: React.FC<MenuTriggerProps> = ({
     if (isTextBlock(activeElement as any)) {
       return <TextOutlined {...svgProps} style={{ color: "#336df4" }} />;
     }
+    if (activeElement?.[TODO_BLCOK_KEY]) {
+      return <TodoOutlined {...svgProps} style={{ color: "#5b65f5" }} />;
+    }
     if (activeElement?.[DIVIDER_BLOCK_KEY]) {
-      return <DividerOutlined {...svgProps} style={{ color: "#ff811a" }} />;
+      return <DividerOutlined />;
     }
     if (activeElement?.[HIGHLIGHT_BLOCK_KEY]) {
       return <CalloutOutlined {...svgProps} style={{ color: "#ff811a" }} />;

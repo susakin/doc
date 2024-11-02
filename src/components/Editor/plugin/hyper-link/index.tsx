@@ -1,7 +1,6 @@
 import { ReactEditor, RenderLeafProps } from "slate-react";
 import { LeafPlugin, CommandFn, LeafContext } from "../base";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
-import { getMarkByFormat, isText } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
 import { isHotkey } from "../../utils/isHotkey";
 import renderToContainer from "../../utils/renderToContainer";
@@ -11,6 +10,7 @@ import LinkEditPanel from "../../components/Link/LinkEditPanel";
 import { mockSelectionPlugin } from "../mock-selection";
 import HyperLink from "./HyperLink";
 import { BaseText, Editor, Transforms } from "slate";
+import { getMarkByFormat, isText } from "../../utils/slateHelper";
 
 export const HYPER_LINK_KEY = "hyper-link";
 

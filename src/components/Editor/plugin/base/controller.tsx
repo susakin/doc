@@ -15,10 +15,10 @@ import Leaf from "../../components/Leaf";
 import React from "react";
 import Void from "../../components/Void";
 import { BaseEditor, Transforms } from "slate";
-import { getSelectionAboveNode } from "../../utils";
 import { DIVIDER_BLOCK_KEY } from "../divider-block";
 import { HEADER_TITLE_KEY } from "../header-title-block";
 import { ALIGN_KEY } from "../align";
+import { getSelectionAboveNode } from "../../utils/slateHelper";
 
 const DEFAULT_PRIORITY = 100;
 

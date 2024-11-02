@@ -8,7 +8,7 @@ import {
   H8Outlined,
   H9Outlined,
 } from "../Icon";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 import { useHeading } from "../../plugin/heading/useHeading";
 
 const TitleMenu: React.FC = () => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { pluginController } from "../../plugin/base/controller";
 import { EDITOR_EVENT, ElementMouseEventPayload } from "../../event/action";
 import {
@@ -54,9 +54,9 @@ const FloatMenu: React.FC = () => {
     let isHoverMenuActive = false;
     pluginController.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, (payload) => {
       if (payload.domElement && !isHoverMenuActive) {
+        cancel();
         setActiveElement(payload.element);
         refs.setReference(payload.domElement);
-        cancel();
         elementPlayloadRef.current = payload;
         setOpen(true);
       }
@@ -113,7 +113,6 @@ const FloatMenu: React.FC = () => {
                 if (!open) {
                   isHoveringRef.current = false;
                   debounceSetOpen(false);
-
                   pluginController.event.trigger(
                     EDITOR_EVENT.FLOAT_MENU_MOUSE_LEAVE,
                     undefined

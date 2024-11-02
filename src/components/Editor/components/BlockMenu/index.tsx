@@ -9,9 +9,8 @@ import {
   NewJoinMeetingOutlined,
 } from "../Icon";
 import MenuList from "./MeunList";
-import EmptyBlockMenu from "../EmptyBlockMenu";
 import { useTypography } from "../HoverToolbar/useTypography";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 import { useHighlightBlock } from "../../plugin/highlight-block/useHighlightBlock";
 import { useFontBlock } from "../../plugin/font-block/useFontBlock";
 import AddBlockMenu from "../AddBlockMenu";

@@ -7,7 +7,7 @@ import RightSmallOutlined from "../Icon/RightSmallOutlined";
 import Popover from "../Tooltip/Popover";
 import Tooltip from "../Tooltip";
 import AnimationWrapper from "../Tooltip/AnimationWrapper";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 
 const classNamePrefix = "menu-item";
 

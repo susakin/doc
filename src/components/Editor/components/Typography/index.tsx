@@ -7,7 +7,7 @@ import {
 } from "../Icon";
 import { useIndentation } from "./useIndentation";
 import { useAlign } from "../../plugin/align/useAlign";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 
 const Typography: React.FC = () => {
   const indentationItems = useIndentation();

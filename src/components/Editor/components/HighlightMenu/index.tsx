@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import HorizontalMenu, { Item } from "../HorizontalMenu";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 import { StyleSetOutlined } from "../Icon";
 import ColorPicker, { PickerProps } from "../ColorPicker";
 

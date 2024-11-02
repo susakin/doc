@@ -11,7 +11,7 @@ import {
   ReferenceOutlined,
   TextOutlined,
 } from "../Icon";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 import TitleMenu from "./TitleMenu";
 import { useTextBlock } from "../../plugin/text-block/useTextBlock";
 import { useHeading } from "../../plugin/heading/useHeading";

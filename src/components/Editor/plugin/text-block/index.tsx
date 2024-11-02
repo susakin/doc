@@ -5,6 +5,8 @@ import { EDITOR_EVENT } from "../../event/action";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { isHotkey } from "../../utils/isHotkey";
 import BlockPlaceholder from "../../components/Block/BlockPlaceholder";
+import { HEADING_KEY } from "../heading";
+import { TODO_BLCOK_KEY } from "../todo-block";
 
 export const TEXT_BLOCK_KEY = "text-block";
 
@@ -38,7 +40,6 @@ export class TextBlockPlugin extends BlockPlugin {
     const textBlock = (this.selectedElement as any)?.[this.key];
     return {
       isActive: !!textBlock,
-      textBlock,
     };
   };
 
@@ -51,6 +52,7 @@ export class TextBlockPlugin extends BlockPlugin {
   public onCommand: CommandFn = () => {
     if (this.editor) {
       const isActive = (this.selectedElement as any)?.[this.key] === true;
+
       const at = ReactEditor.findPath(
         this.editor as any,
         this.selectedElement as any
@@ -59,7 +61,9 @@ export class TextBlockPlugin extends BlockPlugin {
       Transforms.setNodes(
         this.editor,
         Object.assign({
-          [this.key]: isActive ? undefined : true,
+          [this.key]: true,
+          [HEADING_KEY]: undefined,
+          [TODO_BLCOK_KEY]: undefined,
         }),
         {
           at,

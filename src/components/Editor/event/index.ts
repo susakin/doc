@@ -77,13 +77,11 @@ export class EventBus {
     const handler = this.listeners[key];
     if (!handler) return false;
     let isStopped = false;
-    let isPrevented = false;
     for (const item of handler) {
-      item.listener(payload);
+      isStopped = !!item.listener(payload);
       item.once && this.off(key, item.listener);
       if (isStopped) break;
     }
-    return isPrevented;
   }
 
   /**

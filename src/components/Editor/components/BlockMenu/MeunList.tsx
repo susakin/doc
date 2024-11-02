@@ -14,7 +14,7 @@ import {
 } from "../Icon";
 import { Item } from "../HorizontalMenu";
 import FlattenMenu from "./FlattenMenu";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 import { useTextBlock } from "../../plugin/text-block/useTextBlock";
 import { useHeading } from "../../plugin/heading/useHeading";
 import { useHighlightBlock } from "../../plugin/highlight-block/useHighlightBlock";
@@ -122,10 +122,10 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
         tooltip: "链接 (Ctrl + K)",
         hidden: !isEmpty,
         onClick() {
-          pluginController.event.trigger(
-            EDITOR_EVENT.ADD_LINK,
-            pluginController.getSelectedElementPath()
-          );
+          pluginController.event.trigger(EDITOR_EVENT.ADD_LINK, {
+            path: pluginController.getSelectedElementPath(),
+            type: "set",
+          });
         },
       },
     ];

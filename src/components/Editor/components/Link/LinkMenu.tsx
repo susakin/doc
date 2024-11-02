@@ -7,7 +7,7 @@ import {
   GlobalLinkOutlined,
   TitleViewOutlined,
 } from "../Icon";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 import LinkViewMenu from "./LinkVewMenu";
 import { HyperLinkConfig } from "../../plugin/hyper-link";
 

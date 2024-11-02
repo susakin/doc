@@ -1,6 +1,6 @@
 import { TypographyOutlined } from "../Icon";
 import Typography from "../Typography";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 
 export const useTypography = () => {
   return {

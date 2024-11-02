@@ -12,7 +12,7 @@ import {
   TextOutlined,
 } from "../Icon";
 import InlineMenu from "../InlineMenu";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 import { useTextBlock } from "../../plugin/text-block/useTextBlock";
 import { useHeading } from "../../plugin/heading/useHeading";
 

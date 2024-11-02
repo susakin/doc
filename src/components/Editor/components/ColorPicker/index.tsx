@@ -7,7 +7,7 @@ import Button from "../Button";
 import FontColorSelect from "./FontColorSelect";
 import BackgroundColorSelect from "./BackgroundColorSelect";
 import { ReplaceOutlined } from "../Icon";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 
 export type ColorSetting = {
   color: string;

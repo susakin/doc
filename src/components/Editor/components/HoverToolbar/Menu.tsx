@@ -5,7 +5,7 @@ import {
   ItalicOutlined,
   UnderlineOutlined,
 } from "../Icon";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 import { BoldOutlined, HorizontalLineOutlined } from "../Icon";
 import { useColorPicker } from "./useColorPicker";
 import { useTypography } from "./useTypography";

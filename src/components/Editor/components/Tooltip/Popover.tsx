@@ -19,6 +19,7 @@ import {
   hide,
 } from "@floating-ui/react";
 import { flushSync } from "react-dom";
+import { useUpdateEffect } from "ahooks";
 
 export type PopoverProps = {
   children?: React.ReactElement | ((open: boolean) => React.ReactNode);
@@ -69,7 +70,7 @@ const Popover: React.FC<PopoverProps> = ({
     typeof rest.open !== "undefined" && setOpen(rest.open);
   }, [rest.open]);
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     onOpenChange?.(open);
   }, [open]);
 

@@ -5,6 +5,8 @@ import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { isHotkey } from "../../utils/isHotkey";
 import { EDITOR_EVENT } from "../../event/action";
 import TodoBlock from "./TodoBlock";
+import { TEXT_BLOCK_KEY } from "../text-block";
+import { HEADING_KEY } from "../heading";
 
 export const TODO_BLCOK_KEY = "todo-block";
 
@@ -56,15 +58,24 @@ export class TodoBlockPlugin extends BlockPlugin {
   public onCommand: CommandFn = () => {
     if (this.editor) {
       const isActive = !!(this.selectedElement as any)?.[this.key];
+
       const at = ReactEditor.findPath(
         this.editor as any,
         this.selectedElement as any
       );
       Transforms.setNodes(
         this.editor,
-        {
-          [this.key]: isActive ? undefined : { done: false },
-        },
+        Object.assign(
+          {
+            [this.key]: isActive ? undefined : { done: false },
+          },
+          !isActive
+            ? {
+                [TEXT_BLOCK_KEY]: undefined,
+                [HEADING_KEY]: undefined,
+              }
+            : {}
+        ),
         { at }
       );
 

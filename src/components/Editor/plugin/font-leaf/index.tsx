@@ -1,8 +1,8 @@
 import { RenderLeafProps } from "slate-react";
 import { LeafPlugin, CommandFn, LeafContext } from "../base";
 import { Editor } from "slate";
-import { getMarkByFormat, isMarkActive } from "../../utils";
 import { EDITOR_EVENT } from "../../event/action";
+import { getMarkByFormat, isMarkActive } from "../../utils/slateHelper";
 
 export const FONT_LEAF_KEY = "font-leaf";
 

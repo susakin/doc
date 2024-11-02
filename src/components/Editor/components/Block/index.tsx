@@ -3,7 +3,11 @@ import styles from "./index.module.less";
 import { BlockContext } from "../../plugin/base";
 import mergeRefs from "merge-refs";
 import { pluginController } from "../../plugin/base/controller";
-import { EDITOR_EVENT, ElementMouseEventPayload } from "../../event/action";
+import {
+  AddLinkPayload,
+  EDITOR_EVENT,
+  ElementMouseEventPayload,
+} from "../../event/action";
 import SelectedMask from "../SelectedMask";
 import cs from "classnames";
 import { RenderElementProps, useSlate, ReactEditor } from "slate-react";
@@ -14,12 +18,14 @@ import {
   Path,
   removeNodes,
   withoutNormalizing,
+  Transforms,
 } from "slate";
 import renderToContainer from "../../utils/renderToContainer";
 import AddLink from "./AddLink";
 import { HYPER_LINK_KEY } from "../../plugin/hyper-link";
 import { TEXT_BLOCK_KEY } from "../../plugin/text-block";
 import { HEADER_TITLE_KEY } from "../../plugin/header-title-block";
+import { useDebounceFn } from "ahooks";
 
 const classNamePrefix = "block";
 
@@ -59,8 +65,8 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
   const elementRef = useRef<RenderElementProps["element"]>();
   const [selected, setSelected] = useState<boolean>(false);
   const mouseEnterRef = useRef<boolean>(false);
-  const baseEdior = useSlate();
-  const { selection } = baseEdior;
+  const { selection } = useSlate();
+  const isSelectionChangingRef = useRef<boolean>(false);
 
   useEffect(() => {
     const onMouseEnter = (payload: ElementMouseEventPayload) => {
@@ -79,7 +85,7 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
       onMouseLeave
     );
 
-    const addLinkEvent = (path: number[]) => {
+    const addLinkEvent = ({ path, type }: AddLinkPayload) => {
       const currentPath = ReactEditor.findPath(
         pluginController.editor as any,
         elementRef.current as any
@@ -93,9 +99,11 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
                 removeNodes(pluginController.editor as any, {
                   at: currentPath,
                 });
+                const props = { ...(elementRef.current as any) };
                 insertNodes(
                   pluginController.editor as any,
                   {
+                    ...(type === "set" ? props : {}),
                     [TEXT_BLOCK_KEY]: true,
                     children: [
                       {
@@ -111,6 +119,7 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
                     at: currentPath,
                   }
                 );
+
                 unmount();
               });
             }}
@@ -134,6 +143,40 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
     };
   }, []);
 
+  const elementActive = () => {
+    if (rest.element?.[HEADER_TITLE_KEY] || isSelectionChangingRef.current) {
+      return;
+    }
+
+    mouseEnterRef.current = true;
+    pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, {
+      element: rest.element,
+      domElement: elementDivRef.current as any,
+    });
+  };
+
+  const { run: delaySetChanging } = useDebounceFn(
+    () => {
+      isSelectionChangingRef.current = false;
+    },
+    {
+      wait: 400,
+    }
+  );
+
+  const elementInactive = () => {
+    mouseEnterRef.current = false;
+    pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_LEAVE, {
+      element: rest.element,
+      domElement: elementDivRef.current as any,
+    });
+  };
+
+  const elementMouseInactive = () => {
+    clearTimeout(timer);
+    timer = setTimeout(elementInactive, 800);
+  };
+
   useEffect(() => {
     elementRef.current = rest.element;
     if (mouseEnterRef.current || selected) {
@@ -144,31 +187,14 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
     }
   }, [rest.element]);
 
-  const elementMouseActive = () => {
-    if (rest.element?.[HEADER_TITLE_KEY]) {
-      return;
-    }
-
-    clearTimeout(timer);
-    mouseEnterRef.current = true;
-    pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, {
-      element: rest.element,
-      domElement: elementDivRef.current as any,
-    });
-  };
-
-  const elementMouseInactive = () => {
-    timer = setTimeout(() => {
-      mouseEnterRef.current = false;
-      pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_LEAVE, {
-        element: rest.element,
-        domElement: elementDivRef.current as any,
-      });
-    }, 800);
-  };
-
   useEffect(() => {
-    elementMouseInactive();
+    const isTempty = isEmptyText(rest.element);
+    !isTempty && elementInactive();
+    isSelectionChangingRef.current = true;
+    return () => {
+      clearTimeout(timer);
+      delaySetChanging();
+    };
   }, [selection]);
 
   return (
@@ -176,8 +202,8 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
       style={style}
       className={cs(styles[`${classNamePrefix}`], rest.classNameList)}
       {...rest.props.attributes}
-      onMouseEnter={elementMouseActive}
-      onMouseMove={elementMouseActive}
+      onMouseEnter={elementActive}
+      onMouseMove={elementActive}
       onMouseLeave={elementMouseInactive}
       ref={mergeRefs(elementDivRef, rest.props.attributes?.ref)}
     >

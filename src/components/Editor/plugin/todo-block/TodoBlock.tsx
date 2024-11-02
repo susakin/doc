@@ -25,30 +25,25 @@ const TodoBlock: React.FC<TodoBlockProps> = ({ element, editor, children }) => {
         [styles[`${classNamePrefix}-focused`]]: isEleFocused && isFocused,
       })}
     >
-      <div contentEditable={false}>
-        <div
-          className={cs(styles[`${classNamePrefix}-checkbox`], {
-            [styles[`${classNamePrefix}-checkbox-checked`]]: done,
-          })}
-          onClick={() => {
-            Editor.withoutNormalizing(editor as any, () => {
-              const at = ReactEditor.findPath(editor as any, element as any);
-              Transforms.setNodes(
-                editor as any,
-                {
-                  [TODO_BLCOK_KEY]: { done: !done },
-                },
-                { at }
-              );
-            });
-          }}
-        />
-      </div>
       <span
-        className={cs({
-          [styles[`${classNamePrefix}-done`]]: done,
+        className={cs(styles[`${classNamePrefix}-checkbox`], {
+          [styles[`${classNamePrefix}-checkbox-checked`]]: done,
         })}
-      >
+        contentEditable={false}
+        onClick={(e) => {
+          Editor.withoutNormalizing(editor as any, () => {
+            const at = ReactEditor.findPath(editor as any, element as any);
+            Transforms.setNodes(
+              editor as any,
+              {
+                [TODO_BLCOK_KEY]: { done: !done },
+              },
+              { at }
+            );
+          });
+        }}
+      />
+      <span className={cs({ [styles[`${classNamePrefix}-done`]]: done })}>
         {children}
       </span>
     </div>

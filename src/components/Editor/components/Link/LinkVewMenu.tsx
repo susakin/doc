@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import Menu, { Item } from "../Menu";
 import { GlobalLinkOutlined, TitleViewOutlined } from "../Icon";
-import { svgProps } from "../../utils/getSideAnimateClassName";
+import { svgProps } from "../../utils";
 import { HyperLinkConfig } from "../../plugin/hyper-link";
 
 type LinkViewMenuProps = {

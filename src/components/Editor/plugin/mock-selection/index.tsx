@@ -3,8 +3,8 @@ import { LeafPlugin, CommandFn, LeafContext } from "../base";
 import { Transforms } from "slate";
 import { ReactEditor } from "slate-react";
 import { ReactEventMap } from "../../event/react";
-import { isText } from "../../utils";
 import styles from "./index.module.less";
+import { isText } from "../../utils/slateHelper";
 
 const classNamePrefix = "mock-selection";
 

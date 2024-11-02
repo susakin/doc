@@ -34,7 +34,7 @@ export const withLayout = (editor: BaseEditor): BaseEditor => {
             children: [{ text: "" }],
             placeholder: "请输入",
             holdingPlaceholder: true,
-            [TEXT_BLOCK_KEY]: true,
+            //[TEXT_BLOCK_KEY]: true,
           },
           { at: path.concat(1) }
         );
@@ -63,7 +63,7 @@ export const withLayout = (editor: BaseEditor): BaseEditor => {
                 children: [{ text: "" }],
                 placeholder: "请输入",
                 holdingPlaceholder: true,
-                [TEXT_BLOCK_KEY]: true,
+                //[TEXT_BLOCK_KEY]: true,
               },
               {
                 at: childPath,

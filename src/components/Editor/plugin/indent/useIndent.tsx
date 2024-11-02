@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { indentPlugin } from ".";
 import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
-import { getSelectionAbovePath } from "../../utils";
 
 export const useIndent = () => {
   const [indent, setIndent] = useState<PluginActiveChangePayload>(

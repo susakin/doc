@@ -3,8 +3,8 @@ import { BaseEditor, Editor, Transforms } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { EventBus } from "../../event";
 import { PluginActiveChangePayload, EDITOR_EVENT } from "../../event/action";
-import { getSelectionAboveNode, isMarkActive } from "../../utils";
 import { isHotkey } from "../../utils/isHotkey";
+import { getSelectionAboveNode, isMarkActive } from "../../utils/slateHelper";
 
 export const PLUGIN_TYPE = {
   BLOCK: "BLOCK" as const,
