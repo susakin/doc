@@ -17,8 +17,8 @@ import {
   insertNodes,
   Path,
   removeNodes,
-  withoutNormalizing,
   Transforms,
+  withoutNormalizing,
 } from "slate";
 import renderToContainer from "../../utils/renderToContainer";
 import AddLink from "./AddLink";
@@ -26,6 +26,10 @@ import { HYPER_LINK_KEY } from "../../plugin/hyper-link";
 import { TEXT_BLOCK_KEY } from "../../plugin/text-block";
 import { HEADER_TITLE_KEY } from "../../plugin/header-title-block";
 import { useDebounceFn } from "ahooks";
+import { HEADING_KEY } from "../../plugin/heading";
+import { TODO_BLCOK_KEY } from "../../plugin/todo-block";
+import { HIGHLIGHT_BLOCK_KEY } from "../../plugin/highlight-block";
+import { QUOTE_KEY } from "../../plugin/quote-block";
 
 const classNamePrefix = "block";
 
@@ -143,8 +147,16 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
     };
   }, []);
 
-  const elementActive = () => {
-    if (rest.element?.[HEADER_TITLE_KEY] || isSelectionChangingRef.current) {
+  const elementActive = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
+    if (
+      rest.element?.[HEADER_TITLE_KEY] ||
+      rest.element?.[HIGHLIGHT_BLOCK_KEY] ||
+      rest.element?.[QUOTE_KEY] ||
+      isSelectionChangingRef.current
+    ) {
       return;
     }
 
@@ -172,18 +184,44 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
     });
   };
 
-  const elementMouseInactive = () => {
+  const elementMouseInactive = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
     clearTimeout(timer);
     timer = setTimeout(elementInactive, 800);
   };
 
   useEffect(() => {
-    elementRef.current = rest.element;
+    const element = rest.element;
+    elementRef.current = element;
     if (mouseEnterRef.current || selected) {
       pluginController.event.trigger(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, {
         element: rest.element,
         domElement: elementDivRef.current as any,
       });
+    }
+    if (
+      element?.[HEADING_KEY] === undefined &&
+      element?.[TODO_BLCOK_KEY] === undefined &&
+      element?.[HEADER_TITLE_KEY] === undefined &&
+      // element?.[HIGHLIGHT_BLOCK_KEY] === undefined &&
+      // element?.[QUOTE_KEY] === undefined &&
+      !isEmptyText(element) &&
+      !element?.[TEXT_BLOCK_KEY]
+    ) {
+      Transforms.setNodes(
+        pluginController.editor as any,
+        {
+          [TEXT_BLOCK_KEY]: true,
+        },
+        {
+          at: ReactEditor.findPath(
+            pluginController.editor as any,
+            element as any
+          ),
+        }
+      );
     }
   }, [rest.element]);
 

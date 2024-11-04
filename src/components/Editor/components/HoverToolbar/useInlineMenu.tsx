@@ -10,11 +10,13 @@ import {
   H8Outlined,
   H9Outlined,
   TextOutlined,
+  TodoOutlined,
 } from "../Icon";
 import InlineMenu from "../InlineMenu";
 import { svgProps } from "../../utils";
 import { useTextBlock } from "../../plugin/text-block/useTextBlock";
 import { useHeading } from "../../plugin/heading/useHeading";
+import { useTodoBlock } from "../../plugin/todo-block/useTodoBlock";
 
 const headingIconMap: Record<string, React.ReactElement> = {
   h1: <H1Outlined {...svgProps} />,
@@ -31,6 +33,7 @@ const headingIconMap: Record<string, React.ReactElement> = {
 export const useInlineMenu = () => {
   const { textBlock } = useTextBlock();
   const { heading } = useHeading();
+  const { todoBlock } = useTodoBlock();
 
   const icon = useMemo(() => {
     if (textBlock?.isActive) {
@@ -39,7 +42,10 @@ export const useInlineMenu = () => {
     if (heading?.heading) {
       return headingIconMap[heading.heading as any];
     }
-  }, [textBlock, heading]);
+    if (todoBlock?.isActive) {
+      return <TodoOutlined {...svgProps} />;
+    }
+  }, [textBlock?.isActive, heading?.heading]);
 
   return {
     icon,

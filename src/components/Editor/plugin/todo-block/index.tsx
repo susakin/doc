@@ -7,6 +7,7 @@ import { EDITOR_EVENT } from "../../event/action";
 import TodoBlock from "./TodoBlock";
 import { TEXT_BLOCK_KEY } from "../text-block";
 import { HEADING_KEY } from "../heading";
+import { pluginController } from "../base/controller";
 
 export const TODO_BLCOK_KEY = "todo-block";
 
@@ -79,7 +80,13 @@ export class TodoBlockPlugin extends BlockPlugin {
         { at }
       );
 
-      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, { isActive });
+      pluginController.event.trigger(
+        EDITOR_EVENT.SELECTION_CHANGE,
+        this.editor.selection
+      );
+      this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
+        isActive: !isActive,
+      });
     }
   };
 

@@ -8,6 +8,9 @@ import { isHotkey } from "../../utils/isHotkey";
 import { TEXT_BLOCK_KEY, textBlockPlugin } from "../text-block";
 import BlockPlaceholder from "../../components/Block/BlockPlaceholder";
 import { TODO_BLCOK_KEY } from "../todo-block";
+import { isMatchedEvent } from "../../utils/slateHelper";
+import { KEYBOARD } from "../../utils/constant";
+import { pluginController } from "../base/controller";
 
 const classNamePrefix = "heading";
 
@@ -68,7 +71,7 @@ export class HeadingPlugin extends BlockPlugin {
 
   public destroy?: (() => void) | undefined;
 
-  public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
+  public matchHotkey(event: ReactEventMap["react_keydown"]) {
     for (const hotkey in HOTKEYS) {
       if (isHotkey(hotkey, event.nativeEvent)) {
         event.preventDefault();
@@ -76,6 +79,18 @@ export class HeadingPlugin extends BlockPlugin {
         this.onCommand({ heading });
       }
     }
+  }
+
+  public matchNatureKeyboard(event: ReactEventMap["react_keydown"]) {
+    const editor = this.editor;
+    if (isMatchedEvent(event, KEYBOARD.BACKSPACE)) {
+      //删除
+    }
+  }
+
+  public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
+    this.matchHotkey(event);
+    return this.matchNatureKeyboard(event);
   };
 
   public onCommand: CommandFn = ({ heading }) => {
@@ -87,22 +102,19 @@ export class HeadingPlugin extends BlockPlugin {
       );
       Transforms.setNodes(
         this.editor,
-        Object.assign(
-          {
-            heading: isActive ? undefined : heading,
-            placeholder: isActive ? undefined : heading,
-          },
-          !isActive
-            ? {
-                [TODO_BLCOK_KEY]: undefined,
-                [TEXT_BLOCK_KEY]: undefined,
-              }
-            : {}
-        ),
+        {
+          heading: isActive ? undefined : heading,
+          placeholder: isActive ? undefined : heading,
+          [TODO_BLCOK_KEY]: undefined,
+          [TEXT_BLOCK_KEY]: undefined,
+        },
         { at }
       );
 
-      this.event.trigger(EDITOR_EVENT.SELECTION_CHANGE, this.editor.selection);
+      pluginController.event.trigger(
+        EDITOR_EVENT.SELECTION_CHANGE,
+        this.editor.selection
+      );
 
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!heading,

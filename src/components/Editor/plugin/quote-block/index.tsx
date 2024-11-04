@@ -5,6 +5,7 @@ import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { isHotkey } from "../../utils/isHotkey";
 import { EDITOR_EVENT } from "../../event/action";
 import styles from "./index.module.less";
+import { getParentNodeByKey } from "../../utils/slateHelper";
 
 export const QUOTE_KEY = "quote-block";
 
@@ -23,9 +24,14 @@ export class QuoteBlockPlugin extends BlockPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, (element) => {
-      const quoteBlock = (element as any)?.[this.key];
+      const at = ReactEditor.findPath(this.editor as any, element as any);
+      const parentNode = getParentNodeByKey(this.editor as any, at, this.key);
+      const node = parentNode ?? element;
+
+      const isActive = !!(node as any)?.[this.key];
+
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
-        isActive: !!quoteBlock,
+        isActive,
       });
     });
 
@@ -48,27 +54,42 @@ export class QuoteBlockPlugin extends BlockPlugin {
   };
 
   public getCurrentStatus = () => {
-    const quoteBlock = (this.selectedElement as any)?.[this.key];
+    const element = this.selectedElement;
+    const at = ReactEditor.findPath(this.editor as any, element as any);
+    const parentNode = getParentNodeByKey(this.editor as any, at, this.key);
+    const node = parentNode ?? element;
+
+    const isActive = !!(node as any)?.[this.key];
     return {
-      isActive: !!quoteBlock,
+      isActive,
     };
   };
 
   public onCommand: CommandFn = () => {
     if (this.editor) {
-      const isActive = !!(this.selectedElement as any)?.[this.key];
-      const at = ReactEditor.findPath(
+      let at = ReactEditor.findPath(
         this.editor as any,
         this.selectedElement as any
       );
-      Transforms.setNodes(
-        this.editor,
-        {
-          [this.key]: isActive ? undefined : true,
-        },
-        { at }
-      );
+      const parentNode = getParentNodeByKey(this.editor as any, at, this.key);
+      const node = parentNode ?? this.selectedElement;
+      at = parentNode
+        ? ReactEditor.findPath(this.editor as any, parentNode as any)
+        : at;
+      const isActive = !!(node as any)?.[this.key];
 
+      if (isActive) {
+        Transforms.unwrapNodes(this.editor, { at });
+      } else {
+        Transforms.wrapNodes(
+          this.editor,
+          {
+            [this.key]: true,
+            children: [],
+          },
+          { at }
+        );
+      }
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, { isActive });
     }
   };

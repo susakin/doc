@@ -39,18 +39,38 @@ export class HighlightBlockPlugin extends BlockPlugin {
   public destroy?: (() => void) | undefined;
 
   public onCommand: CommandFn = ({ highlightBlock }) => {
+    const highlight = this.selectedElement?.[HIGHLIGHT_BLOCK_KEY];
     if (this.editor) {
       const at = ReactEditor.findPath(
         this.editor as any,
         this.selectedElement as any
       );
-      Transforms.setNodes(
-        this.editor,
-        {
-          [HIGHLIGHT_BLOCK_KEY]: highlightBlock,
-        },
-        { at }
-      );
+
+      if (!highlightBlock) {
+        Transforms.unwrapNodes(this.editor, { at });
+      } else {
+        if (highlight) {
+          Transforms.setNodes(
+            this.editor,
+            {
+              [this.key]: highlightBlock,
+            },
+            {
+              at,
+              split: true,
+            }
+          );
+        } else {
+          Transforms.wrapNodes(
+            this.editor,
+            {
+              [this.key]: highlightBlock,
+              children: [],
+            },
+            { at, split: true }
+          );
+        }
+      }
 
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!highlightBlock,

@@ -93,6 +93,7 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
         icon: <ReferenceOutlined {...svgProps} />,
         tooltip: "引用(Ctrl + Shift + >)",
         active: quoteBlock.isActive,
+        hidden: highlightBlock.isActive,
         onClick() {
           commandQuoteBlock();
         },
@@ -101,6 +102,7 @@ const MenuList: React.FC<MenuListProps> = ({}) => {
         icon: <CalloutOutlined {...svgProps} />,
         tooltip: "高亮块",
         active: highlightBlock.isActive,
+        hidden: quoteBlock.isActive,
         onClick() {
           commandHighlightBlock({
             highlightBlock: highlightBlock.isActive

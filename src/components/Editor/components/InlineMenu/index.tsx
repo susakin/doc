@@ -10,6 +10,7 @@ import {
   OrderListOutlined,
   ReferenceOutlined,
   TextOutlined,
+  TodoOutlined,
 } from "../Icon";
 import { svgProps } from "../../utils";
 import TitleMenu from "./TitleMenu";
@@ -18,12 +19,14 @@ import { useHeading } from "../../plugin/heading/useHeading";
 import { useQuoteBlock } from "../../plugin/quote-block/useQuoteBlock";
 import { useHighlightBlock } from "../../plugin/highlight-block/useHighlightBlock";
 import { defaultColorSetting } from "../ColorPicker";
+import { useTodoBlock } from "../../plugin/todo-block/useTodoBlock";
 
 const InlineMenu: React.FC = () => {
   const { textBlock, commandTextBlock } = useTextBlock();
   const { heading, commandHeading } = useHeading();
   const { quoteBlock, commandQuoteBlock } = useQuoteBlock();
   const { highlightBlock, commandHighlightBlock } = useHighlightBlock();
+  const { todoBlock, commandTodoBlock } = useTodoBlock();
 
   const menus = useMemo<Item[]>(() => {
     return [
@@ -80,6 +83,15 @@ const InlineMenu: React.FC = () => {
         icon: <DisorderListOutlined {...svgProps} />,
         text: "无序列表",
         tooltip: "Ctrl + Shift + 8",
+      },
+      {
+        icon: <TodoOutlined {...svgProps} />,
+        text: "任务",
+        tooltip: "Ctrl + Alt + T",
+        active: todoBlock?.isActive,
+        onClick() {
+          commandTodoBlock();
+        },
         devider: true,
       },
       {
@@ -103,7 +115,7 @@ const InlineMenu: React.FC = () => {
         },
       },
     ];
-  }, [textBlock, heading, quoteBlock]);
+  }, [textBlock, heading, quoteBlock, todoBlock]);
 
   return <Menu items={menus} />;
 };

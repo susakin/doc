@@ -20,15 +20,14 @@ import {
 } from "../Icon";
 import BlockMenu from "../BlockMenu";
 import Popover, { PopoverProps } from "../Tooltip/Popover";
-import { ReactEditor, RenderElementProps } from "slate-react";
+import { RenderElementProps } from "slate-react";
 import EmptyBlockMenu from "../EmptyBlockMenu";
 import { DIVIDER_BLOCK_KEY } from "../../plugin/divider-block";
 import { HIGHLIGHT_BLOCK_KEY } from "../../plugin/highlight-block";
 import { HEADING_KEY } from "../../plugin/heading";
 import { TEXT_BLOCK_KEY } from "../../plugin/text-block";
-import { Editor } from "slate";
-import { pluginController } from "../../plugin/base/controller";
 import { TODO_BLCOK_KEY } from "../../plugin/todo-block";
+import { isEmptyText } from "../Block";
 
 const classNamePrefix = "menu-trigger";
 
@@ -37,17 +36,9 @@ type MenuTriggerProps = Pick<PopoverProps, "onOpenChange"> & {
 };
 
 const isTextBlock = (element: RenderElementProps["element"]) => {
-  if (!element) return false;
-  if (element?.[HEADING_KEY] !== undefined || element?.[TODO_BLCOK_KEY])
+  if (element?.[TEXT_BLOCK_KEY] === undefined || isEmptyText(element))
     return false;
-  const text = Editor.string(
-    pluginController.editor as any,
-    ReactEditor.findPath(pluginController.editor as any, element as any)
-  );
-  if (element?.[TEXT_BLOCK_KEY] && text?.length !== 0) return true;
-
-  if (text?.length !== 0) return true;
-  return false;
+  return true;
 };
 
 export const isEmptyElement = (element: RenderElementProps["element"]) => {
@@ -79,6 +70,9 @@ const MenuTrigger: React.FC<MenuTriggerProps> = ({
   const isDivider = !!activeElement?.[DIVIDER_BLOCK_KEY];
 
   const icon = useMemo(() => {
+    if (activeElement?.[HIGHLIGHT_BLOCK_KEY]) {
+      return <CalloutOutlined {...svgProps} style={{ color: "#ff811a" }} />;
+    }
     if (isTextBlock(activeElement as any)) {
       return <TextOutlined {...svgProps} style={{ color: "#336df4" }} />;
     }
@@ -88,9 +82,7 @@ const MenuTrigger: React.FC<MenuTriggerProps> = ({
     if (activeElement?.[DIVIDER_BLOCK_KEY]) {
       return <DividerOutlined />;
     }
-    if (activeElement?.[HIGHLIGHT_BLOCK_KEY]) {
-      return <CalloutOutlined {...svgProps} style={{ color: "#ff811a" }} />;
-    }
+
     const heading = activeElement?.[HEADING_KEY];
     if (heading) {
       return headingIconMap[heading];

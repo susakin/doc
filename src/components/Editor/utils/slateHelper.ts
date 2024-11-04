@@ -1,4 +1,13 @@
-import { BaseEditor, BaseRange, Editor, Range, Text } from "slate";
+import {
+  BaseEditor,
+  BaseRange,
+  Editor,
+  Range,
+  Text,
+  type Path,
+  Location,
+  Node,
+} from "slate";
 
 export const isMarkActive = (editor: BaseEditor, format: string) => {
   try {
@@ -44,4 +53,66 @@ export const getSelectionAboveNode = (editor: BaseEditor | undefined) => {
     }
   }
   return node;
+};
+
+export const getPreviousPath = (path: Path): Path | undefined => {
+  if (path.length === 0) return;
+
+  const last = path.at(-1)!;
+
+  if (last <= 0) return;
+
+  return path.slice(0, -1).concat(last - 1);
+};
+
+export const isMatchedEvent = (
+  event: React.KeyboardEvent<HTMLDivElement>,
+  ...args: string[]
+) => {
+  const key = event.key;
+  return args.indexOf(key) > -1;
+};
+
+export const isPreviousEmpty = (editor: BaseEditor, path: Path) => {
+  const previoutPath = getPreviousPath(path);
+  const text = Editor.string(editor, previoutPath as any);
+
+  return text?.length === 0;
+};
+
+/**
+ * 向上查找最近的`Block`节点
+ * @param editor
+ * @param at
+ */
+export const getClosestBlockNode = (
+  editor: Editor,
+  at: Location
+): Node | null => {
+  const path = [...Editor.path(editor, at)];
+  while (path.length) {
+    const tuple = Editor.node(editor, path);
+    if (tuple && Editor.isBlock(editor, tuple[0] as any)) return tuple[0];
+    path.pop();
+  }
+  return null;
+};
+
+export const getParentNodeByKey = (
+  editor: Editor,
+  at: Location,
+  key: string
+): Node | null => {
+  const path = [...Editor.path(editor, at)];
+  while (path.length) {
+    const tuple = Editor.node(editor, path);
+    if (
+      tuple &&
+      Editor.isBlock(editor, tuple[0] as any) &&
+      typeof (tuple[0] as any)?.[key] !== "undefined"
+    )
+      return tuple[0];
+    path.pop();
+  }
+  return null;
 };
