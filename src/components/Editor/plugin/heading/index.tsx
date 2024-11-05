@@ -5,10 +5,10 @@ import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { EDITOR_EVENT } from "../../event/action";
 import styles from "./index.module.less";
 import { isHotkey } from "../../utils/isHotkey";
-import { TEXT_BLOCK_KEY, textBlockPlugin } from "../text-block";
+import { TEXT_BLOCK_KEY } from "../text-block";
 import BlockPlaceholder from "../../components/Block/BlockPlaceholder";
 import { TODO_BLCOK_KEY } from "../todo-block";
-import { isMatchedEvent } from "../../utils/slateHelper";
+import { isFocusLineStart, isMatchedEvent } from "../../utils/slateHelper";
 import { KEYBOARD } from "../../utils/constant";
 import { pluginController } from "../base/controller";
 
@@ -82,9 +82,18 @@ export class HeadingPlugin extends BlockPlugin {
   }
 
   public matchNatureKeyboard(event: ReactEventMap["react_keydown"]) {
-    const editor = this.editor;
-    if (isMatchedEvent(event, KEYBOARD.BACKSPACE)) {
+    const editor = this.editor as any;
+    const element = this.selectedElement as any;
+    if (!element?.[this.key]) return false;
+    if (isMatchedEvent(event, KEYBOARD.BACKSPACE, KEYBOARD.ENTER)) {
       //删除
+      const path = ReactEditor.findPath(editor as any, element as any);
+      if (event.key === KEYBOARD.BACKSPACE && isFocusLineStart(editor, path)) {
+        event.preventDefault();
+        event.stopPropagation();
+        Transforms.unsetNodes(editor, [this.key], { at: path });
+        return;
+      }
     }
   }
 

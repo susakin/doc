@@ -29,12 +29,16 @@ export class TextBlockPlugin extends BlockPlugin {
     this.event.on(REACT_EVENTS.KEY_DOWN, this.onKeyDown);
   }
 
-  public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
+  public matchHotKey(event: ReactEventMap["react_keydown"]) {
     const hotkey = "ctrl+alt+0";
     if (isHotkey(hotkey, event.nativeEvent)) {
       event.preventDefault();
       this.onCommand(undefined as any);
     }
+  }
+
+  public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
+    this.matchHotKey(event);
   };
 
   public getCurrentStatus = () => {

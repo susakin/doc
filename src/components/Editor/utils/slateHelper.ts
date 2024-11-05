@@ -7,6 +7,7 @@ import {
   type Path,
   Location,
   Node,
+  Point,
 } from "slate";
 
 export const isMarkActive = (editor: BaseEditor, format: string) => {
@@ -115,4 +116,12 @@ export const getParentNodeByKey = (
     path.pop();
   }
   return null;
+};
+
+export const isFocusLineStart = (editor: Editor, path: Path) => {
+  const start = Editor.start(editor, path);
+  return (
+    isCollapsed(editor, editor.selection) &&
+    Point.equals(start, editor.selection.anchor)
+  );
 };

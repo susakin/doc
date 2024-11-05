@@ -4,6 +4,7 @@ import { Transforms } from "slate";
 import { EDITOR_EVENT } from "../../event/action";
 import Highlight from "./Highligth";
 import { useHasSelection } from "../../components/HoverToolbar";
+import { getParentNodeByKey } from "../../utils/slateHelper";
 
 export const HIGHLIGHT_BLOCK_KEY = "highlight-block";
 
@@ -16,7 +17,11 @@ export class HighlightBlockPlugin extends BlockPlugin {
 
   private init() {
     this.event.on(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, (element) => {
-      const highlightBlock = (element as any)?.[this.key];
+      const at = ReactEditor.findPath(this.editor as any, element as any);
+      const parentNode = getParentNodeByKey(this.editor as any, at, this.key);
+      const node = parentNode ?? element;
+
+      const highlightBlock = (node as any)?.[this.key];
       this.event.trigger(EDITOR_EVENT.PLUGIN_ACTIVE_CHANGE, {
         isActive: !!highlightBlock,
         highlightBlock,
@@ -25,7 +30,12 @@ export class HighlightBlockPlugin extends BlockPlugin {
   }
 
   public getCurrentStatus = () => {
-    const highlightBlock = (this.selectedElement as any)?.[this.key];
+    const element = this.selectedElement;
+    const at = ReactEditor.findPath(this.editor as any, element as any);
+    const parentNode = getParentNodeByKey(this.editor as any, at, this.key);
+    const node = parentNode ?? element;
+
+    const highlightBlock = (node as any)?.[this.key];
     return {
       isActive: !!highlightBlock,
       highlightBlock,
@@ -39,12 +49,18 @@ export class HighlightBlockPlugin extends BlockPlugin {
   public destroy?: (() => void) | undefined;
 
   public onCommand: CommandFn = ({ highlightBlock }) => {
-    const highlight = this.selectedElement?.[HIGHLIGHT_BLOCK_KEY];
     if (this.editor) {
-      const at = ReactEditor.findPath(
+      let at = ReactEditor.findPath(
         this.editor as any,
         this.selectedElement as any
       );
+      const parentNode = getParentNodeByKey(this.editor as any, at, this.key);
+      const node = parentNode ?? this.selectedElement;
+      at = parentNode
+        ? ReactEditor.findPath(this.editor as any, parentNode as any)
+        : at;
+
+      const highlight = (node as any)?.[HIGHLIGHT_BLOCK_KEY];
 
       if (!highlightBlock) {
         Transforms.unwrapNodes(this.editor, { at });

@@ -64,6 +64,9 @@ export class PluginController {
 
       for (const item of Object.values(this.pluginMap)) {
         item.event.trigger(EDITOR_EVENT.KEY_DOWN, event);
+        if (event.isPropagationStopped()) {
+          break;
+        }
       }
     });
     //监听光标变化
