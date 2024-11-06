@@ -41,7 +41,9 @@ export class PluginController {
   public setSelectedElement(element: RenderElementProps["element"]) {
     this.selectedElement = element;
     for (const item of Object.values(this.pluginMap)) {
-      item.event.trigger(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, element);
+      try {
+        item.event.trigger(EDITOR_EVENT.SELECTED_ELEMENT_CHANGE, element);
+      } catch (e) {}
     }
   }
 

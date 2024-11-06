@@ -20,14 +20,15 @@ import {
 } from "../Icon";
 import BlockMenu from "../BlockMenu";
 import Popover, { PopoverProps } from "../Tooltip/Popover";
-import { RenderElementProps } from "slate-react";
+import { ReactEditor, RenderElementProps } from "slate-react";
 import EmptyBlockMenu from "../EmptyBlockMenu";
 import { DIVIDER_BLOCK_KEY } from "../../plugin/divider-block";
 import { HIGHLIGHT_BLOCK_KEY } from "../../plugin/highlight-block";
 import { HEADING_KEY } from "../../plugin/heading";
 import { TEXT_BLOCK_KEY } from "../../plugin/text-block";
 import { TODO_BLCOK_KEY } from "../../plugin/todo-block";
-import { isEmptyText } from "../Block";
+import { pluginController } from "../../plugin/base/controller";
+import { isEmptyElement as isElementEmpty } from "../../utils/slateHelper";
 
 const classNamePrefix = "menu-trigger";
 
@@ -36,8 +37,10 @@ type MenuTriggerProps = Pick<PopoverProps, "onOpenChange"> & {
 };
 
 const isTextBlock = (element: RenderElementProps["element"]) => {
-  if (element?.[TEXT_BLOCK_KEY] === undefined || isEmptyText(element))
-    return false;
+  const editor = pluginController.editor as any;
+  const path = ReactEditor.findPath(editor as any, element as any);
+  const isEmpty = isElementEmpty(editor, path);
+  if (element?.[TEXT_BLOCK_KEY] === undefined || isEmpty) return false;
   return true;
 };
 
@@ -89,9 +92,7 @@ const MenuTrigger: React.FC<MenuTriggerProps> = ({
     }
     return <AddOutlined {...svgProps} />;
   }, [activeElement]);
-
   const isEmpty = isEmptyElement(activeElement as any);
-
   return (
     <Popover
       content={

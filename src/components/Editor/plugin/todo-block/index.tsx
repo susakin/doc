@@ -8,12 +8,14 @@ import TodoBlock from "./TodoBlock";
 import { TEXT_BLOCK_KEY } from "../text-block";
 import { HEADING_KEY } from "../heading";
 import { pluginController } from "../base/controller";
+import {
+  isFocusLineEnd,
+  isFocusLineStart,
+  isMatchedEvent,
+} from "../../utils/slateHelper";
+import { KEYBOARD } from "../../utils/constant";
 
 export const TODO_BLCOK_KEY = "todo-block";
-
-const HOTKEYS: Record<string, boolean> = {
-  "ctrl+alt+t": true,
-};
 
 export class TodoBlockPlugin extends BlockPlugin {
   public readonly key: string = TODO_BLCOK_KEY;
@@ -40,13 +42,39 @@ export class TodoBlockPlugin extends BlockPlugin {
 
   public destroy?: (() => void) | undefined;
 
-  public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
-    for (const hotkey in HOTKEYS) {
-      if (isHotkey(hotkey, event.nativeEvent)) {
+  public matchHotkey(event: ReactEventMap["react_keydown"]) {
+    const hotkey = "ctrl+alt+t";
+    if (isHotkey(hotkey, event.nativeEvent)) {
+      event.preventDefault();
+      this.onCommand(undefined as any);
+    }
+  }
+
+  public matchNatureKeyboard(event: ReactEventMap["react_keydown"]) {
+    const editor = this.editor as any;
+    const element = this.selectedElement as any;
+    if (!element?.[this.key]) return false;
+
+    if (isMatchedEvent(event, KEYBOARD.BACKSPACE, KEYBOARD.ENTER)) {
+      //删除
+      const path = ReactEditor.findPath(editor as any, element as any);
+      if (event.key === KEYBOARD.BACKSPACE && isFocusLineStart(editor, path)) {
         event.preventDefault();
-        this.onCommand(undefined as any);
+        event.stopPropagation();
+        Transforms.unsetNodes(editor, [this.key], { at: path });
+        return;
+      }
+      if (isFocusLineEnd(editor, path)) {
+        event.preventDefault();
+        event.stopPropagation();
+        Transforms.insertNodes(editor, { children: [{ text: "" }] });
       }
     }
+  }
+
+  public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
+    this.matchHotkey(event);
+    this.matchNatureKeyboard(event);
   };
 
   public getCurrentStatus = () => {

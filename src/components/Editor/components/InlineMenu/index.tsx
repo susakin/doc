@@ -92,13 +92,14 @@ const InlineMenu: React.FC = () => {
         onClick() {
           commandTodoBlock();
         },
-        devider: true,
+        devider: highlightBlock?.isActive ? false : true,
       },
       {
         icon: <ReferenceOutlined {...svgProps} />,
         text: "引用",
         tooltip: "Ctrl + Shift + >",
         active: quoteBlock?.isActive,
+        hidden: highlightBlock?.isActive,
         onClick() {
           commandQuoteBlock();
         },
@@ -107,7 +108,7 @@ const InlineMenu: React.FC = () => {
         icon: <CalloutOutlined {...svgProps} />,
         text: "高亮块",
         tooltip: "高亮块",
-        hidden: highlightBlock?.isActive,
+        hidden: highlightBlock?.isActive || quoteBlock?.isActive,
         onClick() {
           commandHighlightBlock({
             highlightBlock: defaultColorSetting,

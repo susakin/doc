@@ -1,9 +1,9 @@
-import { RenderElementProps } from "slate-react";
+import { ReactEditor, RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
 import styles from "./index.module.less";
-import { isEmptyText } from "../../components/Block";
 import cs from "classnames";
 import { ALIGN_KEY } from "../align";
+import { isEmptyElement } from "../../utils/slateHelper";
 
 export const HEADER_TITLE_KEY = "header-title-block";
 
@@ -25,7 +25,8 @@ export class HeaderTitleBlockPlugin extends BlockPlugin {
 
   public renderLine(context: BlockContext): JSX.Element {
     const { children, element } = context;
-    const isEmpty = isEmptyText(element as any);
+    const path = ReactEditor.findPath(this.editor as any, element as any);
+    const isEmpty = isEmptyElement(this.editor, path);
 
     return (
       <div

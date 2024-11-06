@@ -2,13 +2,14 @@ import {
   BaseEditor,
   BaseRange,
   Editor,
+  Path,
   Range,
   Text,
-  type Path,
   Location,
   Node,
   Point,
 } from "slate";
+import { ReactEditor, RenderElementProps } from "slate-react";
 
 export const isMarkActive = (editor: BaseEditor, format: string) => {
   try {
@@ -104,6 +105,7 @@ export const getParentNodeByKey = (
   at: Location,
   key: string
 ): Node | null => {
+  if (!editor) return null;
   const path = [...Editor.path(editor, at)];
   while (path.length) {
     const tuple = Editor.node(editor, path);
@@ -125,3 +127,31 @@ export const isFocusLineStart = (editor: Editor, path: Path) => {
     Point.equals(start, editor.selection.anchor)
   );
 };
+
+export const isFocusLineEnd = (editor: Editor, path: Path) => {
+  const end = Editor.end(editor, path);
+  return (
+    isCollapsed(editor, editor.selection) &&
+    Point.equals(end, editor.selection.anchor)
+  );
+};
+
+export const isEmptyElement = (editor: Editor, path: Path) => {
+  try {
+    const text = Editor.string(editor, path);
+    return text?.length === 0;
+  } catch (e) {
+    return true;
+  }
+};
+
+export function isElementFocused(
+  editor: BaseEditor,
+  element: RenderElementProps["element"]
+) {
+  const { selection } = editor;
+  if (!selection || !element) return false;
+  const selectionPath = Editor.path(editor, selection);
+  const elementPath = ReactEditor.findPath(editor as any, element as any);
+  return Path.isChild(selectionPath, elementPath);
+}

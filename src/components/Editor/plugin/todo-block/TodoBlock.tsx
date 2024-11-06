@@ -1,11 +1,11 @@
 import React from "react";
 import styles from "./todoBlock.module.less";
 import { ReactEditor, RenderElementProps } from "slate-react";
-import { isElementFocused } from "../../components/Block";
 import { useEditorIsfoucesed } from "../../hooks/useEditorIsFocused";
 import { BaseEditor, Editor, Transforms } from "slate";
 import cs from "classnames";
 import { TODO_BLCOK_KEY } from ".";
+import { isElementFocused } from "../../utils/slateHelper";
 
 const classNamePrefix = "todo-block";
 

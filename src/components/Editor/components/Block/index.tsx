@@ -30,6 +30,7 @@ import { HEADING_KEY } from "../../plugin/heading";
 import { TODO_BLCOK_KEY } from "../../plugin/todo-block";
 import { HIGHLIGHT_BLOCK_KEY } from "../../plugin/highlight-block";
 import { QUOTE_KEY } from "../../plugin/quote-block";
+import { isEmptyElement } from "../../utils/slateHelper";
 
 const classNamePrefix = "block";
 
@@ -39,37 +40,13 @@ type BlockProps = {
 
 let timer: any;
 
-export const isEmptyText = (element: RenderElementProps["element"]) => {
-  if (!element) return true;
-  try {
-    const text = Editor.string(
-      pluginController.editor as any,
-      ReactEditor.findPath(pluginController.editor as any, element as any)
-    );
-
-    return text?.length === 0;
-  } catch (e) {
-    return true;
-  }
-};
-
-export function isElementFocused(
-  editor: BaseEditor,
-  element: RenderElementProps["element"]
-) {
-  const { selection } = editor;
-  if (!selection || !element) return false;
-  const selectionPath = Editor.path(editor, selection);
-  const elementPath = ReactEditor.findPath(editor as any, element as any);
-  return Path.isChild(selectionPath, elementPath);
-}
-
 const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
   const elementDivRef = useRef<HTMLDivElement>(null);
   const elementRef = useRef<RenderElementProps["element"]>();
   const [selected, setSelected] = useState<boolean>(false);
   const mouseEnterRef = useRef<boolean>(false);
-  const { selection } = useSlate();
+  const editor = useSlate();
+  const { selection } = editor;
   const isSelectionChangingRef = useRef<boolean>(false);
 
   useEffect(() => {
@@ -201,13 +178,13 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
         domElement: elementDivRef.current as any,
       });
     }
+    const path = ReactEditor.findPath(editor as any, element as any);
+    const isEmpty = isEmptyElement(editor, path);
     if (
       element?.[HEADING_KEY] === undefined &&
       element?.[TODO_BLCOK_KEY] === undefined &&
       element?.[HEADER_TITLE_KEY] === undefined &&
-      // element?.[HIGHLIGHT_BLOCK_KEY] === undefined &&
-      // element?.[QUOTE_KEY] === undefined &&
-      !isEmptyText(element) &&
+      !isEmpty &&
       !element?.[TEXT_BLOCK_KEY]
     ) {
       Transforms.setNodes(
@@ -226,8 +203,9 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
   }, [rest.element]);
 
   useEffect(() => {
-    const isTempty = isEmptyText(rest.element);
-    !isTempty && elementInactive();
+    const path = ReactEditor.findPath(editor as any, rest.element as any);
+    const isEmpty = isEmptyElement(editor, path);
+    !isEmpty && elementInactive();
     isSelectionChangingRef.current = true;
     return () => {
       clearTimeout(timer);

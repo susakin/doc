@@ -1,10 +1,10 @@
 import React from "react";
 import styles from "./blockPlaceholder.module.less";
-import { RenderElementProps, useSlate } from "slate-react";
+import { ReactEditor, RenderElementProps, useSlate } from "slate-react";
 import cs from "classnames";
 import { ALIGN_KEY } from "../../plugin/align";
-import { isElementFocused, isEmptyText } from ".";
 import { useEditorIsfoucesed } from "../../hooks/useEditorIsFocused";
+import { isEmptyElement, isElementFocused } from "../../utils/slateHelper";
 
 const classNamePrefix = "block-placeholder";
 
@@ -19,7 +19,8 @@ const BlockPlaceholder: React.FC<BlockPlaceholderProps> = ({
 }) => {
   const baseEdior = useSlate();
   const isEleFocused = isElementFocused(baseEdior, element);
-  const isEmpty = isEmptyText(element as any);
+  const path = ReactEditor.findPath(baseEdior as any, element as any);
+  const isEmpty = isEmptyElement(baseEdior, path);
   const { isFocused } = useEditorIsfoucesed();
 
   const hasPlaceholder = element?.holdingPlaceholder

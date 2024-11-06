@@ -8,7 +8,11 @@ import { isHotkey } from "../../utils/isHotkey";
 import { TEXT_BLOCK_KEY } from "../text-block";
 import BlockPlaceholder from "../../components/Block/BlockPlaceholder";
 import { TODO_BLCOK_KEY } from "../todo-block";
-import { isFocusLineStart, isMatchedEvent } from "../../utils/slateHelper";
+import {
+  isFocusLineEnd,
+  isFocusLineStart,
+  isMatchedEvent,
+} from "../../utils/slateHelper";
 import { KEYBOARD } from "../../utils/constant";
 import { pluginController } from "../base/controller";
 
@@ -93,6 +97,11 @@ export class HeadingPlugin extends BlockPlugin {
         event.stopPropagation();
         Transforms.unsetNodes(editor, [this.key], { at: path });
         return;
+      }
+      if (isFocusLineEnd(editor, path)) {
+        event.preventDefault();
+        event.stopPropagation();
+        Transforms.insertNodes(editor, { children: [{ text: "" }] });
       }
     }
   }
