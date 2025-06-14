@@ -8,6 +8,8 @@ import BlockPlaceholder from "../../components/Block/BlockPlaceholder";
 import { HEADING_KEY } from "../heading";
 import { TODO_BLCOK_KEY } from "../todo-block";
 import { pluginController } from "../base/controller";
+import { isFocusLineEnd, isMatchedEvent } from "../../utils/slateHelper";
+import { KEYBOARD } from "../../utils/constant";
 
 export const TEXT_BLOCK_KEY = "text-block";
 
@@ -37,8 +39,24 @@ export class TextBlockPlugin extends BlockPlugin {
     }
   }
 
+  public matchNatureKeyboard(event: ReactEventMap["react_keydown"]) {
+    const editor = this.editor as any;
+    const element = this.selectedElement as any;
+    if (!element?.[this.key]) return false;
+    if (isMatchedEvent(event, KEYBOARD.ENTER)) {
+      //删除
+      const path = ReactEditor.findPath(editor as any, element as any);
+
+      if (isFocusLineEnd(editor, path)) {
+        event.preventDefault();
+        Transforms.insertNodes(editor, { children: [{ text: "" }] });
+      }
+    }
+  }
+
   public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
     this.matchHotKey(event);
+    this.matchNatureKeyboard(event);
   };
 
   public getCurrentStatus = () => {

@@ -61,6 +61,10 @@ export class PluginController {
       //标题只有align
       if (this.selectedElement?.[HEADER_TITLE_KEY]) {
         this.pluginMap[ALIGN_KEY]?.event.trigger(EDITOR_EVENT.KEY_DOWN, event);
+        this.pluginMap[HEADER_TITLE_KEY]?.event.trigger(
+          EDITOR_EVENT.KEY_DOWN,
+          event
+        );
         return;
       }
 

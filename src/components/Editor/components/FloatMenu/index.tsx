@@ -18,6 +18,7 @@ import MenuTrigger from "../MenuTrigger";
 import cs from "classnames";
 import { useDebounceFn } from "ahooks";
 import { RenderElementProps } from "slate-react";
+import { HEADER_TITLE_KEY } from "../../plugin/header-title-block";
 
 const classNamePrefix = "float-menu";
 
@@ -53,7 +54,11 @@ const FloatMenu: React.FC = () => {
   useEffect(() => {
     let isHoverMenuActive = false;
     pluginController.event.on(EDITOR_EVENT.ELEMENT_MOUSE_ENTER, (payload) => {
-      if (payload.domElement && !isHoverMenuActive) {
+      if (
+        payload.domElement &&
+        !isHoverMenuActive &&
+        !payload.element?.[HEADER_TITLE_KEY]
+      ) {
         cancel();
         setActiveElement(payload.element);
         refs.setReference(payload.domElement);

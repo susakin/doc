@@ -93,6 +93,7 @@ const MenuTrigger: React.FC<MenuTriggerProps> = ({
     return <AddOutlined {...svgProps} />;
   }, [activeElement]);
   const isEmpty = isEmptyElement(activeElement as any);
+
   return (
     <Popover
       content={

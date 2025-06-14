@@ -1,6 +1,6 @@
 import { ReactEditor, RenderElementProps } from "slate-react";
 import { BlockContext, BlockPlugin, CommandFn } from "../base";
-import { Transforms } from "slate";
+import { Path, Transforms } from "slate";
 import { REACT_EVENTS, ReactEventMap } from "../../event/react";
 import { EDITOR_EVENT } from "../../event/action";
 import styles from "./index.module.less";
@@ -9,9 +9,11 @@ import { TEXT_BLOCK_KEY } from "../text-block";
 import BlockPlaceholder from "../../components/Block/BlockPlaceholder";
 import { TODO_BLCOK_KEY } from "../todo-block";
 import {
+  isEmptyElement,
   isFocusLineEnd,
   isFocusLineStart,
   isMatchedEvent,
+  getPreviousPath,
 } from "../../utils/slateHelper";
 import { KEYBOARD } from "../../utils/constant";
 import { pluginController } from "../base/controller";
@@ -98,6 +100,19 @@ export class HeadingPlugin extends BlockPlugin {
         Transforms.unsetNodes(editor, [this.key], { at: path });
         return;
       }
+
+      if (isFocusLineStart(editor, path) && !isEmptyElement(editor, path)) {
+        event.preventDefault();
+        event.stopPropagation();
+        const previousePath = Path.previous(path);
+        Transforms.insertNodes(
+          editor,
+          { children: [{ text: "" }] },
+          { at: previousePath }
+        );
+        return;
+      }
+
       if (isFocusLineEnd(editor, path)) {
         event.preventDefault();
         event.stopPropagation();
@@ -108,7 +123,7 @@ export class HeadingPlugin extends BlockPlugin {
 
   public onKeyDown = (event: ReactEventMap["react_keydown"]) => {
     this.matchHotkey(event);
-    return this.matchNatureKeyboard(event);
+    this.matchNatureKeyboard(event);
   };
 
   public onCommand: CommandFn = ({ heading }) => {

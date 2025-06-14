@@ -6,7 +6,6 @@ import {
   Element as SlateElement,
 } from "slate";
 import { HEADER_TITLE_KEY } from "../header-title-block";
-import { TEXT_BLOCK_KEY } from "../text-block";
 
 export const withLayout = (editor: BaseEditor): BaseEditor => {
   const { normalizeNode } = editor;

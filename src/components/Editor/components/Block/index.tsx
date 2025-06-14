@@ -129,7 +129,6 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
   ) => {
     event.stopPropagation();
     if (
-      rest.element?.[HEADER_TITLE_KEY] ||
       rest.element?.[HIGHLIGHT_BLOCK_KEY] ||
       rest.element?.[QUOTE_KEY] ||
       isSelectionChangingRef.current
@@ -207,6 +206,7 @@ const Block: React.FC<BlockProps> = ({ children, style, ...rest }) => {
     const isEmpty = isEmptyElement(editor, path);
     !isEmpty && elementInactive();
     isSelectionChangingRef.current = true;
+
     return () => {
       clearTimeout(timer);
       delaySetChanging();
